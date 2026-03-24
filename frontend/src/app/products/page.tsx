@@ -1,70 +1,144 @@
 import Link from 'next/link';
-import { Filter, ChevronDown } from 'lucide-react';
+import { Filter, ChevronDown, Eye, Search, X, Tag, Package, Sparkles } from 'lucide-react';
+import AddToCartButton from '@/components/AddToCartButton';
+import SidebarSearch from '@/components/SidebarSearch';
 
-// Placeholder data since API is not wired yet
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { category?: string }
+  searchParams: { category?: string; types_id?: string; q?: string }
 }) {
   const activeCategory = searchParams.category || 'Tous';
+  const activeTypeId = searchParams.types_id || '';
+  const searchQuery = searchParams.q || '';
+
   const categoryQuery = activeCategory === 'Tous' ? '' : activeCategory;
 
   let products = [];
+  let categoriesData = [];
+  let typesBaseData = [];
+
   try {
-    const res = await fetch(`http://localhost:3001/products?category=${encodeURIComponent(categoryQuery)}`, { cache: 'no-store' });
-    if (res.ok) {
-      products = await res.json();
-    }
+    const [prodRes, catRes, typeRes] = await Promise.all([
+      fetch(`http://localhost:3001/products?category=${encodeURIComponent(categoryQuery)}&types_id=${activeTypeId}&q=${encodeURIComponent(searchQuery)}`, { cache: 'no-store' }),
+      fetch('http://localhost:3001/categories', { cache: 'no-store' }),
+      fetch('http://localhost:3001/categories/types-base', { cache: 'no-store' })
+    ]);
+
+    if (prodRes.ok) products = await prodRes.json();
+    if (catRes.ok) categoriesData = await catRes.json();
+    if (typeRes.ok) typesBaseData = await typeRes.json();
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error('Failed to fetch data:', error);
   }
 
-  const categories = ['Tous', 'Salon', 'Chambre', 'Salle à manger', 'Bureau', 'Décoration'];
+  // Local search filter (since backend might not support ?q= yet)
+  if (searchQuery) {
+    products = products.filter((p: any) => 
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  const categoryList = ['Tous', ...categoriesData.map((c: any) => c.name)];
 
   return (
-    <div className="bg-background min-h-screen py-12">
-      <div className="container">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-serif text-primary mb-4">Nos Collections</h1>
-          <p className="text-text-muted max-w-2xl mx-auto">Explorez notre gamme complète de meubles ou personnalisez vos propres créations sur mesure pour un intérieur unique.</p>
+    <div className="bg-background min-h-screen py-12 pb-24">
+      <div className="container px-4">
+        {/* Header Section */}
+        <div className="relative mb-16 text-center animate-fade-in">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-8 opacity-5">
+             <Sparkles size={120} />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-serif text-primary mb-6 tracking-tight">Nos Collections</h1>
+          <p className="text-text-muted max-w-2xl mx-auto text-lg leading-relaxed">
+            Découvrez l'élégance du design marocain contemporain, entre pièces en stock prêtes à livrer et créations uniques sur mesure.
+          </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar / Filters */}
-          <aside className="w-full md:w-64 shrink-0">
-            <div className="sticky top-28">
-              <div className="flex items-center gap-2 font-serif text-lg text-primary mb-6 border-b border-gray-200 pb-2">
-                <Filter size={20} />
-                <h2>Filtres</h2>
-              </div>
-              
-              <div className="space-y-6">
+          <aside className="w-full lg:w-72 shrink-0">
+            <div className="sticky top-32 space-y-10">
+              {/* Search Box */}
+              <SidebarSearch />
+
+              {/* Filter Sections */}
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-10">
+                <div className="flex items-center gap-3 text-primary font-serif text-xl border-b border-gray-50 pb-4">
+                  <Filter size={20} className="text-secondary" />
+                  <h2>Affiner par</h2>
+                </div>
+
+                {/* Selling Types Filter */}
                 <div>
-                  <h3 className="font-semibold text-text mb-3 flex justify-between items-center cursor-pointer">
-                    Catégories <ChevronDown size={16} />
+                  <h3 className="font-bold text-text mb-5 flex items-center gap-2 text-sm uppercase tracking-widest">
+                    <Tag size={14} className="text-secondary" /> Type de vente
                   </h3>
-                  <ul className="space-y-2 text-sm text-text-muted">
-                    {categories.map((cat) => (
+                  <div className="flex flex-wrap gap-2">
+                    <Link 
+                        href={{ pathname: '/products', query: { ...searchParams, types_id: undefined } }}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${!activeTypeId ? 'bg-primary text-white border-primary shadow-md' : 'bg-gray-50 text-text-muted border-transparent hover:bg-gray-100'}`}
+                    >
+                        Tous
+                    </Link>
+                    {typesBaseData.map((t: any) => (
+                      <Link 
+                        key={t.id}
+                        href={{ pathname: '/products', query: { ...searchParams, types_id: t.id } }}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${activeTypeId === t.id.toString() ? 'bg-primary text-white border-primary shadow-md' : 'bg-gray-50 text-text-muted border-transparent hover:bg-gray-100'}`}
+                      >
+                        {t.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Categories Filter */}
+                <div>
+                  <h3 className="font-bold text-text mb-5 flex items-center gap-2 text-sm uppercase tracking-widest">
+                    <Package size={14} className="text-secondary" /> Catégories
+                  </h3>
+                  <ul className="space-y-3">
+                    {categoryList.map((cat) => (
                       <li key={cat}>
                         <Link 
-                          href={cat === 'Tous' ? '/products' : `/products?category=${cat}`}
-                          className={`hover:text-secondary transition-colors block ${activeCategory === cat ? 'text-secondary font-medium' : ''}`}
+                          href={{ pathname: '/products', query: { ...searchParams, category: cat === 'Tous' ? undefined : cat } }}
+                          className={`flex items-center justify-between group py-1 text-sm transition-all ${activeCategory === cat ? 'text-secondary font-bold translate-x-1' : 'text-text-muted hover:text-primary'}`}
                         >
-                          {cat}
+                          <span>{cat}</span>
+                          {activeCategory === cat && <div className="w-1.5 h-1.5 rounded-full bg-secondary"></div>}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 </div>
+
+                {/* Clear All */}
+                {(activeCategory !== 'Tous' || activeTypeId || searchQuery) && (
+                  <Link 
+                    href="/products" 
+                    className="flex justify-center items-center gap-2 py-3 bg-red-50 text-red-500 rounded-xl text-xs font-bold hover:bg-red-100 transition-colors mt-4"
+                  >
+                    <X size={14} /> Réinitialiser
+                  </Link>
+                )}
               </div>
             </div>
           </aside>
 
           {/* Product Grid */}
           <main className="flex-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex justify-between items-center mb-10">
+                <p className="text-text-muted text-sm font-medium">
+                    <span className="text-primary font-bold">{products.length}</span> résultats trouvés
+                </p>
+                <div className="flex items-center gap-2 text-sm text-text-muted">
+                    Trier par: <span className="text-primary font-bold cursor-pointer hover:text-secondary flex items-center gap-1">Nouveautés <ChevronDown size={14} /></span>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10">
               {products.map((product: any, index: number) => {
                 const imageSrc = product.image 
                   ? (product.image.startsWith('http') 
@@ -75,33 +149,70 @@ export default async function ProductsPage({
                 return (
                   <div 
                     key={product.id} 
-                    className="group animate-slide-up bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
+                    className="group animate-slide-up bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <Link href={`/products/${product.id}`} className="block relative h-64 overflow-hidden bg-gray-100">
-                      <img 
-                        src={imageSrc} 
-                        alt={product.name} 
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                      />
-                      {product.type === 'sur-mesure' && (
-                        <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold uppercase tracking-wider py-1 px-3 rounded-full z-10">
-                          Sur Mesure
-                        </div>
-                      )}
-                    </Link>
-                    <div className="p-6">
-                      <p className="text-xs text-text-muted uppercase tracking-wider mb-2">{product.category}</p>
-                      <Link href={`/products/${product.id}`}>
-                        <h3 className="text-lg font-serif text-primary hover:text-secondary transition-colors mb-3">{product.name}</h3>
+                    <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 shrink-0">
+                      <Link href={`/products/${product.id}`} className="block h-full w-full">
+                        <img 
+                          src={imageSrc} 
+                          alt={product.name} 
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                        />
                       </Link>
-                      <div className="flex justify-between items-center">
-                        <p className="font-medium text-text">
-                          {typeof product.price === 'string' && product.price.includes('DHS') ? product.price : `${Number(product.price).toLocaleString()} DHS`}
-                        </p>
-                        <Link href={`/products/${product.id}`} className="text-secondary text-sm font-medium link-hover">
-                          Découvrir
+                      
+                      {/* Floating Badge */}
+                      <div className="absolute top-5 left-5 z-10 flex flex-col gap-2">
+                        {product.types_id === 1 && (
+                            <div className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest py-1.5 px-4 rounded-full shadow-lg backdrop-blur-sm bg-primary/90">
+                                Sur Mesure
+                            </div>
+                        )}
+                        {product.types_id === 2 && (
+                            <div className="bg-secondary text-white text-[10px] font-bold uppercase tracking-widest py-1.5 px-4 rounded-full shadow-lg backdrop-blur-sm bg-secondary/90">
+                                En Stock
+                            </div>
+                        )}
+                      </div>
+
+                      {/* Overlays */}
+                      <div className="absolute inset-x-0 bottom-6 px-6 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 flex gap-2">
+                          <AddToCartButton 
+                            product={product} 
+                            className="flex-1 py-4 shadow-xl text-xs font-bold"
+                            showIcon={true}
+                          />
+                          <Link 
+                            href={`/products/${product.id}`} 
+                            className="w-14 flex items-center justify-center rounded-2xl bg-white text-primary hover:text-secondary hover:scale-110 transition-all shadow-xl"
+                            title="Aperçu"
+                          >
+                            <Eye size={22} />
+                          </Link>
+                      </div>
+                    </div>
+                    
+                    <div className="p-8 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-3">
+                            <p className="text-[10px] text-secondary font-bold uppercase tracking-[0.2em]">
+                                {product.categories?.name || product.category || 'Collection'}
+                            </p>
+                        </div>
+                        <Link href={`/products/${product.id}`}>
+                          <h3 className="text-xl font-serif text-primary hover:text-secondary transition-colors line-clamp-2 leading-snug mb-2 italic">
+                            {product.name}
+                          </h3>
                         </Link>
+                      </div>
+                      
+                      <div className="flex justify-between items-end pt-6 border-t border-gray-50 mt-auto">
+                        <div className="flex flex-col">
+                            <span className="text-xs text-text-muted font-medium mb-1">Prix à partir de</span>
+                            <span className="text-2xl font-bold text-primary">
+                            {Number(product.price).toLocaleString()} <span className="text-sm font-medium opacity-60">DHS</span>
+                            </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -110,18 +221,23 @@ export default async function ProductsPage({
             </div>
 
             {products.length === 0 && (
-              <div className="py-20 text-center text-text-muted">
-                Aucun produit trouvé dans cette catégorie.
+              <div className="py-32 flex flex-col items-center text-text-muted bg-white rounded-[3rem] border border-dashed border-gray-200 mt-10">
+                <Search size={64} className="mb-6 opacity-10" />
+                <h3 className="text-xl font-serif text-primary mb-2">Aucun résultat trouvé</h3>
+                <p>Essayez de modifier vos filtres ou effectuez une nouvelle recherche.</p>
+                <Link href="/products" className="mt-8 text-secondary font-bold border-b-2 border-secondary pb-1 hover:opacity-70 transition-opacity">
+                    Voir toute la boutique
+                </Link>
               </div>
             )}
             
             {/* Pagination Placeholder */}
             {products.length > 0 && (
-              <div className="mt-16 flex justify-center">
-                <div className="flex gap-2">
-                  <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
-                  <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-text hover:bg-gray-200 transition-colors transition-all duration-200">2</button>
-                  <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-text hover:bg-gray-200 transition-colors transition-all duration-200">3</button>
+              <div className="mt-20 flex justify-center">
+                <div className="p-2 bg-white rounded-2xl shadow-sm border border-gray-100 flex gap-1">
+                  <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-white font-bold shadow-lg">1</button>
+                  <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-transparent text-text hover:bg-gray-50 transition-all font-medium">2</button>
+                  <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-transparent text-text hover:bg-gray-50 transition-all font-medium">3</button>
                 </div>
               </div>
             )}
@@ -131,3 +247,4 @@ export default async function ProductsPage({
     </div>
   );
 }
+

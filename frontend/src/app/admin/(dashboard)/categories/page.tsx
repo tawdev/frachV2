@@ -23,8 +23,10 @@ export default function AdminCategories() {
     description: '',
     image: ''
   });
+  const [previewUrl, setPreviewUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const fetchCategories = async () => {
     try {
@@ -51,9 +53,11 @@ export default function AdminCategories() {
         description: category.description || '',
         image: category.image || ''
       });
+      setPreviewUrl(category.image ? (category.image.startsWith('http') ? category.image : `http://localhost:3001/${category.image}`) : '');
     } else {
       setEditingCategory(null);
       setFormData({ name: '', description: '', image: '' });
+      setPreviewUrl('');
     }
     setShowModal(true);
   };
@@ -196,14 +200,44 @@ export default function AdminCategories() {
                 />
               </div>
                <div>
-                <label className="block text-xs font-bold text-text-muted uppercase mb-1">URL de l'image</label>
-                <input 
-                  value={formData.image}
-                  onChange={(e) => setFormData({...formData, image: e.target.value})}
-                  type="text" 
-                  className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary outline-none transition-all" 
-                  placeholder="images/categories/..."
-                />
+                <label className="block text-xs font-bold text-text-muted uppercase mb-1">Image de la Catégorie</label>
+                <div className="space-y-2">
+                  <label className="flex items-center justify-center w-full h-32 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-all overflow-hidden relative">
+                    {uploadingImage ? (
+                      <span className="text-sm text-text-muted">Téléchargement...</span>
+                    ) : previewUrl ? (
+                      <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-sm text-text-muted">Cliquer pour sélectionner une image</span>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setPreviewUrl(URL.createObjectURL(file));
+                          setUploadingImage(true);
+                          const data = new FormData();
+                          data.append('file', file);
+                          try {
+                            const res = await fetch('http://localhost:3001/upload/categories', { method: 'POST', body: data });
+                            if (!res.ok) throw new Error('Upload failed');
+                            const uploaded = await res.json();
+                            setFormData(prev => ({...prev, image: uploaded.path}));
+                          } catch (err) {
+                            console.error(err);
+                            alert("Erreur lors du téléchargement");
+                          } finally {
+                            setUploadingImage(false);
+                          }
+                        }
+                      }}
+                    />
+                  </label>
+                  {formData.image && <p className="text-xs text-text-muted truncate">{formData.image}</p>}
+                </div>
               </div>
               
               <div className="pt-4 flex gap-3">

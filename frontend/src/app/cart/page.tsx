@@ -1,33 +1,20 @@
+'use client';
+
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 export default function CartPage() {
-  // Placeholder cart data
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Canapé Modena 3 Places',
-      category: 'Salon',
-      price: 12500,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80',
-    },
-    {
-      id: 2,
-      name: 'Fauteuil Accent Velours',
-      category: 'Salon',
-      price: 4200,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400&q=80',
-    }
-  ];
+  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
 
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const deliveryFee = 500; // Placeholder
+  const subtotal = getCartTotal();
+  const deliveryFee = subtotal > 0 ? 500 : 0;
   const total = subtotal + deliveryFee;
 
+  const backendUrl = 'http://localhost:3001';
+
   return (
-    <div className="bg-background min-h-screen py-10">
+    <div className="bg-background min-h-screen py-10 pt-28">
       <div className="container">
         <h1 className="text-4xl font-serif text-primary mb-10 text-center animate-slide-up">Votre Panier</h1>
 
@@ -49,14 +36,23 @@ export default function CartPage() {
                     <div key={item.id} className="py-6 flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center">
                       <div className="col-span-6 w-full flex items-center gap-4">
                         <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                          <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover" />
+                          <img 
+                            src={item.image.startsWith('http') ? item.image : `${backendUrl}/${item.image}`} 
+                            alt={item.name} 
+                            className="absolute inset-0 w-full h-full object-cover" 
+                          />
                         </div>
                         <div>
-                          <p className="text-xs text-text-muted uppercase tracking-wider mb-1">{item.category}</p>
+                          {item.category && (
+                            <p className="text-xs text-text-muted uppercase tracking-wider mb-1">{item.category}</p>
+                          )}
                           <Link href={`/products/${item.id}`} className="font-serif text-lg text-primary hover:text-secondary transition-colors line-clamp-2">
                             {item.name}
                           </Link>
-                          <button className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1 mt-2 transition-colors">
+                          <button 
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1 mt-2 transition-colors"
+                          >
                             <Trash2 size={14} /> <span className="hidden sm:inline">Retirer</span>
                           </button>
                         </div>
@@ -69,9 +65,19 @@ export default function CartPage() {
                       
                       <div className="col-span-2 w-full sm:w-auto flex justify-center">
                         <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50">
-                          <button className="p-2 text-text-muted hover:text-primary transition-colors"><Minus size={14} /></button>
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="p-2 text-text-muted hover:text-primary transition-colors"
+                          >
+                            <Minus size={14} />
+                          </button>
                           <span className="w-8 flex items-center justify-center font-medium text-sm">{item.quantity}</span>
-                          <button className="p-2 text-text-muted hover:text-primary transition-colors"><Plus size={14} /></button>
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="p-2 text-text-muted hover:text-primary transition-colors"
+                          >
+                            <Plus size={14} />
+                          </button>
                         </div>
                       </div>
                       
@@ -83,9 +89,9 @@ export default function CartPage() {
                   ))}
                 </div>
               </div>
-              <div className="flex justify-between items-center">
-                <Link href="/products" className="text-text-muted hover:text-primary transition-colors flex items-center gap-2 text-sm">
-                  Continuer vos achats
+              <div className="flex justify-between items-center px-2">
+                <Link href="/products" className="text-text-muted hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium">
+                  ← Continuer vos achats
                 </Link>
               </div>
             </div>
@@ -97,7 +103,7 @@ export default function CartPage() {
                 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-text-muted">
-                    <span>Sous-total ({cartItems.length} articles)</span>
+                    <span>Sous-total ({cartItems.length} article{cartItems.length > 1 ? 's' : ''})</span>
                     <span className="font-medium text-text">{subtotal.toLocaleString()} DHS</span>
                   </div>
                   <div className="flex justify-between text-text-muted">
@@ -123,7 +129,7 @@ export default function CartPage() {
                 </Link>
                 
                 <div className="mt-6 flex items-center justify-center gap-4 border-t border-gray-100 pt-6 px-4">
-                   <p className="text-xs text-center text-text-muted">Paiement 100% sécurisé et livraison garantie partout au Maroc.</p>
+                   <p className="text-xs text-center text-text-muted italic">Paiement 100% sécurisé et livraison garantie partout au Maroc.</p>
                 </div>
               </div>
             </div>
@@ -132,10 +138,10 @@ export default function CartPage() {
         ) : (
           <div className="text-center py-20 animate-fade-in">
             <div className="w-24 h-24 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Trash2 size={40} />
+              <ShoppingBag size={40} />
             </div>
             <h2 className="text-2xl font-serif text-primary mb-4">Votre panier est vide</h2>
-            <p className="text-text-muted mb-8">Vous n'avez pas encore ajouté d'articles à votre panier.</p>
+            <p className="text-text-muted mb-8">Découvrez nos collections pour ajouter des articles à votre panier.</p>
             <Link href="/products" className="btn-primary">
               Découvrir nos collections
             </Link>

@@ -9,16 +9,16 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-primary text-white hidden md:flex flex-col">
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar - fixed */}
+      <aside className="w-64 bg-primary text-white hidden md:flex flex-col fixed inset-y-0 left-0 z-30">
         <div className="h-20 flex items-center px-8 border-b border-primary-light">
           <span className="text-2xl font-serif font-bold">
             <span className="italic text-secondary">Frach</span>admin
           </span>
         </div>
         
-        <nav className="flex-1 py-8 px-4 space-y-2">
+        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
           <Link href="/admin" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
             <LayoutDashboard size={20} /> Tableau de Bord
           </Link>
@@ -51,10 +51,10 @@ export default function AdminLayout({
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+      {/* Main Content Area — offset by sidebar width */}
+      <div className="md:pl-64 flex flex-col min-h-screen">
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 z-10">
+        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 z-10 sticky top-0">
           <h1 className="text-xl font-medium text-primary md:hidden">FrachAdmin</h1>
           <div className="flex-1"></div>
           <div className="flex items-center gap-4">
@@ -69,7 +69,7 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-8 bg-gray-50 mt-0">
+        <main className="flex-1 p-8 bg-gray-50">
           {children}
         </main>
       </div>

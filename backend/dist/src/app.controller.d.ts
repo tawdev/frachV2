@@ -7,4 +7,8 @@ export declare class AppController {
         message: string;
         path: string;
     };
+    uploadCategoryFile(file: Express.Multer.File): {
+        message: string;
+        path: string;
+    };
 }

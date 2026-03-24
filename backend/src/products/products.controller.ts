@@ -6,13 +6,31 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
   @Get()
-  findAll(@Query('category') category?: string, @Query('type_category') type_category?: string) {
-    return this.productsService.findAll(category, type_category ? +type_category : undefined);
+  findAll(
+    @Query('category') category?: string, 
+    @Query('type_category') type_category?: string,
+    @Query('types_id') types_id?: string,
+    @Query('q') q?: string
+  ) {
+    return this.productsService.findAll(
+      category, 
+      type_category ? +type_category : undefined,
+      types_id ? +types_id : undefined,
+      q
+    );
   }
 
   @Get('featured')
   getFeatured() {
     return this.productsService.getFeatured();
+  }
+
+  @Get('search')
+  search(
+    @Query('q') query: string,
+    @Query('category_id') category_id?: string
+  ) {
+    return this.productsService.search(query, category_id ? +category_id : undefined);
   }
 
   @Get(':id')

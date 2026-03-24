@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description: 'Découvrez notre collection exclusive de meubles modernes et élégants pour transformer votre intérieur. Qualité premium, livraison rapide partout au Maroc.',
 };
 
+import { CartProvider } from '@/context/CartContext';
 import ClientLayout from '@/components/ClientLayout';
 
 export default function RootLayout({
@@ -27,9 +28,11 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased text-text bg-background">
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <CartProvider>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </CartProvider>
       </body>
     </html>
   );

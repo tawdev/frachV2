@@ -16,8 +16,23 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
+  @Get('best-products')
+  bestProductsByMonth() {
+    return this.ordersService.bestProductsByMonth();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ordersService.findOne(+id);
+  }
+
+  @Post(':id/status')
+  updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.ordersService.update(+id, { status });
+  }
+
+  @Post(':id/delete') // Using POST instead of DELETE to avoid issues with some proxies/environments if delete isn't allowed
+  remove(@Param('id') id: string) {
+    return this.ordersService.remove(+id);
   }
 }

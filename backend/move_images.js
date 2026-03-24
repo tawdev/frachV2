@@ -31,18 +31,16 @@ function copyAndSlugify(src, dest) {
     const isDir = fs.statSync(srcPath).isDirectory();
     
     if (isDir) {
-      if (item === 'categories' || item === 'items' || item === 'types') {
-          copyAndSlugify(srcPath, path.join(dest, slugify(item)));
-      } else {
-          copyAndSlugify(srcPath, path.join(dest, slugify(item)));
-      }
+      copyAndSlugify(srcPath, path.join(dest, item)); // keep subdir name as is (e.g. categories, items, types)
     } else {
       if (item === '.htaccess') continue;
       const newName = slugify(item);
       const destPath = path.join(dest, newName);
       
-      console.log(`Copying: ${item} -> ${newName}`);
-      fs.copyFileSync(srcPath, destPath);
+      if (!fs.existsSync(destPath)) {
+        console.log(`Copying: ${item} -> ${path.relative(__dirname, destPath)}`);
+        fs.copyFileSync(srcPath, destPath);
+      }
     }
   }
 }

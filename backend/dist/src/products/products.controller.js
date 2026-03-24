@@ -20,11 +20,14 @@ let ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
     }
-    findAll(category, type_category) {
-        return this.productsService.findAll(category, type_category ? +type_category : undefined);
+    findAll(category, type_category, types_id, q) {
+        return this.productsService.findAll(category, type_category ? +type_category : undefined, types_id ? +types_id : undefined, q);
     }
     getFeatured() {
         return this.productsService.getFeatured();
+    }
+    search(query, category_id) {
+        return this.productsService.search(query, category_id ? +category_id : undefined);
     }
     findOne(id) {
         return this.productsService.findOne(+id);
@@ -44,8 +47,10 @@ __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('category')),
     __param(1, (0, common_1.Query)('type_category')),
+    __param(2, (0, common_1.Query)('types_id')),
+    __param(3, (0, common_1.Query)('q')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String, String]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
@@ -54,6 +59,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getFeatured", null);
+__decorate([
+    (0, common_1.Get)('search'),
+    __param(0, (0, common_1.Query)('q')),
+    __param(1, (0, common_1.Query)('category_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "search", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

@@ -12,7 +12,9 @@ interface TypesCategory {
   id: number;
   name: string;
   category_id: number;
+  types_id?: number | null;
   categories?: { name: string };
+  types?: { name: string };
 }
 
 interface Category {
@@ -34,7 +36,7 @@ export default function AdminTypes() {
   // Modals for TypesCategory
   const [showTCModal, setShowTCModal] = useState(false);
   const [editingTC, setEditingTC] = useState<TypesCategory | null>(null);
-  const [tcForm, setTCForm] = useState({ name: '', category_id: '' });
+  const [tcForm, setTCForm] = useState({ name: '', category_id: '', types_id: '' });
 
   const fetchData = async () => {
     try {
@@ -82,7 +84,11 @@ export default function AdminTypes() {
     await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...tcForm, category_id: parseInt(tcForm.category_id) })
+      body: JSON.stringify({ 
+          ...tcForm, 
+          category_id: parseInt(tcForm.category_id),
+          types_id: tcForm.types_id ? parseInt(tcForm.types_id) : null
+      })
     });
     setShowTCModal(false);
     fetchData();
@@ -141,7 +147,7 @@ export default function AdminTypes() {
             <div className="p-2 bg-secondary/10 text-secondary rounded-lg text-secondary"><Tag size={20} /></div>
             <h2 className="text-2xl font-serif text-primary">Types de Catégories (Sub-categories)</h2>
           </div>
-          <button onClick={() => { setEditingTC(null); setTCForm({ name: '', category_id: '' }); setShowTCModal(true); }} className="px-4 py-2 bg-secondary text-white rounded-xl text-sm flex items-center gap-2">
+          <button onClick={() => { setEditingTC(null); setTCForm({ name: '', category_id: '', types_id: '' }); setShowTCModal(true); }} className="px-4 py-2 bg-secondary text-white rounded-xl text-sm flex items-center gap-2">
             <Plus size={16} /> Nouveau Sous-Type
           </button>
         </div>
@@ -152,6 +158,7 @@ export default function AdminTypes() {
               <tr>
                 <th className="px-6 py-4">Nom du Sous-Type</th>
                 <th className="px-6 py-4">Catégorie Parent</th>
+                <th className="px-6 py-4">Type de Vente</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -160,8 +167,9 @@ export default function AdminTypes() {
                 <tr key={tc.id}>
                   <td className="px-6 py-4 font-medium text-sm text-primary">{tc.name}</td>
                   <td className="px-6 py-4 text-sm text-text-muted">{tc.categories?.name || 'N/A'}</td>
+                  <td className="px-6 py-4 text-sm text-text-muted">{tc.types?.name || '-'}</td>
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => { setEditingTC(tc); setTCForm({ name: tc.name, category_id: tc.category_id.toString() }); setShowTCModal(true); }} className="p-2 text-gray-400 hover:text-secondary"><Edit size={16} /></button>
+                    <button onClick={() => { setEditingTC(tc); setTCForm({ name: tc.name, category_id: tc.category_id.toString(), types_id: tc.types_id ? tc.types_id.toString() : '' }); setShowTCModal(true); }} className="p-2 text-gray-400 hover:text-secondary"><Edit size={16} /></button>
                     <button onClick={() => handleDelete(`http://localhost:3001/categories/types/${tc.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </td>
                 </tr>
@@ -202,6 +210,13 @@ export default function AdminTypes() {
                 <select required value={tcForm.category_id} onChange={e => setTCForm({ ...tcForm, category_id: e.target.value })} className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none">
                   <option value="">Sélectionner une catégorie...</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-text-muted uppercase mb-1">Type de Vente</label>
+                <select value={tcForm.types_id} onChange={e => setTCForm({ ...tcForm, types_id: e.target.value })} className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none">
+                  <option value="">Sélectionner un type de vente...</option>
+                  {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </select>
               </div>
             </div>

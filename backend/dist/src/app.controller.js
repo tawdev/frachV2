@@ -35,6 +35,15 @@ let AppController = class AppController {
             path: `uploads/products/images/${file.filename}`
         };
     }
+    uploadCategoryFile(file) {
+        if (!file) {
+            throw new common_1.BadRequestException('Aucun fichier reçu');
+        }
+        return {
+            message: 'Fichier téléchargé avec succès',
+            path: `uploads/products/images/categories/${file.filename}`
+        };
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -66,6 +75,29 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "uploadFile", null);
+__decorate([
+    (0, common_1.Post)('upload/categories'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: (0, path_1.join)(process.cwd(), 'uploads', 'products', 'images', 'categories'),
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = (0, path_1.extname)(file.originalname).toLowerCase();
+                cb(null, `${uniqueSuffix}${ext}`);
+            }
+        }),
+        fileFilter: (req, file, cb) => {
+            if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp)$/)) {
+                return cb(new common_1.BadRequestException('Seules les images sont autorisées'), false);
+            }
+            cb(null, true);
+        }
+    })),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "uploadCategoryFile", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

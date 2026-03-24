@@ -1,0 +1,7 @@
+Bureau => uploads/products/images/categories/1766479490-office-decor-office-interior-design.jpeg
+Chambre => uploads/products/images/categories/1766479666-elevate-your-space-with-earthy-elegance-using.jpeg
+Cuisine => uploads/products/images/categories/1766479714-download-18.jpeg
+Décoration => uploads/products/images/categories/1766479822-modern-decor-ideas-for-real-modernists-everyday.jpeg
+placard => uploads/products/images/categories/1766479794-vous-cherchez-un-placard-qui-peut-non-seulement.jpeg
+Salle à manger => uploads/products/images/categories/1766479866-download-19.jpeg
+Salon => uploads/products/images/categories/1766479749-transform-any-space-with-this-luxury-modern-corner.jpeg

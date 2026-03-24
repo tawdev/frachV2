@@ -1,0 +1,7 @@
+Bureau => uploads/products/images/placeholder.jpg
+Chambre => uploads/products/images/placeholder.jpg
+Cuisine => uploads/products/images/placeholder.jpg
+Décoration => uploads/products/images/placeholder.jpg
+placard => uploads/products/images/placeholder.jpg
+Salle à manger => uploads/products/images/placeholder.jpg
+Salon => uploads/products/images/placeholder.jpg

@@ -1,28 +1,59 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import CategorySlider from '@/components/CategorySlider';
+import FeaturedProducts from '@/components/FeaturedProducts';
 
 export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Abstract Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-light to-secondary opacity-90 z-0" />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/hero/hero-bg.png"
+            alt="Premium Furniture Hero"
+            fill
+            priority
+            className="object-cover scale-105 animate-slow-zoom"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent z-10" />
+          <div className="absolute inset-0 bg-black/30 z-10" />
+        </div>
         
-        {/* Overlay subtle texture */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 z-0" />
+        <div className="container relative z-20 px-4 md:px-8">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary/20 backdrop-blur-md rounded-full text-secondary-light text-xs font-bold tracking-[0.2em] uppercase mb-6 animate-fade-in">
+              <span className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
+              Nouvelle Collection 2026
+            </div>
+            
+            <h1 className="text-5xl md:text-8xl font-bold text-white mb-6 leading-[1.1] animate-slide-up">
+              L'Art de <br />
+              <span className="font-serif italic text-secondary-light">Vivre Propre</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              Redéfinissez votre espace avec notre sélection exclusive de pièces artisanales, où le luxe rencontre le confort absolu.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              <Link href="/products" className="btn-secondary px-8 py-4 text-lg rounded-full group transition-all hover:scale-105 active:scale-95">
+                Découvrir la collection
+                <span className="ml-2 transition-transform group-hover:translate-x-1 inline-block">→</span>
+              </Link>
+              <Link href="/categories" className="px-8 py-4 text-white font-semibold hover:text-secondary-light transition-colors relative group">
+                Parcourir par styles
+                <span className="absolute bottom-3 left-8 right-8 h-px bg-white/30 group-hover:bg-secondary-light transition-colors" />
+              </Link>
+            </div>
+          </div>
+        </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-up">
-            <span className="font-serif italic text-secondary-light">Frach</span>dark
-          </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Découvrez notre collection exclusive de meubles modernes et élégants pour transformer votre intérieur.
-          </p>
-          <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
-            <Link href="/products" className="btn-secondary text-lg">
-              Découvrir nos collections
-            </Link>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce cursor-pointer">
+          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center p-1">
+            <div className="w-1 h-3 bg-secondary rounded-full" />
           </div>
         </div>
       </section>
@@ -40,37 +71,22 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Category 1 */}
-            <Link href="/products?category=Salon" className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-              <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80" alt="Salon" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-                <h4 className="text-2xl font-serif text-white mb-2">Salon</h4>
-                <p className="inline-block transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 text-gray-200 text-sm">Canapés, fauteuils & tables basses</p>
-              </div>
-            </Link>
-            
-            {/* Category 2 */}
-            <Link href="/products?category=Chambre" className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 md:-translate-y-8">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-              <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80" alt="Chambre" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-                <h4 className="text-2xl font-serif text-white mb-2">Chambre</h4>
-                <p className="inline-block transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 text-gray-200 text-sm">Lits, armoires & commodes</p>
-              </div>
-            </Link>
+          <CategorySlider />
+        </div>
+      </section>
 
-            {/* Category 3 */}
-            <Link href="/products?category=Salle+à+manger" className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-              <img src="https://images.unsplash.com/photo-1617098900591-3f90928e8c54?w=800&q=80" alt="Salle à Manger" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-                <h4 className="text-2xl font-serif text-white mb-2">Salle à Manger</h4>
-                <p className="inline-block transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 text-gray-200 text-sm">Tables & chaises de repas</p>
-              </div>
-            </Link>
+      {/* Featured Products Section */}
+      <section className="py-24 bg-background border-t border-gray-50">
+        <div className="container">
+          <div className="mb-16">
+            <h2 className="text-sm font-bold tracking-widest text-secondary uppercase mb-2">Collection</h2>
+            <h3 className="text-3xl md:text-5xl font-serif text-primary">Les nouveautés</h3>
+            <p className="text-text-muted mt-4 max-w-xl">
+              Découvrez nos dernières créations, alliant artisanat traditionnel et design contemporain.
+            </p>
           </div>
+          
+          <FeaturedProducts />
         </div>
       </section>
 

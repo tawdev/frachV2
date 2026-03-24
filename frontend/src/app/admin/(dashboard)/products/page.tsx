@@ -12,6 +12,7 @@ interface Product {
   category: string;
   stock: number;
   image?: string;
+  images?: { id: number; url: string; is_main: boolean }[];
   category_id?: number;
   type_category_id?: number;
   types_id?: number;
@@ -56,7 +57,8 @@ export default function AdminProducts() {
     category_id: '',
     type_category_id: '',
     types_id: '',
-    image: ''
+    image: '',
+    images: [] as string[]
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -128,7 +130,8 @@ export default function AdminProducts() {
         category_id: product.category_id?.toString() || '',
         type_category_id: product.type_category_id?.toString() || '',
         types_id: product.types_id?.toString() || '',
-        image: product.image || ''
+        image: product.image || '',
+        images: product.images?.map(img => img.url) || []
       });
     } else {
       setEditingProduct(null);
@@ -141,7 +144,8 @@ export default function AdminProducts() {
         category_id: '',
         type_category_id: '',
         types_id: '',
-        image: ''
+        image: '',
+        images: []
       });
     }
     setShowModal(true);
@@ -163,7 +167,8 @@ export default function AdminProducts() {
         stock: parseInt(formData.stock),
         category_id: formData.category_id ? parseInt(formData.category_id) : undefined,
         type_category_id: formData.type_category_id ? parseInt(formData.type_category_id) : undefined,
-        types_id: formData.types_id ? parseInt(formData.types_id) : undefined
+        types_id: formData.types_id ? parseInt(formData.types_id) : undefined,
+        images: formData.images
       };
 
       const response = await fetch(url, {
@@ -232,9 +237,13 @@ export default function AdminProducts() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                        {product.image ? (
+                        {product.image || (product.images && product.images.length > 0) ? (
                           <img 
-                            src={product.image.startsWith('http') ? product.image : `http://localhost:3001${product.image.startsWith('/') ? '' : '/'}${product.image}`} 
+                            src={
+                              (product.image || (product.images?.[0]?.url))?.startsWith('http') 
+                                ? (product.image || product.images?.[0]?.url) 
+                                : `http://localhost:3001${(product.image || product.images?.[0]?.url)?.startsWith('/') ? '' : '/'}${product.image || product.images?.[0]?.url}`
+                            } 
                             alt={product.name} 
                             className="w-full h-full object-cover" 
                           />
@@ -375,48 +384,86 @@ export default function AdminProducts() {
                    </select>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-bold text-text-muted uppercase mb-1">Image</label>
+                  <label className="block text-xs font-bold text-text-muted uppercase mb-3">Images du Produit</label>
+                  
+                  {/* Image List / Previews */}
+                  <div className="grid grid-cols-4 gap-3 mb-4">
+                    {formData.images.map((img, idx) => (
+                      <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-100 group">
+                        <img 
+                          src={img.startsWith('http') ? img : `http://localhost:3001${img.startsWith('/') ? '' : '/'}${img}`} 
+                          className="w-full h-full object-cover" 
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => setFormData({...formData, images: formData.images.filter((_, i) => i !== idx)})}
+                          className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X size={12} />
+                        </button>
+                        {idx === 0 && <span className="absolute bottom-1 left-1 bg-secondary text-white text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase">Main</span>}
+                      </div>
+                    ))}
+                    
+                    {/* Add Button */}
+                    <div className="relative aspect-square rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-text-muted hover:border-secondary hover:text-secondary transition-all cursor-pointer overflow-hidden">
+                      <input 
+                        type="file" 
+                        multiple
+                        accept="image/*"
+                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                        onChange={async (e) => {
+                          const files = e.target.files;
+                          if (files && files.length > 0) {
+                            const newImages = [...formData.images];
+                            for (let i = 0; i < files.length; i++) {
+                              const data = new FormData();
+                              data.append('file', files[i]);
+                              try {
+                                const res = await fetch('http://localhost:3001/upload', {
+                                  method: 'POST',
+                                  body: data,
+                                });
+                                if (res.ok) {
+                                  const uploaded = await res.json();
+                                  newImages.push(uploaded.path);
+                                  // Set main image if not set
+                                  if (!formData.image) {
+                                    setFormData(prev => ({...prev, image: uploaded.path}));
+                                  }
+                                }
+                              } catch (err) { console.error(err); }
+                            }
+                            setFormData(prev => ({...prev, images: newImages}));
+                          }
+                        }}
+                      />
+                      <Plus size={24} />
+                      <span className="text-[10px] font-bold uppercase mt-1">Ajouter</span>
+                    </div>
+                  </div>
+
+                  {/* Manual URL Input */}
                   <div className="flex items-center gap-4">
                     <div className="flex-1">
                       <input 
                         type="text"
-                        placeholder="URL de l'image"
-                        value={formData.image}
-                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                        className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary outline-none transition-all"
-                      />
-                    </div>
-                    <div className="relative group">
-                      <input 
-                        type="file" 
-                        accept="image/jpeg,image/png,image/gif,image/webp"
-                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                             const data = new FormData();
-                             data.append('file', file);
-                             try {
-                               const res = await fetch('http://localhost:3001/upload', {
-                                 method: 'POST',
-                                 body: data,
-                               });
-                               if (!res.ok) throw new Error('Upload failed');
-                               const uploaded = await res.json();
-                               setFormData({...formData, image: uploaded.path});
-                             } catch (err) {
-                               console.error(err);
-                               alert("Erreur lors du téléchargement de l'image");
-                             }
+                        placeholder="Ajouter par URL"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const val = (e.currentTarget as HTMLInputElement).value;
+                            if (val) {
+                              setFormData({...formData, images: [...formData.images, val]});
+                              e.currentTarget.value = '';
+                            }
                           }
                         }}
+                        className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary outline-none transition-all text-sm"
                       />
-                      <button type="button" className="px-4 py-3 bg-gray-100 text-text-muted rounded-xl group-hover:bg-gray-200 transition-all text-sm font-medium">
-                        Choisir un fichier
-                      </button>
                     </div>
                   </div>
-                  <p className="text-[10px] text-text-muted mt-2">Formats acceptés : JPG, PNG, GIF (max 5MB)</p>
+                  <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wider font-bold opacity-60">Glissez-déposez ou collez des URLs. La première est l'image principale.</p>
                 </div>
               </div>
               

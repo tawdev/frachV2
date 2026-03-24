@@ -25,10 +25,23 @@ let CategoriesService = class CategoriesService {
             orderBy: { name: 'asc' }
         });
     }
+    findOne(id) {
+        return this.prisma.category.findUnique({ where: { id } });
+    }
+    create(data) {
+        return this.prisma.category.create({ data });
+    }
+    update(id, data) {
+        return this.prisma.category.update({ where: { id }, data });
+    }
+    remove(id) {
+        return this.prisma.category.delete({ where: { id } });
+    }
     findTypes() {
         return this.prisma.typesCategory.findMany({
             include: {
                 categories: true,
+                types: true,
             },
             orderBy: { name: 'asc' }
         });
@@ -37,6 +50,24 @@ let CategoriesService = class CategoriesService {
         return this.prisma.type.findMany({
             orderBy: { name: 'asc' }
         });
+    }
+    createTypeBase(data) {
+        return this.prisma.type.create({ data });
+    }
+    updateTypeBase(id, data) {
+        return this.prisma.type.update({ where: { id }, data });
+    }
+    deleteTypeBase(id) {
+        return this.prisma.type.delete({ where: { id } });
+    }
+    createType(data) {
+        return this.prisma.typesCategory.create({ data });
+    }
+    updateType(id, data) {
+        return this.prisma.typesCategory.update({ where: { id }, data });
+    }
+    deleteType(id) {
+        return this.prisma.typesCategory.delete({ where: { id } });
     }
 };
 exports.CategoriesService = CategoriesService;

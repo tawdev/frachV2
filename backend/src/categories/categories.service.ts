@@ -14,10 +14,27 @@ export class CategoriesService {
     });
   }
 
+  findOne(id: number) {
+    return this.prisma.category.findUnique({ where: { id } });
+  }
+
+  create(data: any) {
+    return this.prisma.category.create({ data });
+  }
+
+  update(id: number, data: any) {
+    return this.prisma.category.update({ where: { id }, data });
+  }
+
+  remove(id: number) {
+    return this.prisma.category.delete({ where: { id } });
+  }
+
   findTypes() {
     return this.prisma.typesCategory.findMany({
       include: {
         categories: true,
+        types: true,
       },
       orderBy: { name: 'asc' }
     });
@@ -27,5 +44,29 @@ export class CategoriesService {
     return this.prisma.type.findMany({
       orderBy: { name: 'asc' }
     });
+  }
+
+  createTypeBase(data: any) {
+    return this.prisma.type.create({ data });
+  }
+
+  updateTypeBase(id: number, data: any) {
+    return this.prisma.type.update({ where: { id }, data });
+  }
+
+  deleteTypeBase(id: number) {
+    return this.prisma.type.delete({ where: { id } });
+  }
+
+  createType(data: any) {
+    return this.prisma.typesCategory.create({ data });
+  }
+
+  updateType(id: number, data: any) {
+    return this.prisma.typesCategory.update({ where: { id }, data });
+  }
+
+  deleteType(id: number) {
+    return this.prisma.typesCategory.delete({ where: { id } });
   }
 }

@@ -46,7 +46,11 @@ let OrdersService = class OrdersService {
     findAll() {
         return this.prisma.order.findMany({
             include: {
-                order_items: true,
+                order_items: {
+                    include: {
+                        product: true,
+                    },
+                },
             },
             orderBy: { created_at: 'desc' }
         });
@@ -55,8 +59,62 @@ let OrdersService = class OrdersService {
         return this.prisma.order.findUnique({
             where: { id },
             include: {
-                order_items: true,
+                order_items: {
+                    include: {
+                        product: true,
+                    },
+                },
             }
+        });
+    }
+    async update(id, updateData) {
+        try {
+            return await this.prisma.order.update({
+                where: { id },
+                data: updateData,
+            });
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException('Failed to update order');
+        }
+    }
+    async remove(id) {
+        try {
+            return await this.prisma.order.delete({
+                where: { id },
+            });
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException('Failed to delete order');
+        }
+    }
+    async bestProductsByMonth() {
+        const items = await this.prisma.orderItem.findMany({
+            include: {
+                order: { select: { created_at: true } },
+            },
+            orderBy: { order: { created_at: 'desc' } },
+        });
+        const monthMap = {};
+        for (const item of items) {
+            const d = new Date(item.order.created_at);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            if (!monthMap[key])
+                monthMap[key] = {};
+            if (!monthMap[key][item.product_name]) {
+                monthMap[key][item.product_name] = { name: item.product_name, qty: 0, revenue: 0 };
+            }
+            monthMap[key][item.product_name].qty += item.quantity;
+            monthMap[key][item.product_name].revenue += Number(item.price) * item.quantity;
+        }
+        return Object.entries(monthMap)
+            .sort(([a], [b]) => b.localeCompare(a))
+            .slice(0, 6)
+            .map(([month, products]) => {
+            const top = Object.values(products).sort((a, b) => b.qty - a.qty)[0];
+            const [year, m] = month.split('-');
+            const label = new Date(+year, +m - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            return { month, label, product: top.name, qty: top.qty, revenue: top.revenue };
         });
     }
 };
