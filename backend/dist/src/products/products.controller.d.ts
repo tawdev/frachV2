@@ -1,0 +1,176 @@
+import { ProductsService } from './products.service';
+export declare class ProductsController {
+    private readonly productsService;
+    constructor(productsService: ProductsService);
+    findAll(category?: string, type_category?: string): Promise<({
+        categories: {
+            id: number;
+            name: string;
+            description: string | null;
+            image: string | null;
+            created_at: Date;
+            updated_at: Date;
+        } | null;
+        types_categories: {
+            id: number;
+            name: string;
+            image: string | null;
+            created_at: Date;
+            updated_at: Date;
+            category_id: number;
+            types_id: number | null;
+        } | null;
+    } & {
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    })[]>;
+    getFeatured(): Promise<({
+        categories: {
+            id: number;
+            name: string;
+            description: string | null;
+            image: string | null;
+            created_at: Date;
+            updated_at: Date;
+        } | null;
+    } & {
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    })[]>;
+    findOne(id: string): Promise<{
+        categories: {
+            id: number;
+            name: string;
+            description: string | null;
+            image: string | null;
+            created_at: Date;
+            updated_at: Date;
+        } | null;
+        types_categories: {
+            id: number;
+            name: string;
+            image: string | null;
+            created_at: Date;
+            updated_at: Date;
+            category_id: number;
+            types_id: number | null;
+        } | null;
+    } & {
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    }>;
+    create(data: any): Promise<{
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    }>;
+    update(id: string, data: any): Promise<{
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    }>;
+    remove(id: string): Promise<{
+        id: number;
+        name: string;
+        description: string | null;
+        price: import("@prisma/client-runtime-utils").Decimal;
+        image: string | null;
+        category: string;
+        stock: number | null;
+        created_at: Date;
+        updated_at: Date;
+        category_id: number | null;
+        type_category_id: number | null;
+        types_categories_items_id: number | null;
+        types_id: number | null;
+        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        longueur: import("@prisma/client-runtime-utils").Decimal | null;
+        largeur: import("@prisma/client-runtime-utils").Decimal | null;
+        max_length: import("@prisma/client-runtime-utils").Decimal | null;
+        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    }>;
+}

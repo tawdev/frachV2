@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique @db.VarChar(100)
+  password   String   @db.VarChar(255)
+  email      String?  @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+
+  @@map("admins")
+}
+
+model Category {
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(100)
+  description      String?           @db.Text
+  image            String?           @db.VarChar(255)
+  created_at       DateTime          @default(now()) @db.Timestamp(0)
+  updated_at       DateTime          @default(now()) @db.Timestamp(0)
+  products         Product[]
+  types_categories TypesCategory[]
+
+  @@map("categories")
+}
+
+model ContactMessage {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  phone       String?  @db.VarChar(50)
+  message     String   @db.Text
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  read_status Boolean? @default(false)
+
+  @@map("contact_messages")
+}
+
+model Order {
+  id               Int         @id @default(autoincrement())
+  customer_name    String      @db.VarChar(255)
+  customer_email   String      @db.VarChar(255)
+  customer_phone   String?     @db.VarChar(50)
+  customer_address String      @db.Text
+  total_amount     Decimal     @db.Decimal(10, 2)
+  status           String?     @default("En attente")
+  created_at       DateTime    @default(now()) @db.Timestamp(0)
+  updated_at       DateTime    @default(now()) @db.Timestamp(0)
+  order_items      OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id           Int     @id @default(autoincrement())
+  order_id     Int
+  product_id   Int
+  product_name String  @db.VarChar(255)
+  quantity     Int
+  price        Decimal @db.Decimal(10, 2)
+  order        Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product      Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([order_id], map: "order_id")
+  @@index([product_id], map: "product_id")
+  @@map("order_items")
+}
+
+model Product {
+  id                        Int                   @id @default(autoincrement())
+  name                      String                @db.VarChar(255)
+  description               String?               @db.Text
+  price                     Decimal               @db.Decimal(10, 2)
+  image                     String?               @db.VarChar(255)
+  category                  String                @db.VarChar(100)
+  stock                     Int?                  @default(0)
+  created_at                DateTime              @default(now()) @db.Timestamp(0)
+  updated_at                DateTime              @default(now()) @db.Timestamp(0)
+  category_id               Int?
+  type_category_id          Int?
+  types_categories_items_id Int?
+  types_id                  Int?
+  max_longueur              Decimal?              @db.Decimal(10, 2)
+  max_largeur               Decimal?              @db.Decimal(10, 2)
+  longueur                  Decimal?              @db.Decimal(10, 2)
+  largeur                   Decimal?              @db.Decimal(10, 2)
+  max_length                Decimal?              @db.Decimal(10, 2)
+  max_width                 Decimal?              @db.Decimal(10, 2)
+  order_items               OrderItem[]
+  product_embeddings        ProductEmbedding?
+  types_categories_items    TypesCategoriesItem?  @relation(fields: [types_categories_items_id], references: [id])
+  categories                Category?             @relation(fields: [category_id], references: [id])
+  types_categories          TypesCategory?        @relation(fields: [type_category_id], references: [id])
+  types                     Type?                 @relation(fields: [types_id], references: [id])
+
+  @@index([category_id], map: "idx_category_id")
+  @@index([type_category_id], map: "idx_type_category_id")
+  @@index([types_id], map: "idx_types_id")
+  @@index([types_categories_items_id], map: "fk_product_item")
+  @@map("products")
+}
+
+model ProductEmbedding {
+  id            Int      @id @default(autoincrement())
+  product_id    Int      @unique(map: "unique_product")
+  vector_path   String   @db.VarChar(255)
+  vector_dim    Int?     @default(1536)
+  model_version String?  @default("efficientnet-b3") @db.VarChar(50)
+  created_at    DateTime @default(now()) @db.Timestamp(0)
+  updated_at    DateTime @default(now()) @db.Timestamp(0)
+  products      Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([product_id], map: "idx_product_id")
+  @@map("product_embeddings")
+}
+
+model Type {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique @db.VarChar(255)
+  created_at       DateTime           @default(now()) @db.Timestamp(0)
+  updated_at       DateTime           @default(now()) @db.Timestamp(0)
+  products         Product[]
+  types_categories TypesCategory[]
+
+  @@map("types")
+}
+
+model TypesCategory {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @db.VarChar(255)
+  image                  String?                  @db.VarChar(255)
+  category_id            Int
+  types_id               Int?
+  created_at             DateTime                 @default(now()) @db.Timestamp(0)
+  updated_at             DateTime                 @default(now()) @db.Timestamp(0)
+  products               Product[]
+  categories             Category                 @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  types                  Type?                    @relation(fields: [types_id], references: [id])
+  types_categories_items TypesCategoriesItem[]
+
+  @@index([category_id], map: "idx_category_id")
+  @@index([types_id], map: "idx_types_id")
+  @@map("types_categories")
+}
+
+model TypesCategoriesItem {
+  id                  Int               @id @default(autoincrement())
+  types_categories_id Int
+  name                String            @db.VarChar(255)
+  image               String?           @db.VarChar(255)
+  created_at          DateTime          @default(now()) @db.Timestamp(0)
+  updated_at          DateTime          @default(now()) @db.Timestamp(0)
+  products            Product[]
+  types_categories    TypesCategory     @relation(fields: [types_categories_id], references: [id], onDelete: Cascade)
+
+  @@index([types_categories_id], map: "fk_types_categories_items")
+  @@map("types_categories_items")
+}
+
+model VisualSearchHistory {
+  id                Int      @id @default(autoincrement())
+  user_ip           String?  @db.VarChar(45)
+  detected_category String?  @db.VarChar(100)
+  detected_objects  String?  @db.Text
+  results_count     Int?     @default(0)
+  search_time_ms    Int?
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([created_at], map: "idx_created_at")
+  @@index([detected_category], map: "idx_category")
+  @@map("visual_search_history")
+}
+
+model VisualSearchMetric {
+  id                  Int      @id @default(autoincrement())
+  date                DateTime @unique(map: "unique_date") @db.Date
+  total_searches      Int?     @default(0)
+  successful_searches Int?     @default(0)
+  avg_search_time_ms  Decimal? @db.Decimal(10, 2)
+  avg_results_count   Decimal? @db.Decimal(10, 2)
+  created_at          DateTime @default(now()) @db.Timestamp(0)
+
+  @@map("visual_search_metrics")
+}

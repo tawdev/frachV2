@@ -1,82 +1,147 @@
-"use client";
-import React from 'react';
-import Navbar from '@/components/layout/Navbar';
-import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
+import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 
-const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, total } = useCart();
+export default function CartPage() {
+  // Placeholder cart data
+  const cartItems = [
+    {
+      id: 1,
+      name: 'Canapé Modena 3 Places',
+      category: 'Salon',
+      price: 12500,
+      quantity: 1,
+      image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80',
+    },
+    {
+      id: 2,
+      name: 'Fauteuil Accent Velours',
+      category: 'Salon',
+      price: 4200,
+      quantity: 2,
+      image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400&q=80',
+    }
+  ];
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const deliveryFee = 500; // Placeholder
+  const total = subtotal + deliveryFee;
 
   return (
-    <div className="min-h-screen bg-bg-primary pt-32 pb-24">
-      <Navbar />
-      
+    <div className="bg-background min-h-screen py-10">
       <div className="container">
-        <h1 className="text-5xl font-heading mb-12 tracking-tight">Votre <span className="italic">Panier.</span></h1>
+        <h1 className="text-4xl font-serif text-primary mb-10 text-center animate-slide-up">Votre Panier</h1>
 
-        {cart.length === 0 ? (
-          <div className="py-20 text-center glass rounded-3xl">
-             <p className="text-text-secondary mb-8">Votre panier est actuellement vide.</p>
-             <Link href="/products" className="bg-accent-gold text-bg-primary px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">
-                Découvrir nos produits
-             </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 flex flex-col gap-6">
-              {cart.map((item) => (
-                <div key={item.id} className="glass p-6 rounded-2xl flex items-center gap-6">
-                  <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-heading mb-1">{item.name}</h3>
-                    {item.dimensions && (
-                      <p className="text-[10px] text-text-muted uppercase tracking-widest mb-2">
-                        {item.dimensions.length}x{item.dimensions.width} cm
-                      </p>
-                    )}
-                    <p className="text-accent-gold font-bold">{item.price.toLocaleString()} DH</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center border border-white/10 rounded-full px-3 py-1">
-                       <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1 hover:text-accent-gold">-</button>
-                       <span className="w-8 text-center text-xs font-bold">{item.quantity}</span>
-                       <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1 hover:text-accent-gold">+</button>
+        {cartItems.length > 0 ? (
+          <div className="flex flex-col lg:flex-row gap-12">
+            
+            {/* Cart Items */}
+            <div className="lg:w-2/3 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div className="hidden sm:grid grid-cols-12 gap-4 pb-4 border-b border-gray-100 text-sm font-medium text-text-muted">
+                  <div className="col-span-6">Produit</div>
+                  <div className="col-span-2 text-center">Prix</div>
+                  <div className="col-span-2 text-center">Quantité</div>
+                  <div className="col-span-2 text-right">Total</div>
+                </div>
+
+                <div className="divide-y divide-gray-100">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="py-6 flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center">
+                      <div className="col-span-6 w-full flex items-center gap-4">
+                        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                          <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-text-muted uppercase tracking-wider mb-1">{item.category}</p>
+                          <Link href={`/products/${item.id}`} className="font-serif text-lg text-primary hover:text-secondary transition-colors line-clamp-2">
+                            {item.name}
+                          </Link>
+                          <button className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1 mt-2 transition-colors">
+                            <Trash2 size={14} /> <span className="hidden sm:inline">Retirer</span>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="col-span-2 w-full sm:w-auto flex justify-between sm:block text-center text-text font-medium text-sm">
+                        <span className="sm:hidden text-text-muted">Prix:</span>
+                        {item.price.toLocaleString()} DHS
+                      </div>
+                      
+                      <div className="col-span-2 w-full sm:w-auto flex justify-center">
+                        <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50">
+                          <button className="p-2 text-text-muted hover:text-primary transition-colors"><Minus size={14} /></button>
+                          <span className="w-8 flex items-center justify-center font-medium text-sm">{item.quantity}</span>
+                          <button className="p-2 text-text-muted hover:text-primary transition-colors"><Plus size={14} /></button>
+                        </div>
+                      </div>
+                      
+                      <div className="col-span-2 w-full sm:w-auto flex justify-between sm:block text-right text-primary font-bold">
+                        <span className="sm:hidden text-text-muted font-normal text-sm">Total:</span>
+                        {(item.price * item.quantity).toLocaleString()} DHS
+                      </div>
                     </div>
-                    <button onClick={() => removeFromCart(item.id)} className="p-2 text-text-muted hover:text-red-500 transition-colors">
-                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            <div className="lg:col-span-1">
-              <div className="glass p-8 rounded-3xl sticky top-32">
-                <h2 className="text-2xl font-heading mb-8">Récapitulatif</h2>
-                <div className="flex justify-between items-center mb-4 text-text-secondary font-light">
-                  <span>Sous-total</span>
-                  <span>{total.toLocaleString()} DH</span>
-                </div>
-                <div className="flex justify-between items-center mb-8 text-text-secondary font-light">
-                  <span>Livraison</span>
-                  <span className="text-xs uppercase tracking-widest font-bold text-accent-gold">Gratuite</span>
-                </div>
-                <div className="border-t border-white/5 pt-6 flex justify-between items-center mb-10">
-                  <span className="text-lg font-heading">Total</span>
-                  <span className="text-2xl font-bold text-accent-gold">{total.toLocaleString()} DH</span>
-                </div>
-                <Link href="/checkout" className="w-full bg-accent-gold hover:bg-accent-gold-dark text-bg-primary py-5 rounded-full font-bold uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center">
-                  Passer à la commande
+              </div>
+              <div className="flex justify-between items-center">
+                <Link href="/products" className="text-text-muted hover:text-primary transition-colors flex items-center gap-2 text-sm">
+                  Continuer vos achats
                 </Link>
               </div>
             </div>
+
+            {/* Order Summary */}
+            <div className="lg:w-1/3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 sticky top-28">
+                <h2 className="text-2xl font-serif text-primary mb-6">Résumé de la commande</h2>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex justify-between text-text-muted">
+                    <span>Sous-total ({cartItems.length} articles)</span>
+                    <span className="font-medium text-text">{subtotal.toLocaleString()} DHS</span>
+                  </div>
+                  <div className="flex justify-between text-text-muted">
+                    <span>Frais de livraison estimés</span>
+                    <span className="font-medium text-text">{deliveryFee.toLocaleString()} DHS</span>
+                  </div>
+                </div>
+                
+                <div className="border-t border-gray-100 pt-6 mb-8">
+                  <div className="flex justify-between items-end">
+                    <span className="text-lg font-serif tracking-wide text-primary">Total</span>
+                    <div className="text-right">
+                      <span className="text-3xl font-bold text-primary">{total.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-text-muted block mt-1">DHS</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-text-muted mt-2 text-right">Taxes incluses</p>
+                </div>
+                
+                <Link href="/checkout" className="btn-primary w-full py-4 text-center justify-center gap-2 group">
+                  Passer à la caisse
+                  <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                </Link>
+                
+                <div className="mt-6 flex items-center justify-center gap-4 border-t border-gray-100 pt-6 px-4">
+                   <p className="text-xs text-center text-text-muted">Paiement 100% sécurisé et livraison garantie partout au Maroc.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        ) : (
+          <div className="text-center py-20 animate-fade-in">
+            <div className="w-24 h-24 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Trash2 size={40} />
+            </div>
+            <h2 className="text-2xl font-serif text-primary mb-4">Votre panier est vide</h2>
+            <p className="text-text-muted mb-8">Vous n'avez pas encore ajouté d'articles à votre panier.</p>
+            <Link href="/products" className="btn-primary">
+              Découvrir nos collections
+            </Link>
           </div>
         )}
       </div>
     </div>
   );
-};
-
-export default CartPage;
+}
