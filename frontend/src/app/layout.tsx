@@ -17,8 +17,7 @@ export const metadata: Metadata = {
   description: 'Découvrez notre collection exclusive de meubles modernes et élégants pour transformer votre intérieur. Qualité premium, livraison rapide partout au Maroc.',
 };
 
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import ClientLayout from '@/components/ClientLayout';
 
 export default function RootLayout({
   children,
@@ -28,13 +27,9 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased text-text bg-background">
-        <main className="min-h-screen flex flex-col">
-          <Navbar />
-          <div className="flex-1 mt-20">
-            {children}
-          </div>
-          <Footer />
-        </main>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

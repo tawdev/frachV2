@@ -8,9 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const path_1 = require("path");
 const app_service_1 = require("./app.service");
 let AppController = class AppController {
     appService;
@@ -20,6 +26,15 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
+    uploadFile(file) {
+        if (!file) {
+            throw new common_1.BadRequestException('Aucun fichier reçu');
+        }
+        return {
+            message: 'Fichier téléchargé avec succès',
+            path: `uploads/products/images/${file.filename}`
+        };
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -28,6 +43,29 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: (0, path_1.join)(process.cwd(), 'uploads', 'products', 'images'),
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = (0, path_1.extname)(file.originalname).toLowerCase();
+                cb(null, `${uniqueSuffix}${ext}`);
+            }
+        }),
+        fileFilter: (req, file, cb) => {
+            if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp)$/)) {
+                return cb(new common_1.BadRequestException('Seules les images sont autorisées'), false);
+            }
+            cb(null, true);
+        }
+    })),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "uploadFile", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

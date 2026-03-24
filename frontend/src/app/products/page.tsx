@@ -66,7 +66,11 @@ export default async function ProductsPage({
           <main className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {products.map((product: any, index: number) => {
-                const imageSrc = product.image ? (product.image.startsWith('http') ? product.image : (product.image.startsWith('/') ? product.image : `/${product.image}`)) : '/images/placeholder.jpg';
+                const imageSrc = product.image 
+                  ? (product.image.startsWith('http') 
+                    ? product.image 
+                    : `http://localhost:3001${product.image.startsWith('/') ? '' : '/'}${product.image}`) 
+                  : '/images/placeholder.jpg';
                 
                 return (
                   <div 

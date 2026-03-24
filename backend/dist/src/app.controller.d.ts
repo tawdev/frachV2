@@ -3,4 +3,8 @@ export declare class AppController {
     private readonly appService;
     constructor(appService: AppService);
     getHello(): string;
+    uploadFile(file: Express.Multer.File): {
+        message: string;
+        path: string;
+    };
 }

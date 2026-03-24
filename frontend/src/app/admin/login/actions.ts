@@ -45,3 +45,8 @@ export async function loginAdmin(prevState: any, formData: FormData) {
   // Redirect on success
   redirect('/admin');
 }
+
+export async function logoutAdmin() {
+  cookies().delete('admin_token');
+  redirect('/admin/login');
+}
