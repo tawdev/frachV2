@@ -1,4 +1,5 @@
 import { Sparkles, Award, ShieldCheck, Heart, Star } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AboutPage() {
   return (
@@ -7,10 +8,13 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="relative h-[65vh] rounded-[3rem] overflow-hidden mb-24 shadow-2xl animate-fade-in group border border-gray-100/20">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/60 to-transparent z-10" />
-          <img 
+          <Image 
             src="/images/about/hero.png" 
             alt="L'Atelier Frachdark" 
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms] ease-out" 
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover group-hover:scale-110 transition-transform duration-[2000ms] ease-out" 
           />
           <div className="relative z-20 h-full flex flex-col justify-center px-10 md:px-24 max-w-4xl">
             <div className="inline-flex items-center gap-2 mb-6 bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 self-start animate-slide-up">
@@ -58,7 +62,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-6 relative z-10">
               <div className="space-y-6">
                 <div className="relative h-80 rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white/20">
-                  <img src="/images/about/detail.png" alt="Savoir-faire artisanal" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/about/detail.png" alt="Savoir-faire artisanal" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500" />
                 </div>
                 <div className="bg-primary p-12 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
@@ -75,7 +79,7 @@ export default function AboutPage() {
                   <p className="text-xs font-bold text-text-muted uppercase tracking-[0.2em]">Atelier Local</p>
                 </div>
                 <div className="relative h-80 rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white/20">
-                  <img src="/images/about/minimal.png" alt="Intérieur Prestige" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/about/minimal.png" alt="Intérieur Prestige" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-secondary/10 group-hover:bg-transparent transition-colors duration-500" />
                 </div>
               </div>

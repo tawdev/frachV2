@@ -1,50 +1,28 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
-export default function CategoriesPage() {
-  const categories = [
-    {
-      id: 1,
-      name: 'Salon',
-      description: 'L\'art de recevoir avec élégance. Découvrez nos canapés, fauteuils et tables basses.',
-      image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1000&q=80',
-      itemCount: 45
-    },
-    {
-      id: 2,
-      name: 'Chambre',
-      description: 'Créez votre sanctuaire de repos. Lits, commodes et armoires au design soigné.',
-      image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1000&q=80',
-      itemCount: 32
-    },
-    {
-      id: 3,
-      name: 'Salle à manger',
-      description: 'Des moments inoubliables partagés autour de tables et chaises raffinées.',
-      image: 'https://images.unsplash.com/photo-1617098900591-3f90928e8c54?w=1000&q=80',
-      itemCount: 28
-    },
-    {
-      id: 4,
-      name: 'Bureau',
-      description: 'Un espace de travail inspirant alliant productivité et esthétique premium.',
-      image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1000&q=80',
-      itemCount: 15
-    },
-    {
-      id: 5,
-      name: 'Décoration',
-      description: 'La touche finale pour parfaire votre intérieur avec nos objets de caractère.',
-      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1000&q=80',
-      itemCount: 86
-    },
-    {
-      id: 6,
-      name: 'Rangement',
-      description: 'Optimisez votre espace avec nos solutions de rangement intelligentes et élégantes.',
-      image: 'https://images.unsplash.com/photo-1595514535315-2207b5d1db92?w=1000&q=80',
-      itemCount: 22
-    }
-  ];
+interface Category {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  _count?: { products: number };
+}
+
+async function getCategories(): Promise<Category[]> {
+  try {
+    const res = await fetch('http://localhost:3001/categories', { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+export default async function CategoriesPage() {
+  const categories = await getCategories();
+  const backendUrl = 'http://localhost:3001';
 
   return (
     <div className="bg-background min-h-screen py-10">
@@ -65,10 +43,12 @@ export default function CategoriesPage() {
               {/* Image Section */}
               <Link href={`/products?category=${encodeURIComponent(category.name)}`} className="w-full md:w-3/5 relative h-80 md:h-[500px] rounded-3xl overflow-hidden shadow-lg animate-slide-up hover:shadow-2xl transition-all duration-500" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                <img 
-                  src={category.image} 
+                <Image 
+                  src={category.image ? (category.image.startsWith('http') ? category.image : `${backendUrl}/${category.image}`) : '/images/placeholder.jpg'} 
                   alt={category.name} 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 60vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
                 />
               </Link>
 
@@ -79,7 +59,7 @@ export default function CategoriesPage() {
                 </h2>
                 <div className="flex items-center gap-4 mb-6">
                   <span className="w-12 h-[1px] bg-secondary hidden md:block"></span>
-                  <span className="text-sm font-medium text-text-muted uppercase tracking-widest">{category.itemCount} articles</span>
+                  <span className="text-sm font-medium text-text-muted uppercase tracking-widest">{category._count?.products || 0} articles</span>
                 </div>
                 <p className="text-text-muted leading-relaxed mb-8 text-lg">
                   {category.description}

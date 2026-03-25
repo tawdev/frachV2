@@ -1,6 +1,3 @@
-'use client';
-
-import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -11,32 +8,17 @@ interface Category {
   description: string;
 }
 
-export default function CategorySlider() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
+export default function CategorySlider({ initialCategories }: { initialCategories: Category[] }) {
+  if (!initialCategories || initialCategories.length === 0) return null;
 
-  useEffect(() => {
-    fetch('http://localhost:3001/categories')
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          // Double for -50% infinite loop
-          setCategories([...data, ...data]);
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading || categories.length === 0) return null;
-
+  const displayCategories = [...initialCategories, ...initialCategories];
   const backendUrl = 'http://localhost:3001';
 
   return (
     <div className="relative overflow-hidden group">
       {/* Infinite Scroll Container */}
       <div className="flex animate-infinite-scroll hover:[animation-play-state:paused] whitespace-nowrap py-10">
-        {categories.map((cat, idx) => (
+        {displayCategories.map((cat, idx) => (
           <Link 
             key={`${cat.id}-${idx}`}
             href={`/products?category=${cat.name}`}
@@ -46,10 +28,12 @@ export default function CategorySlider() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 transition-opacity duration-500 group-hover/card:opacity-80" />
             
             {/* Image */}
-            <img 
+            <Image 
               src={cat.image.startsWith('http') ? cat.image : `${backendUrl}/${cat.image}`}
               alt={cat.name}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+              fill
+              sizes="(max-width: 768px) 100vw, 320px"
+              className="object-cover transition-transform duration-700 group-hover/card:scale-110"
             />
             
             {/* Content */}

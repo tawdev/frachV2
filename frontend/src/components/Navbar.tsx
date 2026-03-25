@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -10,16 +10,25 @@ import GlobalSearch from './GlobalSearch';
 export default function Navbar() {
   const pathname = usePathname();
   const { getItemCount } = useCart();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   if (pathname.startsWith('/admin')) return null;
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+    <>
+    <header className="fixed top-0 w-full z-[60] bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
       <div className="container h-20 flex items-center justify-between">
         {/* Mobile Menu Button */}
-        <button className="md:hidden p-2 text-primary hover:text-black">
-          <Menu size={24} />
+        <button 
+          className="md:hidden p-2 text-primary hover:text-secondary transition-colors z-[60] relative"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {/* Logo */}
@@ -51,5 +60,19 @@ export default function Navbar() {
         </div>
       </div>
     </header>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-white bg-opacity-95 backdrop-blur-xl z-[55] transition-all duration-500 flex flex-col pt-32 pb-10 px-6 overflow-y-auto md:hidden ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+      >
+        <nav className="flex flex-col items-center gap-8 text-3xl font-serif text-primary w-full">
+          <Link href="/" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Accueil</Link>
+          <Link href="/products" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Produits</Link>
+          <Link href="/categories" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Catégories</Link>
+          <Link href="/about" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>À Propos</Link>
+          <Link href="/contact" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+        </nav>
+      </div>
+    </>
   );
 }

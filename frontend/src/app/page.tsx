@@ -3,7 +3,34 @@ import Link from 'next/link';
 import CategorySlider from '@/components/CategorySlider';
 import FeaturedProducts from '@/components/FeaturedProducts';
 
-export default function Home() {
+async function getCategories() {
+  try {
+    const res = await fetch('http://localhost:3001/categories', { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+async function getProducts() {
+  try {
+    const res = await fetch('http://localhost:3001/products', { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [categories, products] = await Promise.all([
+    getCategories(),
+    getProducts()
+  ]);
+
   return (
     <div>
       {/* Hero Section */}
@@ -68,7 +95,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <CategorySlider />
+          <CategorySlider initialCategories={categories} />
         </div>
       </section>
 
@@ -83,7 +110,7 @@ export default function Home() {
             </p>
           </div>
 
-          <FeaturedProducts />
+          <FeaturedProducts initialProducts={products} />
         </div>
       </section>
 
@@ -116,7 +143,14 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative h-[500px] w-full glass-card p-2 rounded-3xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-              <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" alt="Design Feature" className="w-full h-full object-cover rounded-2xl" />
+              <Image 
+                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" 
+                alt="Design Feature Frachdark" 
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover rounded-2xl" 
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

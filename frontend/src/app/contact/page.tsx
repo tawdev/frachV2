@@ -1,4 +1,5 @@
 import { MapPin, Phone, Mail, Clock, Send, Instagram, Facebook, Linkedin, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ContactPage() {
   return (
@@ -7,10 +8,13 @@ export default function ContactPage() {
         {/* Cinematic Hero */}
         <section className="relative h-[45vh] md:h-[55vh] rounded-[3rem] overflow-hidden mb-20 shadow-2xl animate-fade-in group border border-gray-100/20">
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent z-10" />
-          <img 
+          <Image 
             src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80" 
             alt="Showroom Frachdark" 
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out" 
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out" 
           />
           <div className="absolute inset-x-0 bottom-0 z-20 p-10 md:p-20 text-center translate-y-4 group-hover:translate-y-0 transition-transform duration-1000">
             <h1 className="text-5xl md:text-7xl font-serif text-white mb-6 tracking-tight italic">Parlons de <span className="text-secondary not-italic">votre projet</span></h1>

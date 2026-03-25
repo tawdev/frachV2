@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
+
 
 interface ProductImageGalleryProps {
   images: string[] | { url: string }[];
@@ -56,12 +58,14 @@ export default function ProductImageGallery({ images, alt }: ProductImageGallery
         onMouseLeave={handleMouseLeave}
         className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-gray-50 shadow-inner group border border-gray-100 cursor-zoom-in"
       >
-        <img 
+        <Image 
           key={fullImageUrl} // Reset transition on image change
           src={fullImageUrl} 
           alt={alt} 
-          style={zoomStyle}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-out will-change-transform" 
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          style={{ ...zoomStyle, objectFit: 'cover', transform: zoomStyle.transform || 'scale(1)' }}
+          className="transition-transform duration-300 ease-out will-change-transform" 
         />
         
         {/* Subtle Hint Overlay */}
@@ -81,7 +85,7 @@ export default function ProductImageGallery({ images, alt }: ProductImageGallery
                   currentIndex === idx ? 'ring-2 ring-secondary shadow-md' : 'border border-gray-100 opacity-60 hover:opacity-100'
                 }`}
               >
-                <img src={thumbUrl} alt={`${alt} ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                <Image src={thumbUrl} alt={`${alt} ${idx + 1}`} fill sizes="100px" className="object-cover" />
               </div>
             );
           })}

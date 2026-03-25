@@ -12,6 +12,9 @@ export declare class CategoriesController {
             category_id: number;
             types_id: number | null;
         }[];
+        _count: {
+            products: number;
+        };
     } & {
         id: number;
         name: string;

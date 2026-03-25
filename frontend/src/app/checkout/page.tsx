@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { ChevronRight, ShieldCheck, CheckCircle, Package, ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -259,16 +260,17 @@ export default function CheckoutPage() {
                 {cartItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-4 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
                       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm transition-transform hover:scale-110">
-                        <img 
+                        <Image 
                           src={item.image.startsWith('http') ? item.image : `${backendUrl}/${item.image}`} 
                           alt={item.name} 
-                          className="w-full h-full object-cover" 
+                          fill
+                          sizes="64px"
+                          className="object-cover" 
                         />
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-sm text-primary line-clamp-1">{item.name}</p>
                         <p className="text-xs text-text-muted">Qté: {item.quantity}</p>
-                      </div>
                       <span className="font-bold text-sm text-text">{(item.price * item.quantity).toLocaleString()} <span className="text-[10px]">DHS</span></span>
                     </div>
                 ))}

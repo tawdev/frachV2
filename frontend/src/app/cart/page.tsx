@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
@@ -36,10 +37,12 @@ export default function CartPage() {
                     <div key={item.id} className="py-6 flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center">
                       <div className="col-span-6 w-full flex items-center gap-4">
                         <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                          <img 
+                          <Image 
                             src={item.image.startsWith('http') ? item.image : `${backendUrl}/${item.image}`} 
                             alt={item.name} 
-                            className="absolute inset-0 w-full h-full object-cover" 
+                            fill
+                            sizes="96px"
+                            className="object-cover" 
                           />
                         </div>
                         <div>

@@ -1,6 +1,4 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
 import { Eye, ArrowRight } from 'lucide-react';
@@ -15,37 +13,15 @@ interface Product {
   type?: string;
 }
 
-export default function FeaturedProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/products')
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setProducts(data.slice(0, 8)); // Display 8 newest products
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="animate-pulse bg-gray-100 rounded-2xl h-80" />
-        ))}
-      </div>
-    );
-  }
-
+export default function FeaturedProducts({ initialProducts }: { initialProducts: Product[] }) {
+  const displayProducts = initialProducts?.slice(0, 8) || [];
   const backendUrl = 'http://localhost:3001';
+
 
   return (
     <div className="space-y-12">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {products.map((product, index) => {
+        {displayProducts.map((product, index) => {
           const imageSrc = product.image 
             ? (product.image.startsWith('http') ? product.image : `${backendUrl}/${product.image}`)
             : '/images/placeholder.jpg';
@@ -57,10 +33,12 @@ export default function FeaturedProducts() {
             >
               <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 shrink-0">
                 <Link href={`/products/${product.id}`} className="block h-full w-full">
-                  <img 
+                  <Image 
                     src={imageSrc} 
                     alt={product.name} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
                 </Link>
                 {product.type === 'sur-mesure' && (

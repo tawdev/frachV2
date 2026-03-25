@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Filter, ChevronDown, Eye, Search, X, Tag, Package, Sparkles } from 'lucide-react';
+
 import AddToCartButton from '@/components/AddToCartButton';
 import SimpleSearch from '@/components/SimpleSearch';
 import SortDropdown from '@/components/SortDropdown';
@@ -192,10 +194,12 @@ export default async function ProductsPage({
                   >
                     <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 shrink-0">
                       <Link href={`/products/${product.id}`} className="block h-full w-full">
-                        <img 
+                        <Image 
                           src={imageSrc} 
                           alt={product.name} 
-                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                         />
                       </Link>
                       

@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X, ChevronDown, Package, Folder, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
+
 
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
@@ -225,8 +227,8 @@ export default function GlobalSearch() {
                         onClick={() => setShowDropdown(false)}
                         className="flex items-center gap-4 p-2 rounded-2xl hover:bg-gray-50 transition-all group"
                       >
-                        <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-sm">
-                          <img src={fullImg} alt={prod.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-sm">
+                          <Image src={fullImg} alt={prod.name} fill sizes="60px" className="object-cover group-hover:scale-110 transition-transform duration-500" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-bold text-primary truncate">{prod.name}</h4>

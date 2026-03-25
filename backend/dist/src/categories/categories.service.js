@@ -21,6 +21,9 @@ let CategoriesService = class CategoriesService {
         return this.prisma.category.findMany({
             include: {
                 types_categories: true,
+                _count: {
+                    select: { products: true }
+                }
             },
             orderBy: { name: 'asc' }
         });
