@@ -133,6 +133,7 @@ export declare class OrdersService {
         month: string;
         label: string;
         product: string;
+        image: string;
         qty: number;
         revenue: number;
     }[]>;

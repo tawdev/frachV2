@@ -20,23 +20,20 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent z-10" />
           <div className="absolute inset-0 bg-black/30 z-10" />
         </div>
-        
+
         <div className="container relative z-20 px-4 md:px-8">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary/20 backdrop-blur-md rounded-full text-secondary-light text-xs font-bold tracking-[0.2em] uppercase mb-6 animate-fade-in">
-              <span className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
-              Nouvelle Collection 2026
-            </div>
-            
+
+
             <h1 className="text-5xl md:text-8xl font-bold text-white mb-6 leading-[1.1] animate-slide-up">
               L'Art de <br />
               <span className="font-serif italic text-secondary-light">Vivre Propre</span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
               Redéfinissez votre espace avec notre sélection exclusive de pièces artisanales, où le luxe rencontre le confort absolu.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center gap-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <Link href="/products" className="btn-secondary px-8 py-4 text-lg rounded-full group transition-all hover:scale-105 active:scale-95">
                 Découvrir la collection
@@ -70,7 +67,7 @@ export default function Home() {
               Voir tout
             </Link>
           </div>
-          
+
           <CategorySlider />
         </div>
       </section>
@@ -85,7 +82,7 @@ export default function Home() {
               Découvrez nos dernières créations, alliant artisanat traditionnel et design contemporain.
             </p>
           </div>
-          
+
           <FeaturedProducts />
         </div>
       </section>

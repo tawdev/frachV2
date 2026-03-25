@@ -92,20 +92,30 @@ let OrdersService = class OrdersService {
         const items = await this.prisma.orderItem.findMany({
             include: {
                 order: { select: { created_at: true } },
+                product: { select: { image: true, name: true } }
             },
             orderBy: { order: { created_at: 'desc' } },
         });
         const monthMap = {};
         for (const item of items) {
+            if (!item.product)
+                continue;
             const d = new Date(item.order.created_at);
             const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            const prodId = String(item.product_id);
             if (!monthMap[key])
                 monthMap[key] = {};
-            if (!monthMap[key][item.product_name]) {
-                monthMap[key][item.product_name] = { name: item.product_name, qty: 0, revenue: 0 };
+            if (!monthMap[key][prodId]) {
+                monthMap[key][prodId] = {
+                    id: item.product_id,
+                    name: item.product?.name || item.product_name,
+                    image: item.product?.image || '',
+                    qty: 0,
+                    revenue: 0
+                };
             }
-            monthMap[key][item.product_name].qty += item.quantity;
-            monthMap[key][item.product_name].revenue += Number(item.price) * item.quantity;
+            monthMap[key][prodId].qty += item.quantity;
+            monthMap[key][prodId].revenue += Number(item.price) * item.quantity;
         }
         return Object.entries(monthMap)
             .sort(([a], [b]) => b.localeCompare(a))
@@ -113,8 +123,16 @@ let OrdersService = class OrdersService {
             .map(([month, products]) => {
             const top = Object.values(products).sort((a, b) => b.qty - a.qty)[0];
             const [year, m] = month.split('-');
-            const label = new Date(+year, +m - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-            return { month, label, product: top.name, qty: top.qty, revenue: top.revenue };
+            const dateObj = new Date(+year, +m - 1);
+            const label = dateObj.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            return {
+                month,
+                label,
+                product: top.name,
+                image: top.image,
+                qty: top.qty,
+                revenue: top.revenue
+            };
         });
     }
 };

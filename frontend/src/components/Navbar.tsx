@@ -40,7 +40,7 @@ export default function Navbar() {
 
         {/* Actions & Search */}
         <div className="flex items-center gap-4 text-primary">
-          <GlobalSearch />
+          {pathname !== '/products' && <GlobalSearch />}
 
           <Link href="/cart" className="p-2 hover:text-secondary transition-colors relative" aria-label="Cart">
             <ShoppingBag size={20} strokeWidth={2.5} />

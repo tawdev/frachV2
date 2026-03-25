@@ -9,10 +9,11 @@ export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<{ products: any[]; categories: any[] }>({ products: [], categories: [] });
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -37,7 +38,7 @@ export default function GlobalSearch() {
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const catParam = selectedCategory ? `&category_id=${selectedCategory}` : '';
+        const catParam = selectedCategory ? `&category=${encodeURIComponent(selectedCategory)}` : '';
         const res = await fetch(`http://localhost:3001/products/search?q=${encodeURIComponent(query)}${catParam}`);
         if (res.ok) {
           const data = await res.json();
@@ -59,6 +60,7 @@ export default function GlobalSearch() {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
+        setIsCategoryOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -69,8 +71,8 @@ export default function GlobalSearch() {
     e?.preventDefault();
     if (!query.trim()) return;
     
-    const catParam = selectedCategory ? `&category=${selectedCategory}` : '';
-    router.push(`/products?search=${encodeURIComponent(query)}${catParam}`);
+    const catParam = selectedCategory ? `&category=${encodeURIComponent(selectedCategory)}` : '';
+    router.push(`/products?q=${encodeURIComponent(query)}${catParam}`);
     setShowDropdown(false);
     setIsOpen(false);
   };
@@ -87,10 +89,11 @@ export default function GlobalSearch() {
   return (
     <div className="relative flex items-center" ref={dropdownRef}>
       {/* Search Toggle / Bar */}
-      <div className={`flex items-center bg-gray-100 rounded-full border transition-all duration-300 ${
-        isOpen ? 'w-[300px] md:w-[450px] border-secondary shadow-sm ring-2 ring-secondary/10 px-2' : 'w-10 h-10 border-transparent hover:bg-gray-200 cursor-pointer'
-      } overflow-hidden`}
-      onClick={() => !isOpen && setIsOpen(true)}
+      <div 
+        className={`flex items-center bg-gray-100 rounded-full border transition-all duration-300 ${
+          isOpen ? 'w-[300px] md:w-[450px] border-secondary shadow-sm ring-2 ring-secondary/10 px-2' : 'w-10 h-10 border-transparent hover:bg-gray-200 cursor-pointer overflow-hidden'
+        }`}
+        onClick={() => !isOpen && setIsOpen(true)}
       >
         
         {/* Unified Search Icon (Acts as toggle when closed) */}
@@ -100,19 +103,42 @@ export default function GlobalSearch() {
           </div>
         ) : (
           <>
-            {/* Category Select (Left) */}
-            <div className="relative group shrink-0 border-r border-gray-200 flex items-center">
-              <select 
-                value={selectedCategory || ''}
-                onChange={(e) => setSelectedCategory(e.target.value ? parseInt(e.target.value) : null)}
-                className="appearance-none bg-transparent pl-3 pr-7 py-2 text-[10px] font-bold uppercase tracking-wider text-primary outline-none cursor-pointer"
+            {/* Custom Category Select (Left) */}
+            <div className="relative shrink-0 border-r border-gray-200 flex items-center h-full">
+              <button 
+                type="button"
+                onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                className="flex items-center gap-1.5 pl-3 pr-7 py-2 h-full text-[10px] font-bold uppercase tracking-wider text-primary hover:text-secondary transition-colors outline-none cursor-pointer whitespace-nowrap"
               >
-                <option value="">Tous</option>
-                {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-              <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none group-hover:text-secondary transition-colors" />
+                {selectedCategory || 'Tous'}
+                <ChevronDown size={10} className={`text-text-muted transition-transform duration-300 ${isCategoryOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Category Options List */}
+              {isCategoryOpen && (
+                <div className="absolute top-full left-0 mt-2 min-w-[140px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[70] animate-slide-up py-1">
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedCategory(null); setIsCategoryOpen(false); handleSearch(); }}
+                    className={`w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${!selectedCategory ? 'text-secondary bg-secondary/5' : 'text-primary hover:bg-gray-50'}`}
+                  >
+                    Tous
+                  </button>
+                  {categories.map(c => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => { setSelectedCategory(c.name); setIsCategoryOpen(false); // Trigger search with new category
+                        const catParam = `&category=${encodeURIComponent(c.name)}`;
+                        router.push(`/products?q=${encodeURIComponent(query)}${catParam}`);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${selectedCategory === c.name ? 'text-secondary bg-secondary/5' : 'text-primary hover:bg-gray-50'}`}
+                    >
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Input */}

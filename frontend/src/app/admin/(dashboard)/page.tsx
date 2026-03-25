@@ -31,9 +31,16 @@ interface BestProduct {
   month: string;
   label: string;
   product: string;
+  image: string;
   qty: number;
   revenue: number;
 }
+
+const formatUrl = (url?: string) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `http://localhost:3001${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { cls: string; icon: React.ReactNode }> = {
@@ -113,7 +120,7 @@ export default function AdminDashboard() {
       sub: '+8.2% ce mois',
       icon: <TrendingUp size={20} />,
       href: '/admin/orders',
-      gradient: 'from-indigo-600 to-violet-600',
+      isRevenue: true
     },
     {
       label: 'Commandes',
@@ -121,7 +128,6 @@ export default function AdminDashboard() {
       sub: counts.pending ? `${counts.pending} en attente` : 'Tous traités',
       icon: <ShoppingBag size={20} />,
       href: '/admin/orders',
-      gradient: 'from-emerald-500 to-teal-600',
     },
     {
       label: 'Produits',
@@ -129,7 +135,6 @@ export default function AdminDashboard() {
       sub: 'En catalogue',
       icon: <Package size={20} />,
       href: '/admin/products',
-      gradient: 'from-blue-500 to-cyan-600',
     },
     {
       label: 'Catégories',
@@ -137,109 +142,114 @@ export default function AdminDashboard() {
       sub: 'Collections actives',
       icon: <FolderTree size={20} />,
       href: '/admin/categories',
-      gradient: 'from-orange-500 to-pink-500',
     },
   ];
 
   return (
-    <div className="space-y-7 pb-8">
+    <div className="space-y-8 pb-12">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles size={16} className="text-secondary" />
-            <span className="text-xs font-semibold uppercase tracking-widest text-secondary">Admin Panel</span>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-[1px] bg-secondary"></div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary">Frachdark Prestige</span>
           </div>
-          <h1 className="text-3xl font-serif font-bold text-primary">Tableau de Bord</h1>
-          <p className="text-text-muted mt-1 text-sm">
+          <h1 className="text-4xl font-serif font-bold text-primary tracking-tight">Tableau de <span className="italic text-secondary">Bord</span></h1>
+          <p className="text-text-muted mt-2 text-xs font-medium uppercase tracking-widest opacity-60">
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="relative p-2.5 bg-white border border-gray-200 rounded-xl text-text-muted hover:text-primary transition-colors shadow-sm">
-            <Bell size={18} />
+        <div className="flex items-center gap-4">
+          <button className="relative p-3 bg-white border border-gray-100 rounded-2xl text-text-muted hover:text-primary transition-all shadow-sm hover:shadow-md group">
+            <Bell size={20} className="group-hover:rotate-12 transition-transform" />
             {counts.pending > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                {counts.pending}
-              </span>
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-secondary border-2 border-white rounded-full"></span>
             )}
           </button>
+          <div className="w-10 h-10 rounded-2xl bg-primary text-secondary flex items-center justify-center font-bold text-sm border border-primary-light">
+             AD
+          </div>
         </div>
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((card) => (
           <Link
             key={card.label}
             href={card.href}
-            className={`bg-gradient-to-br ${card.gradient} text-white rounded-2xl p-5 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 group relative overflow-hidden`}
+            className="group relative bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-2 transition-all duration-500 overflow-hidden"
           >
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white" />
-              <div className="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+            {/* Subtle Gradient Polish */}
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-colors" />
+            
+            <div className="relative z-10 space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gray-50 text-primary rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
                   {card.icon}
                 </div>
-                <ArrowUpRight size={16} className="text-white/60 group-hover:text-white/100 transition-colors" />
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">
+                   Explore <ArrowRight size={10} className="inline ml-1" />
+                </div>
               </div>
-              <div className="text-2xl font-bold mb-0.5">{card.value}</div>
-              <div className="text-xs font-medium text-white/80">{card.label}</div>
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/20">
-                <span className="text-xs text-white/70">{card.sub}</span>
-                <MiniBar />
+
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mb-1">{card.label}</div>
+                <div className={`text-3xl font-bold ${card.isRevenue ? 'text-primary' : 'text-primary'} tracking-tighter`}>{card.value}</div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
+                <span className="text-[10px] font-medium text-text-muted/60">{card.sub}</span>
+                <div className="flex items-end gap-[2px] h-4">
+                  {[4, 7, 5, 9, 6].map((h, i) => (
+                    <div key={i} className="w-1 bg-secondary/20 rounded-full group-hover:bg-secondary/40 transition-colors" style={{ height: `${h*10}%` }} />
+                  ))}
+                </div>
               </div>
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Recent Orders */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-5">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
-                <BarChart2 size={16} />
+        <div className="lg:col-span-8 bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-10 py-8">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center">
+                <BarChart2 size={20} />
               </div>
-              <h2 className="font-bold text-primary">Commandes Récentes</h2>
+              <h2 className="text-xl font-serif font-bold text-primary italic">Commandes Récentes</h2>
             </div>
-            <Link href="/admin/orders" className="flex items-center gap-1 text-xs font-semibold text-secondary hover:text-primary transition-colors">
-              Voir tout <ArrowRight size={13} />
+            <Link href="/admin/orders" className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] hover:text-primary transition-colors flex items-center gap-2">
+              Voir le registre <ArrowRight size={12} />
             </Link>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto px-4 pb-8">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-gray-50 border-y border-gray-100 text-xs text-text-muted uppercase tracking-wide">
-                  <th className="px-6 py-3 font-semibold">N°</th>
-                  <th className="px-6 py-3 font-semibold">Client</th>
-                  <th className="px-6 py-3 font-semibold">Statut</th>
-                  <th className="px-6 py-3 font-semibold text-right">Montant</th>
+                <tr className="text-stone-400 text-[10px] font-bold uppercase tracking-[0.2em] border-b border-gray-50">
+                  <th className="px-6 py-4">Référence</th>
+                  <th className="px-6 py-4">Client Prestige</th>
+                  <th className="px-6 py-4 text-center">Statut</th>
+                  <th className="px-6 py-4 text-right">Investissement</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {orders.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-text-muted text-sm">
-                      Aucune commande pour l'instant.
-                    </td>
-                  </tr>
+                  <tr><td colSpan={4} className="px-6 py-12 text-center text-text-muted italic">Aucune transaction enregistrée.</td></tr>
                 ) : orders.map((o) => (
-                  <tr key={o.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-3.5 font-mono text-xs text-text-muted">
-                      #{String(o.id).padStart(4, '0')}
+                  <tr key={o.id} className="group hover:bg-gray-50/50 transition-all">
+                    <td className="px-6 py-5 font-mono text-[10px] text-stone-400">
+                      ORD-{String(o.id).padStart(4, '0')}
                     </td>
-                    <td className="px-6 py-3.5">
-                      <p className="text-sm font-semibold text-primary">{o.customer_name}</p>
-                      <p className="text-xs text-text-muted truncate max-w-[180px]">{o.customer_email}</p>
+                    <td className="px-6 py-5">
+                      <p className="text-sm font-bold text-primary">{o.customer_name}</p>
+                      <p className="text-[10px] text-text-muted opacity-60 italic">{o.customer_email}</p>
                     </td>
-                    <td className="px-6 py-3.5"><StatusBadge status={o.status} /></td>
-                    <td className="px-6 py-3.5 text-right text-sm font-bold text-primary">
-                      {Number(o.total_amount).toLocaleString('fr-FR')} <span className="text-xs font-normal text-text-muted">DHS</span>
+                    <td className="px-6 py-5 text-center"><StatusBadge status={o.status} /></td>
+                    <td className="px-6 py-5 text-right font-bold text-primary">
+                      {Number(o.total_amount).toLocaleString('fr-FR')} <span className="text-[10px] font-normal text-text-muted/60">DHS</span>
                     </td>
                   </tr>
                 ))}
@@ -248,132 +258,122 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Side panel: messages + quick actions */}
-        <div className="flex flex-col gap-5">
+        {/* Messaging & Categs */}
+        <div className="lg:col-span-4 space-y-8">
           {/* Messages */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex-1">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <MessageSquare size={16} className="text-secondary" />
-                <h2 className="font-bold text-primary text-sm">Messages</h2>
-              </div>
-              {messages.filter(m => !m.read_status).length > 0 && (
-                <span className="text-xs bg-secondary text-white px-2 py-0.5 rounded-full font-semibold">
-                  {messages.filter(m => !m.read_status).length} nouveau{messages.filter(m => !m.read_status).length > 1 ? 'x' : ''}
-                </span>
-              )}
+          <div className="bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-8 py-6 border-b border-gray-50 bg-gray-50/30 flex items-center justify-between">
+               <h2 className="font-serif font-bold text-primary italic flex items-center gap-3">
+                 <MessageSquare size={18} className="text-secondary" />
+                 Conciergerie
+               </h2>
+               {messages.some(m => !m.read_status) && <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" />}
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-50 h-[320px] overflow-y-auto scrollbar-hide">
               {messages.length === 0 ? (
-                <div className="px-5 py-8 text-center text-text-muted text-sm">Aucun message.</div>
+                <div className="p-10 text-center text-text-muted text-sm italic">Boîte de réception vide.</div>
               ) : messages.map((msg) => (
-                <div key={msg.id} className={`px-5 py-3 hover:bg-gray-50 transition-colors ${!msg.read_status ? 'border-l-[3px] border-secondary' : ''}`}>
-                  <div className="flex justify-between items-center mb-0.5">
-                    <span className="text-sm font-semibold text-primary">{msg.name}</span>
-                    <span className="text-[10px] text-text-muted">{new Date(msg.created_at).toLocaleDateString('fr-FR')}</span>
+                <div key={msg.id} className={`p-6 hover:bg-gray-50 transition-all cursor-pointer ${!msg.read_status ? 'bg-secondary/5' : ''}`}>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-xs font-bold text-primary line-clamp-1 flex-1">{msg.name}</span>
+                    <span className="text-[8px] font-bold text-stone-400 uppercase tracking-tighter whitespace-nowrap ml-2">{new Date(msg.created_at).toLocaleDateString('fr-FR')}</span>
                   </div>
-                  <p className="text-xs text-text-muted truncate">{msg.email}</p>
-                  <p className="text-xs text-text mt-1 line-clamp-2">{msg.message}</p>
+                  <p className="text-[10px] text-text-muted mb-2 opacity-70 italic">{msg.email}</p>
+                  <p className="text-xs text-primary/80 line-clamp-2 leading-relaxed">{msg.message}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Top Categories Static */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Star size={15} className="text-secondary" />
-              <h2 className="font-bold text-primary text-sm">Top Catégories</h2>
-            </div>
-            <div className="space-y-3">
-              {[
-                { name: 'Salon', pct: 82, color: 'bg-indigo-500' },
-                { name: 'Chambre', pct: 67, color: 'bg-emerald-500' },
-                { name: 'Bureau', pct: 45, color: 'bg-blue-500' },
-                { name: 'Cuisine', pct: 30, color: 'bg-orange-400' },
-              ].map(c => (
-                <div key={c.name}>
-                  <div className="flex justify-between text-xs font-medium text-primary mb-1">
-                    <span>{c.name}</span><span>{c.pct}%</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${c.color}`} style={{ width: `${c.pct}%` }} />
-                  </div>
+          {/* Quick Stats - Simple & Elegant */}
+          <div className="bg-primary p-8 rounded-[3rem] shadow-xl text-white relative overflow-hidden group">
+            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-secondary/10 rounded-full blur-[60px]" />
+            <div className="relative z-10 space-y-6">
+                <div className="flex items-center gap-3 text-secondary font-bold uppercase tracking-[0.3em] text-[10px]">
+                   <TrendingUp size={14} /> Performance
                 </div>
-              ))}
+                <div className="space-y-4">
+                  {[
+                    { n: 'Salon', p: 82 },
+                    { n: 'Chambre', p: 67 },
+                    { n: 'Bureau', p: 45 }
+                  ].map(c => (
+                    <div key={c.n} className="space-y-1.5">
+                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest opacity-70">
+                        <span>{c.n}</span>
+                        <span>{c.p}%</span>
+                      </div>
+                      <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-secondary rounded-full transition-all duration-1000" style={{ width: `${c.p}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Best Product Per Month */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Trophy size={16} className="text-amber-500" />
-          <h2 className="text-sm font-bold text-text-muted uppercase tracking-widest">Meilleur Produit par Mois</h2>
+      {/* Best Products Overlay */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Trophy size={18} className="text-secondary" />
+          <h2 className="text-xs font-bold text-stone-400 uppercase tracking-[0.5em]">Hall of Excellence</h2>
         </div>
-        {bestProducts.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center text-text-muted text-sm">
-            Aucune donnée disponible. Les produits apparaîtront ici dès qu'il y a des commandes.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bestProducts.map((bp, i) => {
-              const isCurrentMonth = i === 0;
-              return (
-                <div
-                  key={bp.month}
-                  className={`relative rounded-2xl overflow-hidden shadow-sm border ${isCurrentMonth ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50' : 'bg-white border-gray-100'}`}
-                >
-                  {isCurrentMonth && (
-                    <div className="absolute top-3 right-3">
-                      <span className="inline-flex items-center gap-1 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                        <Trophy size={9} /> Ce mois
-                      </span>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {bestProducts.length === 0 ? (
+            <div className="col-span-full border border-dashed border-gray-200 rounded-[3rem] p-12 text-center text-text-muted italic">En attente des premières transactions majeures.</div>
+          ) : bestProducts.slice(0, 3).map((bp, i) => (
+            <div key={bp.month} className={`relative flex gap-6 p-8 rounded-[2.5rem] border ${i === 0 ? 'bg-secondary/5 border-secondary/20 shadow-xl shadow-secondary/5' : 'bg-white border-gray-100 shadow-sm'} group hover:shadow-2xl transition-all duration-500 overflow-hidden`}>
+                <div className="relative w-24 h-24 rounded-2xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+                  {bp.image ? (
+                    <img 
+                      src={formatUrl(bp.image)} 
+                      alt={bp.product} 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400"><Package size={24} /></div>
                   )}
-                  <div className="p-5">
-                    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3 capitalize">{bp.label}</p>
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-white text-lg font-bold ${isCurrentMonth ? 'bg-amber-500' : 'bg-gray-200 text-gray-500'}`}>
-                        {i + 1}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-bold text-primary text-sm leading-tight line-clamp-2 mb-2">{bp.product}</p>
-                        <div className="flex items-center gap-3 text-xs text-text-muted">
-                          <span className="bg-gray-100 px-2 py-0.5 rounded-full font-medium">{bp.qty} vendus</span>
-                          <span className="font-semibold text-emerald-600">{bp.revenue.toLocaleString('fr-FR')} DHS</span>
-                        </div>
-                      </div>
+                </div>
+                
+                <div className="flex-1 space-y-4">
+                  <div className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] flex items-center justify-between">
+                     {bp.label}
+                     {i === 0 && <span className="bg-secondary text-primary px-2 py-0.5 rounded-full text-[8px]">Best Seller</span>}
+                  </div>
+                  <h3 className="text-lg font-serif font-bold text-primary line-clamp-1 italic">{bp.product}</h3>
+                  <div className="flex items-center gap-4 pt-4 border-t border-gray-50">
+                    <div className="flex flex-col">
+                      <span className="text-[8px] uppercase font-bold text-stone-400 tracking-widest">Volume</span>
+                      <span className="text-sm font-bold text-primary">{bp.qty} <span className="text-[10px] font-normal opacity-60">unités</span></span>
+                    </div>
+                    <div className="flex flex-col border-l border-gray-100 pl-4">
+                      <span className="text-[8px] uppercase font-bold text-stone-400 tracking-widest">Revenu</span>
+                      <span className="text-sm font-bold text-secondary">{bp.revenue.toLocaleString('fr-FR')} <span className="text-xs">DHS</span></span>
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Quick Actions */}
-      <div>
-        <h2 className="text-sm font-bold text-text-muted uppercase tracking-widest mb-4">Actions Rapides</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Nouveau Produit', href: '/admin/products', icon: <Package size={18} />, cls: 'from-blue-500 to-blue-700' },
-            { label: 'Nouvelle Catégorie', href: '/admin/categories', icon: <FolderTree size={18} />, cls: 'from-orange-500 to-red-500' },
-            { label: 'Voir Commandes', href: '/admin/orders', icon: <ShoppingBag size={18} />, cls: 'from-emerald-500 to-teal-600' },
-            { label: 'Types & Sous-Types', href: '/admin/types', icon: <BarChart2 size={18} />, cls: 'from-violet-500 to-purple-700' },
-          ].map(a => (
-            <Link
-              key={a.label}
-              href={a.href}
-              className={`bg-gradient-to-br ${a.cls} text-white rounded-xl px-5 py-4 flex items-center gap-3 hover:opacity-90 hover:scale-[1.02] transition-all shadow-sm`}
-            >
-              <div className="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">{a.icon}</div>
-              <span className="text-sm font-semibold leading-tight">{a.label}</span>
-            </Link>
+            </div>
           ))}
         </div>
+      </section>
+
+      {/* Modern Quick Buttons */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-10">
+          {[
+            { label: 'Catalogue', icon: <Package />, href: '/admin/products' },
+            { label: 'Collections', icon: <FolderTree />, href: '/admin/categories' },
+            { label: 'Ventes', icon: <ShoppingBag />, href: '/admin/orders' },
+            { label: 'Paramètres', icon: <BarChart2 />, href: '/admin/types' }
+          ].map((btn, i) => (
+            <Link key={i} href={btn.href} className="group p-6 bg-white border border-gray-100 rounded-2xl flex flex-col items-center gap-4 hover:border-secondary/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+                <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                    {btn.icon}
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted group-hover:text-primary transition-colors">{btn.label}</span>
+            </Link>
+          ))}
       </div>
     </div>
   );

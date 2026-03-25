@@ -69,9 +69,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        
+
         <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-500">
-          <p>&copy; {currentYear} Frachdark. Tous droits réservés.</p>
+          <p>&copy; {currentYear} <a href="https://cdigital.ma/" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline font-medium">cdigital</a>. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

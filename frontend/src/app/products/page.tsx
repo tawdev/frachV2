@@ -1,16 +1,19 @@
 import Link from 'next/link';
 import { Filter, ChevronDown, Eye, Search, X, Tag, Package, Sparkles } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
-import SidebarSearch from '@/components/SidebarSearch';
+import SimpleSearch from '@/components/SimpleSearch';
+import SortDropdown from '@/components/SortDropdown';
 
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { category?: string; types_id?: string; q?: string }
+  searchParams: { category?: string; types_id?: string; q?: string; sort?: string; type_category_id?: string }
 }) {
   const activeCategory = searchParams.category || 'Tous';
   const activeTypeId = searchParams.types_id || '';
+  const activeSubCatId = searchParams.type_category_id || '';
   const searchQuery = searchParams.q || '';
+  const sort = searchParams.sort || 'newest';
 
   const categoryQuery = activeCategory === 'Tous' ? '' : activeCategory;
 
@@ -20,7 +23,7 @@ export default async function ProductsPage({
 
   try {
     const [prodRes, catRes, typeRes] = await Promise.all([
-      fetch(`http://localhost:3001/products?category=${encodeURIComponent(categoryQuery)}&types_id=${activeTypeId}&q=${encodeURIComponent(searchQuery)}`, { cache: 'no-store' }),
+      fetch(`http://localhost:3001/products?category=${encodeURIComponent(categoryQuery)}&types_id=${activeTypeId}&type_category=${activeSubCatId}&q=${encodeURIComponent(searchQuery)}`, { cache: 'no-store' }),
       fetch('http://localhost:3001/categories', { cache: 'no-store' }),
       fetch('http://localhost:3001/categories/types-base', { cache: 'no-store' })
     ]);
@@ -42,6 +45,15 @@ export default async function ProductsPage({
 
   const categoryList = ['Tous', ...categoriesData.map((c: any) => c.name)];
 
+  // Sorting logic
+  products.sort((a: any, b: any) => {
+    if (sort === 'price-asc') return Number(a.price) - Number(b.price);
+    if (sort === 'price-desc') return Number(b.price) - Number(a.price);
+    if (sort === 'name-asc') return a.name.localeCompare(b.name);
+    // newest (default) - assume id or createdAt
+    return b.id - a.id;
+  });
+
   return (
     <div className="bg-background min-h-screen py-12 pb-24">
       <div className="container px-4">
@@ -60,9 +72,7 @@ export default async function ProductsPage({
           {/* Sidebar / Filters */}
           <aside className="w-full lg:w-72 shrink-0">
             <div className="sticky top-32 space-y-10">
-              {/* Search Box */}
-              <SidebarSearch />
-
+              <SimpleSearch />
               {/* Filter Sections */}
               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-10">
                 <div className="flex items-center gap-3 text-primary font-serif text-xl border-b border-gray-50 pb-4">
@@ -103,7 +113,7 @@ export default async function ProductsPage({
                     {categoryList.map((cat) => (
                       <li key={cat}>
                         <Link 
-                          href={{ pathname: '/products', query: { ...searchParams, category: cat === 'Tous' ? undefined : cat } }}
+                          href={{ pathname: '/products', query: { ...searchParams, category: cat === 'Tous' ? undefined : cat, type_category_id: undefined } }}
                           className={`flex items-center justify-between group py-1 text-sm transition-all ${activeCategory === cat ? 'text-secondary font-bold translate-x-1' : 'text-text-muted hover:text-primary'}`}
                         >
                           <span>{cat}</span>
@@ -115,7 +125,7 @@ export default async function ProductsPage({
                 </div>
 
                 {/* Clear All */}
-                {(activeCategory !== 'Tous' || activeTypeId || searchQuery) && (
+                {(activeCategory !== 'Tous' || activeTypeId || searchQuery || activeSubCatId) && (
                   <Link 
                     href="/products" 
                     className="flex justify-center items-center gap-2 py-3 bg-red-50 text-red-500 rounded-xl text-xs font-bold hover:bg-red-100 transition-colors mt-4"
@@ -133,10 +143,38 @@ export default async function ProductsPage({
                 <p className="text-text-muted text-sm font-medium">
                     <span className="text-primary font-bold">{products.length}</span> résultats trouvés
                 </p>
-                <div className="flex items-center gap-2 text-sm text-text-muted">
-                    Trier par: <span className="text-primary font-bold cursor-pointer hover:text-secondary flex items-center gap-1">Nouveautés <ChevronDown size={14} /></span>
-                </div>
+                <SortDropdown />
             </div>
+
+            {/* Sub-categories (Category Types) Chips - Horizontal Top Bar */}
+            {activeCategory !== 'Tous' && (
+                <div className="mb-12 animate-fade-in">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-1 h-4 bg-secondary rounded-full" />
+                      <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest">
+                          Modèles de {activeCategory}
+                      </h3>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                        <Link 
+                            href={{ pathname: '/products', query: { ...searchParams, type_category_id: undefined } }}
+                            className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${!activeSubCatId ? 'bg-primary text-white border-primary shadow-lg scale-105' : 'bg-white text-text-muted border-gray-100 hover:border-secondary/30 hover:bg-gray-50'}`}
+                        >
+                            Tous les modèles
+                        </Link>
+                        {categoriesData.find((c: any) => c.name === activeCategory)?.types_categories.map((type: any) => (
+                            <Link 
+                                key={type.id}
+                                href={{ pathname: '/products', query: { ...searchParams, type_category_id: type.id } }}
+                                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${activeSubCatId === type.id.toString() ? 'bg-primary text-white border-primary shadow-lg scale-105' : 'bg-white text-text-muted border-gray-100 hover:border-secondary/30 hover:bg-gray-50'}`}
+                            >
+                                {type.name}
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="h-px bg-gradient-to-r from-gray-100 via-gray-50 to-transparent mt-10" />
+                </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10">
               {products.map((product: any, index: number) => {

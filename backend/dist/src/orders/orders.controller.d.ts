@@ -69,6 +69,7 @@ export declare class OrdersController {
         month: string;
         label: string;
         product: string;
+        image: string;
         qty: number;
         revenue: number;
     }[]>;
