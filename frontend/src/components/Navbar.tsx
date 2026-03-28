@@ -44,6 +44,7 @@ export default function Navbar() {
           <Link href="/products" className="text-sm font-medium hover:text-secondary transition-colors text-primary">Produits</Link>
           <Link href="/categories" className="text-sm font-medium hover:text-secondary transition-colors text-primary">Catégories</Link>
           <Link href="/about" className="text-sm font-medium hover:text-secondary transition-colors text-primary">À Propos</Link>
+          <Link href="/blogs" className="text-sm font-medium hover:text-secondary transition-colors text-primary">Blog</Link>
           <Link href="/contact" className="text-sm font-medium hover:text-secondary transition-colors text-text-muted">Contact</Link>
         </nav>
 
@@ -70,6 +71,7 @@ export default function Navbar() {
           <Link href="/products" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Produits</Link>
           <Link href="/categories" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Catégories</Link>
           <Link href="/about" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>À Propos</Link>
+          <Link href="/blogs" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
           <Link href="/contact" className="hover:text-secondary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
         </nav>
       </div>

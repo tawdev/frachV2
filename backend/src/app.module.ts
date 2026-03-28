@@ -10,6 +10,8 @@ import { OrdersModule } from './orders/orders.module';
 import { ContactModule } from './contact/contact.module';
 import { AuthModule } from './auth/auth.module';
 
+import { BlogsModule } from './blogs/blogs.module';
+
 @Module({
   imports: [
     PrismaModule,
@@ -18,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
     OrdersModule,
     ContactModule,
     AuthModule,
+    BlogsModule,
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',

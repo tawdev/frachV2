@@ -77,6 +77,7 @@ export default function GlobalSearch() {
     router.push(`/products?q=${encodeURIComponent(query)}${catParam}`);
     setShowDropdown(false);
     setIsOpen(false);
+    setQuery('');
   };
 
   const backendUrl = 'http://localhost:3001';
@@ -195,7 +196,7 @@ export default function GlobalSearch() {
                     <Link 
                       key={cat.id} 
                       href={`/products?category_id=${cat.id}`}
-                      onClick={() => setShowDropdown(false)}
+                      onClick={() => { setShowDropdown(false); setIsOpen(false); setQuery(''); }}
                       className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 text-sm text-primary transition-all group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-text-muted group-hover:bg-secondary group-hover:text-white transition-all">
@@ -224,7 +225,7 @@ export default function GlobalSearch() {
                       <Link 
                         key={prod.id} 
                         href={`/products/${prod.id}`}
-                        onClick={() => setShowDropdown(false)}
+                        onClick={() => { setShowDropdown(false); setIsOpen(false); setQuery(''); }}
                         className="flex items-center gap-4 p-2 rounded-2xl hover:bg-gray-50 transition-all group"
                       >
                         <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-sm">

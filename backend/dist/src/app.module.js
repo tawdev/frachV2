@@ -18,6 +18,7 @@ const categories_module_1 = require("./categories/categories.module");
 const orders_module_1 = require("./orders/orders.module");
 const contact_module_1 = require("./contact/contact.module");
 const auth_module_1 = require("./auth/auth.module");
+const blogs_module_1 = require("./blogs/blogs.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,6 +31,7 @@ exports.AppModule = AppModule = __decorate([
             orders_module_1.OrdersModule,
             contact_module_1.ContactModule,
             auth_module_1.AuthModule,
+            blogs_module_1.BlogsModule,
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(process.cwd(), 'uploads'),
                 serveRoot: '/uploads',

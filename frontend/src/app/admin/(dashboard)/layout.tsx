@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingBag, Users, FolderTree, Settings, LogOut, Trophy, Package } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, FolderTree, Settings, LogOut, Trophy, Package, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { logoutAdmin } from '../login/actions';
@@ -41,6 +41,9 @@ export default function AdminLayout({
           </Link>
           <Link href="/admin/customers" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
             <Users size={20} /> Clients
+          </Link>
+          <Link href="/admin/blogs" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
+            <Newspaper size={20} /> Blogs
           </Link>
           <Link href="/admin/excellence" className="flex items-center gap-3 px-4 py-3 hover:bg-yellow-500/20 rounded-xl text-yellow-300 hover:text-yellow-400 transition-colors">
             <Trophy size={20} /> Excellence
