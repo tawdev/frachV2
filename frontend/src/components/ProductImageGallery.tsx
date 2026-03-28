@@ -11,7 +11,7 @@ interface ProductImageGalleryProps {
 
 export default function ProductImageGallery({ images, alt }: ProductImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [zoomStyle, setZoomStyle] = useState({});
+  const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
   const imagesList = Array.isArray(images) 
@@ -64,7 +64,7 @@ export default function ProductImageGallery({ images, alt }: ProductImageGallery
           alt={alt} 
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          style={{ ...zoomStyle, objectFit: 'cover', transform: zoomStyle.transform || 'scale(1)' }}
+          style={{ ...zoomStyle, objectFit: 'cover' }}
           className="transition-transform duration-300 ease-out will-change-transform" 
         />
         
