@@ -22,7 +22,7 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
           <Link 
             key={`${cat.id}-${idx}`}
             href={`/products?category=${cat.name}`}
-            className="inline-block w-[320px] h-[450px] mx-4 shrink-0 group/card relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+            className="inline-block w-[220px] h-[300px] sm:w-[280px] sm:h-[380px] mx-2 sm:mx-4 shrink-0 group/card relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
           >
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 transition-opacity duration-500 group-hover/card:opacity-80" />
@@ -37,19 +37,19 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
             />
             
             {/* Content */}
-            <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-              <span className="text-secondary-light text-xs font-bold tracking-[0.2em] uppercase mb-2 block opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
+            <div className="absolute bottom-0 left-0 p-5 sm:p-8 z-20 w-full">
+              <span className="text-secondary-light text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase mb-1 sm:mb-2 block opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
                 Découvrir
               </span>
-              <h4 className="text-3xl font-serif text-white mb-2">{cat.name}</h4>
-              <p className="text-gray-300 text-sm opacity-0 group-hover/card:opacity-100 transition-all duration-500 transform translate-y-4 group-hover/card:translate-y-0 line-clamp-2 italic">
+              <h4 className="text-xl sm:text-3xl font-serif text-white mb-1 sm:mb-2">{cat.name}</h4>
+              <p className="text-gray-300 text-xs sm:text-sm opacity-0 group-hover/card:opacity-100 transition-all duration-500 transform translate-y-4 group-hover/card:translate-y-0 line-clamp-2 italic">
                 {cat.description || "Collection exclusive de meubles"}
               </p>
             </div>
             
             {/* Glass decoration */}
-            <div className="absolute top-4 right-4 w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity translate-x-4 group-hover/card:translate-x-0 transition-transform z-20">
-              <span className="text-white">→</span>
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity translate-x-4 group-hover/card:translate-x-0 transition-transform z-20">
+              <span className="text-white text-sm sm:text-base">→</span>
             </div>
           </Link>
         ))}

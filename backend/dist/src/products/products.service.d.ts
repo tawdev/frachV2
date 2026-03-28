@@ -1,6 +1,9 @@
 import { PrismaService } from '../prisma/prisma.service';
 export declare class ProductsService {
     private prisma;
+    private lowStockSubject;
+    get lowStockStream$(): import("rxjs").Observable<number>;
+    emitCurrentLowStock(): Promise<number>;
     constructor(prisma: PrismaService);
     findAll(category?: string, type_category?: number, types_id?: number, query?: string): Promise<any[]>;
     findOne(id: number): Promise<any>;
@@ -65,6 +68,10 @@ export declare class ProductsService {
         largeur: import("@prisma/client-runtime-utils").Decimal | null;
         max_length: import("@prisma/client-runtime-utils").Decimal | null;
         max_width: import("@prisma/client-runtime-utils").Decimal | null;
+    }>;
+    updateStock(id: number, stock: number): Promise<{
+        id: number;
+        stock: number | null;
     }>;
     update(id: number, data: any): Promise<{
         id: number;

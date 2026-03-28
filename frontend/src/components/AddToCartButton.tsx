@@ -29,10 +29,12 @@ export default function AddToCartButton({
   };
 
   const baseStyles = "flex items-center justify-center gap-2 transition-all duration-300 font-medium rounded-full";
-  const primaryStyles = "bg-primary text-white hover:bg-secondary";
-  const outlineStyles = "border-2 border-primary text-primary hover:bg-primary hover:text-white";
+  const primaryStyles = variant === 'primary' ? "bg-primary text-white hover:bg-secondary" : "border-2 border-primary text-primary hover:bg-primary hover:text-white";
   
-  const finalClassName = `${baseStyles} ${variant === 'primary' ? primaryStyles : outlineStyles} ${className} ${added ? 'bg-green-600 border-green-600 text-white' : ''}`;
+  // Use custom className if it contains background color, otherwise use variant styles
+  const hasCustomBg = className.includes('bg-');
+  const finalStyles = hasCustomBg ? className : `${primaryStyles} ${className}`;
+  const finalClassName = `${baseStyles} ${finalStyles} ${added ? 'bg-green-600 border-green-600 text-white' : ''} disabled:opacity-50 disabled:cursor-not-allowed`;
 
   return (
     <button 

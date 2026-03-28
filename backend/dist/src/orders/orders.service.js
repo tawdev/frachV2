@@ -135,6 +135,44 @@ let OrdersService = class OrdersService {
             };
         });
     }
+    async bestProductsForSpecificMonth(month, year) {
+        const items = await this.prisma.orderItem.findMany({
+            where: { order: { status: 'Livrée' } },
+            include: {
+                order: { select: { created_at: true } },
+                product: { select: { image: true, name: true } }
+            }
+        });
+        const productMap = {};
+        for (const item of items) {
+            if (!item.product)
+                continue;
+            const d = new Date(item.order.created_at);
+            if (d.getMonth() + 1 === month && d.getFullYear() === year) {
+                const prodId = String(item.product_id);
+                if (!productMap[prodId]) {
+                    productMap[prodId] = {
+                        id: item.product_id,
+                        name: item.product.name,
+                        image: item.product.image || '',
+                        qty: 0,
+                        revenue: 0
+                    };
+                }
+                productMap[prodId].qty += item.quantity;
+                productMap[prodId].revenue += Number(item.price) * item.quantity;
+            }
+        }
+        return Object.values(productMap)
+            .sort((a, b) => b.qty - a.qty)
+            .map((p, index) => ({
+            rank: index + 1,
+            product_name: p.name,
+            total_quantity_sold: p.qty,
+            revenue: p.revenue,
+            image: p.image
+        }));
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([

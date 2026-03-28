@@ -12,8 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const rxjs_1 = require("rxjs");
 let ProductsService = class ProductsService {
     prisma;
+    lowStockSubject = new rxjs_1.Subject();
+    get lowStockStream$() {
+        return this.lowStockSubject.asObservable();
+    }
+    async emitCurrentLowStock() {
+        const count = await this.prisma.product.count({ where: { stock: { lt: 10 } } });
+        this.lowStockSubject.next(count);
+        return count;
+    }
     constructor(prisma) {
         this.prisma = prisma;
     }
@@ -121,6 +131,18 @@ let ProductsService = class ProductsService {
             await this.prisma.$executeRawUnsafe('INSERT INTO product_images (product_id, url, is_main) VALUES (?, ?, ?)', product.id, data.image, 1);
         }
         return product;
+    }
+    async updateStock(id, stock) {
+        if (stock < 0) {
+            throw new Error('Stock cannot be negative');
+        }
+        const result = await this.prisma.product.update({
+            where: { id },
+            data: { stock: Number(stock) },
+            select: { id: true, stock: true }
+        });
+        this.emitCurrentLowStock();
+        return result;
     }
     async update(id, data) {
         const { images, ...productData } = data;

@@ -27,7 +27,10 @@ let OrdersController = class OrdersController {
     findAll() {
         return this.ordersService.findAll();
     }
-    bestProductsByMonth() {
+    bestProductsByMonth(month, year) {
+        if (month && year) {
+            return this.ordersService.bestProductsForSpecificMonth(+month, +year);
+        }
         return this.ordersService.bestProductsByMonth();
     }
     findOne(id) {
@@ -56,8 +59,10 @@ __decorate([
 ], OrdersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('best-products'),
+    __param(0, (0, common_1.Query)('month')),
+    __param(1, (0, common_1.Query)('year')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "bestProductsByMonth", null);
 __decorate([

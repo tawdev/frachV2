@@ -20,7 +20,7 @@ export default function FeaturedProducts({ initialProducts }: { initialProducts:
 
   return (
     <div className="space-y-12">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
         {displayProducts.map((product, index) => {
           const imageSrc = product.image 
             ? (product.image.startsWith('http') ? product.image : `${backendUrl}/${product.image}`)
@@ -47,36 +47,36 @@ export default function FeaturedProducts({ initialProducts }: { initialProducts:
                   </div>
                 )}
                 {/* Quick Add Overlay */}
-                <div className="absolute inset-x-0 bottom-4 px-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                <div className="absolute inset-x-0 bottom-3 sm:bottom-4 px-2 sm:px-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
                     <AddToCartButton 
                       product={product} 
-                      className="w-full py-3 shadow-lg"
+                      className="w-full py-2 sm:py-3 text-[10px] sm:text-xs shadow-lg"
                       showIcon={true}
                     />
                 </div>
               </div>
               
-              <div className="p-6 flex-1 flex flex-col justify-between">
+              <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <p className="text-[10px] text-secondary font-bold uppercase tracking-widest mb-2">
+                  <p className="text-[8px] sm:text-[10px] text-secondary font-bold uppercase tracking-widest mb-1 sm:mb-2">
                     {product.category?.name || product.category_name || 'Mobilier'}
                   </p>
                   <Link href={`/products/${product.id}`}>
-                    <h4 className="text-lg font-serif text-primary hover:text-secondary transition-colors line-clamp-2 mb-2">
+                    <h4 className="text-sm sm:text-lg font-serif text-primary hover:text-secondary transition-colors line-clamp-2 leading-tight mb-2">
                       {product.name}
                     </h4>
                   </Link>
                 </div>
-                <div className="flex justify-between items-center pt-4 border-t border-gray-50 mt-auto">
-                    <span className="text-xl font-bold text-primary">
-                      {product.price.toLocaleString()} <span className="text-xs font-medium text-text-muted">DHS</span>
+                <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-gray-50 mt-auto">
+                    <span className="text-sm sm:text-xl font-bold text-primary">
+                      {product.price.toLocaleString()} <span className="text-[10px] sm:text-xs font-medium text-text-muted">DHS</span>
                     </span>
                     <Link 
                       href={`/products/${product.id}`} 
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-text-muted hover:text-secondary hover:border-secondary transition-all" 
+                      className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-text-muted hover:text-secondary hover:border-secondary transition-all shrink-0 ml-2" 
                       title="Détails"
                     >
-                      <Eye size={18} />
+                      <Eye className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                     </Link>
                 </div>
               </div>

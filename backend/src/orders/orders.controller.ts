@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 
@@ -17,7 +17,10 @@ export class OrdersController {
   }
 
   @Get('best-products')
-  bestProductsByMonth() {
+  bestProductsByMonth(@Query('month') month?: string, @Query('year') year?: string) {
+    if (month && year) {
+      return this.ordersService.bestProductsForSpecificMonth(+month, +year);
+    }
     return this.ordersService.bestProductsByMonth();
   }
 

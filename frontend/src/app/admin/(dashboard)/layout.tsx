@@ -1,7 +1,8 @@
-import { LayoutDashboard, ShoppingBag, Users, FolderTree, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, FolderTree, Settings, LogOut, Trophy, Package } from 'lucide-react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { logoutAdmin } from '../login/actions';
+import StockBadge from '@/components/StockBadge';
 
 export default function AdminLayout({
   children,
@@ -28,6 +29,10 @@ export default function AdminLayout({
           <Link href="/admin/products" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
             <ShoppingBag size={20} /> Produits
           </Link>
+          <Link href="/admin/stock" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors relative">
+            <Package size={20} /> Stock
+            <StockBadge />
+          </Link>
           <Link href="/admin/categories" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
             <FolderTree size={20} /> Catégories
           </Link>
@@ -36,6 +41,9 @@ export default function AdminLayout({
           </Link>
           <Link href="/admin/customers" className="flex items-center gap-3 px-4 py-3 hover:bg-primary-light/50 rounded-xl text-gray-300 hover:text-white transition-colors">
             <Users size={20} /> Clients
+          </Link>
+          <Link href="/admin/excellence" className="flex items-center gap-3 px-4 py-3 hover:bg-yellow-500/20 rounded-xl text-yellow-300 hover:text-yellow-400 transition-colors">
+            <Trophy size={20} /> Excellence
           </Link>
         </nav>
         

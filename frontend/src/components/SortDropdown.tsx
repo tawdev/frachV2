@@ -43,7 +43,7 @@ export default function SortDropdown() {
         <span>Trier par :</span>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 rounded-xl font-bold text-primary hover:border-secondary transition-all shadow-sm"
+          className="flex items-center gap-2 px-6 py-2 bg-white border border-[#EEEEEE] rounded-full font-bold text-primary hover:border-[#B00020] transition-all shadow-sm h-10"
         >
           {activeLabel}
           <ChevronDown className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={14} />

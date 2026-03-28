@@ -1,4 +1,6 @@
+import { MessageEvent } from '@nestjs/common';
 import { ProductsService } from './products.service';
+import { Observable } from 'rxjs';
 export declare class ProductsController {
     private readonly productsService;
     constructor(productsService: ProductsService);
@@ -87,6 +89,10 @@ export declare class ProductsController {
         max_length: import("@prisma/client-runtime-utils").Decimal | null;
         max_width: import("@prisma/client-runtime-utils").Decimal | null;
     }>;
+    updateStock(id: string, stock: number): Promise<{
+        id: number;
+        stock: number | null;
+    }>;
     remove(id: string): Promise<{
         id: number;
         name: string;
@@ -108,4 +114,5 @@ export declare class ProductsController {
         max_length: import("@prisma/client-runtime-utils").Decimal | null;
         max_width: import("@prisma/client-runtime-utils").Decimal | null;
     }>;
+    lowStockStream(): Observable<MessageEvent>;
 }

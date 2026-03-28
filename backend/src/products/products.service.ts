@@ -1,8 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
+  private lowStockSubject = new Subject<number>();
+
+  get lowStockStream$() {
+    return this.lowStockSubject.asObservable();
+  }
+
+  async emitCurrentLowStock() {
+    const count = await this.prisma.product.count({ where: { stock: { lt: 10 } } });
+    this.lowStockSubject.next(count);
+    return count;
+  }
+
   constructor(private prisma: PrismaService) { }
 
   async findAll(category?: string, type_category?: number, types_id?: number, query?: string) {
@@ -143,6 +156,19 @@ export class ProductsService {
     }
 
     return product;
+  }
+
+  async updateStock(id: number, stock: number) {
+    if (stock < 0) {
+      throw new Error('Stock cannot be negative');
+    }
+    const result = await this.prisma.product.update({
+      where: { id },
+      data: { stock: Number(stock) },
+      select: { id: true, stock: true }
+    });
+    this.emitCurrentLowStock();
+    return result;
   }
 
   async update(id: number, data: any) {
