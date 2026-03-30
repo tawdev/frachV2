@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Eye, ShoppingCart } from 'lucide-react';
 import AddToCartButton from './AddToCartButton';
+import { API_BASE_URL } from '@/lib/api-config';
 
 interface Product {
   id: number;
@@ -21,7 +22,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, view }: ProductCardProps) {
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = API_BASE_URL;
   const imageSrc = product.image 
     ? (product.image.startsWith('http') 
         ? product.image 

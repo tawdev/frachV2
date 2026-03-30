@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export async function loginAdmin(prevState: any, formData: FormData) {
   const username = formData.get('username')?.toString();
@@ -12,7 +13,7 @@ export async function loginAdmin(prevState: any, formData: FormData) {
   }
 
   try {
-    const response = await fetch('http://localhost:3001/auth/login', {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
