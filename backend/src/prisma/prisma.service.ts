@@ -1,10 +1,9 @@
 import 'dotenv/config';
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '../../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 function parseDatabaseUrl(url: string) {
-  // mysql://user:password@host:port/database
   const match = url.match(/mysql:\/\/([^:]+):([^@]*)@([^:]+):(\d+)\/(.+)/);
   if (!match) {
     throw new Error(`Invalid DATABASE_URL format: ${url}`);
@@ -23,7 +22,8 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   public readonly client: PrismaClient;
 
   constructor() {
-    const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL as string);
+    const dbUrl = process.env.DATABASE_URL as string;
+    const dbConfig = parseDatabaseUrl(dbUrl);
 
     const adapter = new PrismaMariaDb({
       host: dbConfig.host,

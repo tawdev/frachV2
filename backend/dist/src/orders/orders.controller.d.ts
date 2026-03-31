@@ -23,7 +23,7 @@ export declare class OrdersController {
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
     }>;
-    findAll(): import("generated/prisma").Prisma.PrismaPromise<({
+    findAll(): import("@prisma/client").Prisma.PrismaPromise<({
         order_items: ({
             product: {
                 id: number;
@@ -79,7 +79,7 @@ export declare class OrdersController {
         qty: number;
         revenue: number;
     }[]>;
-    findOne(id: string): import("generated/prisma").Prisma.Prisma__OrderClient<({
+    findOne(id: string): import("@prisma/client").Prisma.Prisma__OrderClient<({
         order_items: ({
             product: {
                 id: number;
@@ -120,7 +120,7 @@ export declare class OrdersController {
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-    }) | null, null, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    }) | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     updateStatus(id: string, status: string): Promise<{
         id: number;
         created_at: Date;

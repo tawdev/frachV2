@@ -12,7 +12,7 @@ export declare class ContactService {
         message: string;
         read_status: boolean | null;
     }>;
-    findAll(): import("generated/prisma").Prisma.PrismaPromise<{
+    findAll(): import("@prisma/client").Prisma.PrismaPromise<{
         id: number;
         name: string;
         created_at: Date;

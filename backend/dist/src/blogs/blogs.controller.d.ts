@@ -117,7 +117,7 @@ export declare class BlogsController {
         views: number;
         published_at: Date | null;
     }>;
-    bulkDelete(ids: number[]): Promise<import("generated/prisma").Prisma.BatchPayload>;
+    bulkDelete(ids: number[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
     uploadFile(file: Express.Multer.File): {
         url: string;
     };

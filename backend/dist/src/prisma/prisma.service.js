@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = void 0;
 require("dotenv/config");
 const common_1 = require("@nestjs/common");
-const prisma_1 = require("../../generated/prisma");
+const client_1 = require("@prisma/client");
 const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
 function parseDatabaseUrl(url) {
     const match = url.match(/mysql:\/\/([^:]+):([^@]*)@([^:]+):(\d+)\/(.+)/);
@@ -30,7 +30,8 @@ function parseDatabaseUrl(url) {
 let PrismaService = class PrismaService {
     client;
     constructor() {
-        const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL);
+        const dbUrl = process.env.DATABASE_URL;
+        const dbConfig = parseDatabaseUrl(dbUrl);
         const adapter = new adapter_mariadb_1.PrismaMariaDb({
             host: dbConfig.host,
             port: dbConfig.port,
@@ -38,7 +39,7 @@ let PrismaService = class PrismaService {
             password: dbConfig.password,
             database: dbConfig.database,
         });
-        this.client = new prisma_1.PrismaClient({ adapter });
+        this.client = new client_1.PrismaClient({ adapter });
     }
     async onModuleInit() {
         await this.client.$connect();

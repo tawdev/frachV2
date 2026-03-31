@@ -124,5 +124,5 @@ export declare class BlogsService {
         views: number;
         published_at: Date | null;
     }>;
-    bulkDelete(ids: number[]): Promise<import("generated/prisma").Prisma.BatchPayload>;
+    bulkDelete(ids: number[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
 }
