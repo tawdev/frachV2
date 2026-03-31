@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { ChevronRight, ShieldCheck, CheckCircle, Package, ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -53,7 +54,7 @@ export default function CheckoutPage() {
         }))
       };
 
-      const response = await fetch('http://localhost:3001/orders', {
+      const response = await fetch(`${API_BASE_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = API_BASE_URL;
 
   return (
     <div className="bg-background min-h-screen py-10 pt-28">

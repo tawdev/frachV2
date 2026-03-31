@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Settings, Tag, X, Loader2 } from 'lucide-react';
@@ -41,9 +41,9 @@ export default function AdminTypes() {
   const fetchData = async () => {
     try {
       const [tRes, tcRes, catRes] = await Promise.all([
-        fetch('http://localhost:3001/categories/types-base'),
-        fetch('http://localhost:3001/categories/types'),
-        fetch('http://localhost:3001/categories')
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base'),
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types'),
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories')
       ]);
       
       const tData = await tRes.json();
@@ -66,7 +66,7 @@ export default function AdminTypes() {
 
   const handleTypeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingType ? `http://localhost:3001/categories/types-base/${editingType.id}` : 'http://localhost:3001/categories/types-base';
+    const url = editingType ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types-base/${editingType.id}` : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base';
     const method = editingType ? 'PATCH' : 'POST';
     await fetch(url, {
       method,
@@ -79,7 +79,7 @@ export default function AdminTypes() {
 
   const handleTCSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingTC ? `http://localhost:3001/categories/types/${editingTC.id}` : 'http://localhost:3001/categories/types';
+    const url = editingTC ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types/${editingTC.id}` : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types';
     const method = editingTC ? 'PATCH' : 'POST';
     await fetch(url, {
       method,
@@ -95,7 +95,7 @@ export default function AdminTypes() {
   };
 
   const handleDelete = async (url: string) => {
-    if (confirm('Supprimer cet élément ?')) {
+    if (confirm('Supprimer cet Ã©lÃ©ment ?')) {
       await fetch(url, { method: 'DELETE' });
       fetchData();
     }
@@ -131,7 +131,7 @@ export default function AdminTypes() {
                   <td className="px-6 py-4 font-medium text-sm text-primary">{t.name}</td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => { setEditingType(t); setTypeForm({ name: t.name }); setShowTypeModal(true); }} className="p-2 text-gray-400 hover:text-primary"><Edit size={16} /></button>
-                    <button onClick={() => handleDelete(`http://localhost:3001/categories/types-base/${t.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                    <button onClick={() => handleDelete(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types-base/${t.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </td>
                 </tr>
               ))}
@@ -145,7 +145,7 @@ export default function AdminTypes() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-secondary/10 text-secondary rounded-lg text-secondary"><Tag size={20} /></div>
-            <h2 className="text-2xl font-serif text-primary">Types de Catégories (Sub-categories)</h2>
+            <h2 className="text-2xl font-serif text-primary">Types de CatÃ©gories (Sub-categories)</h2>
           </div>
           <button onClick={() => { setEditingTC(null); setTCForm({ name: '', category_id: '', types_id: '' }); setShowTCModal(true); }} className="px-4 py-2 bg-secondary text-white rounded-xl text-sm flex items-center gap-2">
             <Plus size={16} /> Nouveau Sous-Type
@@ -157,7 +157,7 @@ export default function AdminTypes() {
             <thead className="bg-gray-50 border-b border-gray-100 text-xs font-bold uppercase text-text-muted">
               <tr>
                 <th className="px-6 py-4">Nom du Sous-Type</th>
-                <th className="px-6 py-4">Catégorie Parent</th>
+                <th className="px-6 py-4">CatÃ©gorie Parent</th>
                 <th className="px-6 py-4">Type de Vente</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
@@ -170,7 +170,7 @@ export default function AdminTypes() {
                   <td className="px-6 py-4 text-sm text-text-muted">{tc.types?.name || '-'}</td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => { setEditingTC(tc); setTCForm({ name: tc.name, category_id: tc.category_id.toString(), types_id: tc.types_id ? tc.types_id.toString() : '' }); setShowTCModal(true); }} className="p-2 text-gray-400 hover:text-secondary"><Edit size={16} /></button>
-                    <button onClick={() => handleDelete(`http://localhost:3001/categories/types/${tc.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                    <button onClick={() => handleDelete(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types/${tc.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </td>
                 </tr>
               ))}
@@ -199,23 +199,23 @@ export default function AdminTypes() {
       {showTCModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <form onSubmit={handleTCSubmit} className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
-            <h3 className="text-xl font-serif font-bold mb-6 text-primary">{editingTC ? 'Modifier Type Catégorie' : 'Nouveau Sous-Type'}</h3>
+            <h3 className="text-xl font-serif font-bold mb-6 text-primary">{editingTC ? 'Modifier Type CatÃ©gorie' : 'Nouveau Sous-Type'}</h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-xs font-bold text-text-muted uppercase mb-1">Nom du Sous-Type</label>
                 <input required value={tcForm.name} onChange={e => setTCForm({ ...tcForm, name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-secondary/20" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-text-muted uppercase mb-1">Catégorie Parent</label>
+                <label className="block text-xs font-bold text-text-muted uppercase mb-1">CatÃ©gorie Parent</label>
                 <select required value={tcForm.category_id} onChange={e => setTCForm({ ...tcForm, category_id: e.target.value })} className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none">
-                  <option value="">Sélectionner une catégorie...</option>
+                  <option value="">SÃ©lectionner une catÃ©gorie...</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-text-muted uppercase mb-1">Type de Vente</label>
                 <select value={tcForm.types_id} onChange={e => setTCForm({ ...tcForm, types_id: e.target.value })} className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none">
-                  <option value="">Sélectionner un type de vente...</option>
+                  <option value="">SÃ©lectionner un type de vente...</option>
                   {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </select>
               </div>
@@ -230,3 +230,4 @@ export default function AdminTypes() {
     </div>
   );
 }
+

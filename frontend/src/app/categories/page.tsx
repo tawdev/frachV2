@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import Image from 'next/image';
 
 interface Category {
@@ -11,7 +11,7 @@ interface Category {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch('http://localhost:3001/categories', { next: { revalidate: 3600 } });
+    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories', { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -22,7 +22,7 @@ async function getCategories(): Promise<Category[]> {
 
 export default async function CategoriesPage() {
   const categories = await getCategories();
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
 
   return (
     <div className="bg-background min-h-screen py-10">
@@ -30,7 +30,7 @@ export default async function CategoriesPage() {
         <div className="text-center mb-16 animate-fade-in text-primary">
           <h1 className="text-4xl md:text-6xl font-serif mb-6 leading-tight">Nos Espaces <span className="italic text-secondary">de Vie</span></h1>
           <p className="text-text-muted text-lg max-w-2xl mx-auto">
-            Chaque catégorie a été pensée pour répondre à vos exigences de style et de confort. Explorez nos univers pour trouver l'inspiration.
+            Chaque catÃ©gorie a Ã©tÃ© pensÃ©e pour rÃ©pondre Ã  vos exigences de style et de confort. Explorez nos univers pour trouver l'inspiration.
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export default async function CategoriesPage() {
                   href={`/products?category=${encodeURIComponent(category.name)}`} 
                   className="inline-flex items-center gap-2 font-medium text-primary hover:text-secondary transition-colors link-hover"
                 >
-                  Découvrir la collection
+                  DÃ©couvrir la collection
                 </Link>
               </div>
             </div>
@@ -78,3 +78,4 @@ export default async function CategoriesPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import {
@@ -39,15 +39,15 @@ interface BestProduct {
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `http://localhost:3001${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { cls: string; icon: React.ReactNode }> = {
     'En attente': { cls: 'bg-amber-100 text-amber-700 border border-amber-200', icon: <Clock size={11} /> },
     'En cours': { cls: 'bg-blue-100 text-blue-700 border border-blue-200', icon: <Loader2 size={11} className="animate-spin" /> },
-    'Livrée': { cls: 'bg-emerald-100 text-emerald-700 border border-emerald-200', icon: <CheckCircle2 size={11} /> },
-    'Annulée': { cls: 'bg-red-100 text-red-700 border border-red-200', icon: <XCircle size={11} /> },
+    'LivrÃ©e': { cls: 'bg-emerald-100 text-emerald-700 border border-emerald-200', icon: <CheckCircle2 size={11} /> },
+    'AnnulÃ©e': { cls: 'bg-red-100 text-red-700 border border-red-200', icon: <XCircle size={11} /> },
   };
   const s = map[status] ?? { cls: 'bg-gray-100 text-gray-600', icon: null };
   return (
@@ -83,10 +83,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:3001/products').then(r => r.json()).catch(() => []),
-      fetch('http://localhost:3001/orders').then(r => r.json()).catch(() => []),
-      fetch('http://localhost:3001/categories').then(r => r.json()).catch(() => []),
-      fetch('http://localhost:3001/contact').then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products').then(r => r.json()).catch(() => []),
+      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/orders').then(r => r.json()).catch(() => []),
+      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories').then(r => r.json()).catch(() => []),
+      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/contact').then(r => r.ok ? r.json() : []).catch(() => []),
     ]).then(([products, ordersData, cats, msgs]) => {
       const o = Array.isArray(ordersData) ? ordersData : [];
       const p = Array.isArray(products) ? products : [];
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
         categories: c.length,
         orders: o.length,
         pending: o.filter((x: Order) => x.status === 'En attente').length,
-        revenue: o.reduce((s: number, x: Order) => x.status === 'Livrée' ? s + Number(x.total_amount) : s, 0),
+        revenue: o.reduce((s: number, x: Order) => x.status === 'LivrÃ©e' ? s + Number(x.total_amount) : s, 0),
       });
       setOrders(o.slice(0, 5));
       setMessages(m.slice(0, 4));
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
-    fetch(`http://localhost:3001/orders/best-products?month=${currentMonth}&year=${currentYear}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/best-products?month=${currentMonth}&year=${currentYear}`)
       .then(r => r.ok ? r.json() : [])
       .then(data => setBestProducts(Array.isArray(data) ? data.slice(0, 3) : []))
       .catch(() => setBestProducts([]));
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
   const statCards = [
     {
       label: 'Revenus',
-      value: counts.revenue > 0 ? `${counts.revenue.toLocaleString('fr-FR')} DHS` : '—',
+      value: counts.revenue > 0 ? `${counts.revenue.toLocaleString('fr-FR')} DHS` : 'â€”',
       sub: '+8.2% ce mois',
       icon: <TrendingUp size={20} />,
       href: '/admin/orders',
@@ -133,7 +133,7 @@ export default function AdminDashboard() {
     {
       label: 'Commandes',
       value: counts.orders,
-      sub: counts.pending ? `${counts.pending} en attente` : 'Tous traités',
+      sub: counts.pending ? `${counts.pending} en attente` : 'Tous traitÃ©s',
       icon: <ShoppingBag size={20} />,
       href: '/admin/orders',
     },
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
       href: '/admin/products',
     },
     {
-      label: 'Catégories',
+      label: 'CatÃ©gories',
       value: counts.categories,
       sub: 'Collections actives',
       icon: <FolderTree size={20} />,
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
               <div className="w-10 h-10 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center">
                 <BarChart2 size={20} />
               </div>
-              <h2 className="text-xl font-serif font-bold text-primary italic">Commandes Récentes</h2>
+              <h2 className="text-xl font-serif font-bold text-primary italic">Commandes RÃ©centes</h2>
             </div>
             <Link href="/admin/orders" className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] hover:text-primary transition-colors flex items-center gap-2">
               Voir le registre <ArrowRight size={12} />
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
             <table className="w-full text-left">
               <thead>
                 <tr className="text-stone-400 text-[10px] font-bold uppercase tracking-[0.2em] border-b border-gray-50">
-                  <th className="px-6 py-4">Référence</th>
+                  <th className="px-6 py-4">RÃ©fÃ©rence</th>
                   <th className="px-6 py-4">Client Prestige</th>
                   <th className="px-6 py-4 text-center">Statut</th>
                   <th className="px-6 py-4 text-right">Investissement</th>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {orders.length === 0 ? (
-                  <tr><td colSpan={4} className="px-6 py-12 text-center text-text-muted italic">Aucune transaction enregistrée.</td></tr>
+                  <tr><td colSpan={4} className="px-6 py-12 text-center text-text-muted italic">Aucune transaction enregistrÃ©e.</td></tr>
                 ) : orders.map((o) => (
                   <tr key={o.id} className="group hover:bg-gray-50/50 transition-all">
                     <td className="px-6 py-5 font-mono text-[10px] text-stone-400">
@@ -279,7 +279,7 @@ export default function AdminDashboard() {
             </div>
             <div className="divide-y divide-gray-50 h-[320px] overflow-y-auto scrollbar-hide">
               {messages.length === 0 ? (
-                <div className="p-10 text-center text-text-muted text-sm italic">Boîte de réception vide.</div>
+                <div className="p-10 text-center text-text-muted text-sm italic">BoÃ®te de rÃ©ception vide.</div>
               ) : messages.map((msg) => (
                 <div key={msg.id} className={`p-6 hover:bg-gray-50 transition-all cursor-pointer ${!msg.read_status ? 'bg-secondary/5' : ''}`}>
                   <div className="flex justify-between items-start mb-2">
@@ -335,13 +335,13 @@ export default function AdminDashboard() {
             </div>
           </div>
           <Link href="/admin/excellence" className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] hover:bg-secondary hover:text-primary transition-colors flex items-center gap-2 px-5 py-3 bg-secondary/10 rounded-2xl">
-             Accéder au classement complet <ArrowRight size={12} />
+             AccÃ©der au classement complet <ArrowRight size={12} />
           </Link>
         </div>
 
         <div className="space-y-4">
           {bestProducts.length === 0 ? (
-            <div className="border border-dashed border-gray-200 rounded-[2rem] p-12 text-center text-text-muted italic">Aucune vente livrée pour ce mois.</div>
+            <div className="border border-dashed border-gray-200 rounded-[2rem] p-12 text-center text-text-muted italic">Aucune vente livrÃ©e pour ce mois.</div>
           ) : bestProducts.map((bp: any, index: number) => {
             let badgeIcon: any = <span className="font-bold text-gray-500">#{index + 1}</span>;
             let badgeColor = 'bg-gray-50 border-gray-100';
@@ -376,7 +376,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
                   <div className="text-left sm:text-right border-l border-gray-200 pl-6">
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-widest block mb-1">Volume</span>
-                    <span className="font-bold text-lg text-primary">{bp.total_quantity_sold} <span className="text-xs font-normal text-text-muted opacity-60">unités</span></span>
+                    <span className="font-bold text-lg text-primary">{bp.total_quantity_sold} <span className="text-xs font-normal text-text-muted opacity-60">unitÃ©s</span></span>
                   </div>
                   <div className="text-right border-l border-gray-200 pl-6 w-32">
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-widest block mb-1">Revenu</span>
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
           { label: 'Catalogue', icon: <Package />, href: '/admin/products' },
           { label: 'Collections', icon: <FolderTree />, href: '/admin/categories' },
           { label: 'Ventes', icon: <ShoppingBag />, href: '/admin/orders' },
-          { label: 'Paramètres', icon: <BarChart2 />, href: '/admin/types' }
+          { label: 'ParamÃ¨tres', icon: <BarChart2 />, href: '/admin/types' }
         ].map((btn, i) => (
           <Link key={i} href={btn.href} className="group p-6 bg-white border border-gray-100 rounded-2xl flex flex-col items-center gap-4 hover:border-secondary/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
             <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
@@ -408,3 +408,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

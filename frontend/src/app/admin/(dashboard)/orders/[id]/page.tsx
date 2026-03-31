@@ -37,7 +37,7 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
 
   const fetchOrder = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/orders/${params.id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders/${params.id}`);
       if (!response.ok) throw new Error('Commande non trouvée');
       const data = await response.json();
       setOrder(data);
@@ -55,7 +55,7 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
   const handleStatusUpdate = async (newStatus: string) => {
     if (!order) return;
     try {
-      const response = await fetch(`http://localhost:3001/orders/${order.id}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders/${order.id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -154,7 +154,7 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
                         <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-primary font-bold shadow-inner border border-gray-100 transition-transform group-hover:scale-105 overflow-hidden">
                             {item.product?.image ? (
                               <img 
-                                src={item.product.image.startsWith('http') ? item.product.image : `http://localhost:3001${item.product.image.startsWith('/') ? '' : '/'}${item.product.image}`} 
+                                src={item.product.image.startsWith('http') ? item.product.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${item.product.image.startsWith('/') ? '' : '/'}${item.product.image}`} 
                                 alt={item.product_name}
                                 className="w-full h-full object-cover"
                               />

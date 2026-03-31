@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -60,7 +60,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
     formDataUpload.append('image', file);
 
     try {
-      const res = await fetch('http://localhost:3001/blogs/upload', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs/upload', {
         method: 'POST',
         body: formDataUpload,
       });
@@ -81,8 +81,8 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
     setError(null);
 
     const url = isEdit 
-      ? `http://localhost:3001/blogs/${initialData.id}` 
-      : 'http://localhost:3001/blogs';
+      ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs/${initialData.id}` 
+      : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs';
     
     const method = isEdit ? 'PATCH' : 'POST';
 
@@ -127,14 +127,14 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
           href="/admin/blogs" 
           className="flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-sm font-medium"
         >
-          <ArrowLeft size={16} /> Retour à la liste
+          <ArrowLeft size={16} /> Retour Ã  la liste
         </Link>
         <div className="flex items-center gap-3">
            <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider ${
              formData.status === 'published' ? 'bg-green-100 text-green-700' : 
              formData.status === 'archived' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
            }`}>
-             {formData.status === 'published' ? 'En ligne' : formData.status === 'archived' ? 'Archivé' : 'Brouillon'}
+             {formData.status === 'published' ? 'En ligne' : formData.status === 'archived' ? 'ArchivÃ©' : 'Brouillon'}
            </span>
         </div>
       </div>
@@ -199,13 +199,13 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-primary mb-3 uppercase tracking-widest text-[10px]">Catégorie</label>
+              <label className="block text-sm font-bold text-primary mb-3 uppercase tracking-widest text-[10px]">CatÃ©gorie</label>
               <select 
                 className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-secondary/20 outline-none appearance-none cursor-pointer"
                 value={formData.category}
                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
               >
-                <option value="">Sélectionner une catégorie</option>
+                <option value="">SÃ©lectionner une catÃ©gorie</option>
                 <option value="Design">Design</option>
                 <option value="Conseils">Conseils</option>
                 <option value="Style">Style</option>
@@ -215,7 +215,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-primary mb-3 uppercase tracking-widest text-[10px]">Mots-clés (Tags)</label>
+              <label className="block text-sm font-bold text-primary mb-3 uppercase tracking-widest text-[10px]">Mots-clÃ©s (Tags)</label>
               <input 
                 type="text"
                 className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-secondary/20 outline-none text-sm"
@@ -234,7 +234,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
               {formData.image ? (
                 <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100 border border-gray-100 shadow-inner">
                   <img 
-                    src={formData.image.startsWith('/') ? `http://localhost:3001${formData.image}` : formData.image} 
+                    src={formData.image.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${formData.image}` : formData.image} 
                     alt="Preview" 
                     className="w-full h-full object-cover"
                   />
@@ -278,7 +278,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
             {success && (
               <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-2xl text-sm flex items-start gap-3 animate-fade-in">
                 <CheckCircle size={18} className="shrink-0 mt-0.5" />
-                <p>L'article a été enregistré avec succès !</p>
+                <p>L'article a Ã©tÃ© enregistrÃ© avec succÃ¨s !</p>
               </div>
             )}
 
@@ -292,7 +292,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
               ) : (
                 <>
                   <Save size={20} /> 
-                  {isEdit ? 'Mettre à jour' : 'Enregistrer'}
+                  {isEdit ? 'Mettre Ã  jour' : 'Enregistrer'}
                 </>
               )}
             </button>
@@ -336,3 +336,4 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import Image from 'next/image';
 
 interface Category {
@@ -12,7 +12,7 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
   if (!initialCategories || initialCategories.length === 0) return null;
 
   const displayCategories = [...initialCategories, ...initialCategories];
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
 
   return (
     <div className="relative overflow-hidden group">
@@ -39,7 +39,7 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-5 sm:p-8 z-20 w-full">
               <span className="text-secondary-light text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase mb-1 sm:mb-2 block opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
-                Découvrir
+                DÃ©couvrir
               </span>
               <h4 className="text-xl sm:text-3xl font-serif text-white mb-1 sm:mb-2">{cat.name}</h4>
               <p className="text-gray-300 text-xs sm:text-sm opacity-0 group-hover/card:opacity-100 transition-all duration-500 transform translate-y-4 group-hover/card:translate-y-0 line-clamp-2 italic">
@@ -49,7 +49,7 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
             
             {/* Glass decoration */}
             <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity translate-x-4 group-hover/card:translate-x-0 transition-transform z-20">
-              <span className="text-white text-sm sm:text-base">→</span>
+              <span className="text-white text-sm sm:text-base">â†’</span>
             </div>
           </Link>
         ))}
@@ -61,3 +61,4 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
     </div>
   );
 }
+

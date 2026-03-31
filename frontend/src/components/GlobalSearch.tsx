@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, ChevronDown, Package, Folder, Loader2 } from 'lucide-react';
@@ -23,7 +23,7 @@ export default function GlobalSearch() {
 
   // Fetch categories for dropdown
   useEffect(() => {
-    fetch('http://localhost:3001/categories')
+    fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories')
       .then(res => res.json())
       .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error('Failed to fetch categories:', err));
@@ -41,7 +41,7 @@ export default function GlobalSearch() {
       setLoading(true);
       try {
         const catParam = selectedCategory ? `&category=${encodeURIComponent(selectedCategory)}` : '';
-        const res = await fetch(`http://localhost:3001/products/search?q=${encodeURIComponent(query)}${catParam}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/search?q=${encodeURIComponent(query)}${catParam}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -80,7 +80,7 @@ export default function GlobalSearch() {
     setQuery('');
   };
 
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
 
   const formatUrl = (url: string) => {
     if (!url) return '/images/placeholder.jpg';
@@ -189,7 +189,7 @@ export default function GlobalSearch() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-4 bg-secondary rounded-full" />
-                  <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Suggestions de Catégories</h3>
+                  <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Suggestions de CatÃ©gories</h3>
                 </div>
                 <div className="space-y-1">
                   {suggestions.categories.map(cat => (
@@ -248,7 +248,7 @@ export default function GlobalSearch() {
                 onClick={handleSearch}
                 className="text-xs font-bold text-secondary uppercase tracking-widest hover:tracking-[0.15em] transition-all py-2 inline-block"
               >
-                Voir tous les résultats
+                Voir tous les rÃ©sultats
               </button>
             </div>
           </div>
@@ -267,3 +267,4 @@ export default function GlobalSearch() {
     </div>
   );
 }
+

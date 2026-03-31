@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ export default function BlogsPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
 
   useEffect(() => {
-    fetch('http://localhost:3001/blogs?status=published')
+    fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs?status=published')
       .then(res => res.json())
       .then(data => {
         setBlogs(data.data);
@@ -49,13 +49,13 @@ export default function BlogsPage() {
         {/* Header Section */}
         <div className="max-w-4xl mx-auto text-center mb-16 space-y-4 animate-fade-in">
           <span className="inline-block px-4 py-1.5 bg-secondary/10 text-secondary rounded-full text-xs font-bold uppercase tracking-widest leading-none">
-            Inspiration & Décoration
+            Inspiration & DÃ©coration
           </span>
           <h1 className="text-4xl md:text-6xl font-serif text-primary leading-tight">
             Notre <span className="italic">Journal</span> de Design
           </h1>
           <p className="text-lg text-text-muted max-w-2xl mx-auto">
-            Découvrez nos conseils, tendances et coulisses pour transformer votre intérieur avec élégance et caractère.
+            DÃ©couvrez nos conseils, tendances et coulisses pour transformer votre intÃ©rieur avec Ã©lÃ©gance et caractÃ¨re.
           </p>
         </div>
 
@@ -106,13 +106,13 @@ export default function BlogsPage() {
               >
                 <Link href={`/blogs/${blog.slug}`} className="block relative aspect-[16/10] overflow-hidden">
                   <img 
-                    src={blog.image ? (blog.image.startsWith('/') ? `http://localhost:3001${blog.image}` : blog.image) : '/images/placeholder-blog.jpg'} 
+                    src={blog.image ? (blog.image.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${blog.image}` : blog.image) : '/images/placeholder-blog.jpg'} 
                     alt={blog.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute top-4 left-4">
                     <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md rounded-xl text-[10px] font-bold uppercase tracking-widest text-primary shadow-sm">
-                      {blog.category || 'Non classé'}
+                      {blog.category || 'Non classÃ©'}
                     </span>
                   </div>
                 </Link>
@@ -156,8 +156,8 @@ export default function BlogsPage() {
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-gray-400">
               <Newspaper size={40} />
             </div>
-            <h3 className="text-2xl font-serif text-primary">Aucun article trouvé</h3>
-            <p className="text-text-muted italic">Essayez d'autres mots-clés ou revenez plus tard.</p>
+            <h3 className="text-2xl font-serif text-primary">Aucun article trouvÃ©</h3>
+            <p className="text-text-muted italic">Essayez d'autres mots-clÃ©s ou revenez plus tard.</p>
             <button 
               onClick={() => setSearchTerm('')}
               className="px-6 py-2 bg-primary text-white rounded-xl text-sm font-bold"
@@ -170,3 +170,4 @@ export default function BlogsPage() {
     </main>
   );
 }
+

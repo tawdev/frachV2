@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -50,7 +50,7 @@ export default function BlogsPage() {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      let url = `http://localhost:3001/blogs?page=${page}&limit=10`;
+      let url = `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs?page=${page}&limit=10`;
       if (statusFilter !== 'all') url += `&status=${statusFilter}`;
       if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
       
@@ -72,10 +72,10 @@ export default function BlogsPage() {
   };
 
   const deleteBlog = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+    if (!confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cet article ?')) return;
     
     try {
-      const res = await fetch(`http://localhost:3001/blogs/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -88,10 +88,10 @@ export default function BlogsPage() {
 
   const handleBulkDelete = async () => {
     if (!selectedIds.length) return;
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedIds.length} articles ?`)) return;
+    if (!confirm(`ÃŠtes-vous sÃ»r de vouloir supprimer ${selectedIds.length} articles ?`)) return;
 
     try {
-      const res = await fetch('http://localhost:3001/blogs/bulk/delete', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs/bulk/delete', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: selectedIds }),
@@ -124,11 +124,11 @@ export default function BlogsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1"><CheckCircle size={12} /> Publié</span>;
+        return <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1"><CheckCircle size={12} /> PubliÃ©</span>;
       case 'draft':
         return <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium flex items-center gap-1"><Clock size={12} /> Brouillon</span>;
       case 'archived':
-        return <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium flex items-center gap-1"><Archive size={12} /> Archivé</span>;
+        return <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium flex items-center gap-1"><Archive size={12} /> ArchivÃ©</span>;
       default:
         return <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">{status}</span>;
     }
@@ -139,7 +139,7 @@ export default function BlogsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-serif text-primary">Gestion des Blogs</h1>
-          <p className="text-text-muted mt-1">Gérez vos articles, actualités et guides.</p>
+          <p className="text-text-muted mt-1">GÃ©rez vos articles, actualitÃ©s et guides.</p>
         </div>
         <Link 
           href="/admin/blogs/new" 
@@ -180,9 +180,9 @@ export default function BlogsPage() {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="all">Tous les statuts</option>
-            <option value="published">Publiés</option>
+            <option value="published">PubliÃ©s</option>
             <option value="draft">Brouillons</option>
-            <option value="archived">Archivés</option>
+            <option value="archived">ArchivÃ©s</option>
           </select>
         </div>
       </div>
@@ -202,7 +202,7 @@ export default function BlogsPage() {
                   />
                 </th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">Article</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">Catégorie</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">CatÃ©gorie</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">Auteur</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">Statut</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-text-muted">Date</th>
@@ -221,7 +221,7 @@ export default function BlogsPage() {
               ) : blogs.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-20 text-center text-text-muted">
-                    Aucun article trouvé.
+                    Aucun article trouvÃ©.
                   </td>
                 </tr>
               ) : (
@@ -242,7 +242,7 @@ export default function BlogsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="flex items-center gap-1.5 text-sm text-primary">
                         <Tag size={14} className="text-secondary" />
-                        {blog.category || 'Non classé'}
+                        {blog.category || 'Non classÃ©'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -321,3 +321,4 @@ export default function BlogsPage() {
     </div>
   );
 }
+

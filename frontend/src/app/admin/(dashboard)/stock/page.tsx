@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Package, AlertCircle, CheckCircle2, AlertTriangle, Loader2, Plus } from 'lucide-react';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `http://localhost:3001${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 interface Product {
@@ -32,7 +32,7 @@ export default function StockManagementPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/products');
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products');
       const data = await res.json();
       const sortedData = data.sort((a: Product, b: Product) => {
         if (a.stock !== b.stock) return a.stock - b.stock;
@@ -55,13 +55,13 @@ export default function StockManagementPage() {
 
     const newStock = product.stock + amount;
     if (newStock < 0) {
-      alert("Le stock final ne peut pas être négatif !");
+      alert("Le stock final ne peut pas Ãªtre nÃ©gatif !");
       return;
     }
 
     setUpdatingId(product.id);
     try {
-      const res = await fetch(`http://localhost:3001/products/${product.id}/stock`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${product.id}/stock`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export default function StockManagementPage() {
           >
             <AlertCircle size={16} className="text-red-500 group-hover:scale-110 transition-transform" />
             <span className="text-xs font-bold text-red-700 uppercase tracking-widest">
-              Alerte Quantité Critique : <span className="text-red-600 font-black text-sm ml-1">+{criticalStockCount}</span>
+              Alerte QuantitÃ© Critique : <span className="text-red-600 font-black text-sm ml-1">+{criticalStockCount}</span>
             </span>
           </button>
         )}
@@ -187,7 +187,7 @@ export default function StockManagementPage() {
                             {isWarning && <AlertTriangle size={14} />}
                             {isCritical && <AlertCircle size={14} />}
                             <span className="font-bold">{p.stock}</span>
-                            <span className="text-[10px] uppercase tracking-widest opacity-80 font-semibold">Unités</span>
+                            <span className="text-[10px] uppercase tracking-widest opacity-80 font-semibold">UnitÃ©s</span>
                           </div>
                         )}
                       </td>
@@ -230,3 +230,4 @@ export default function StockManagementPage() {
     </div>
   );
 }
+

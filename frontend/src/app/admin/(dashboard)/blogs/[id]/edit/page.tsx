@@ -11,7 +11,7 @@ export default function EditBlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/blogs/${params.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/blogs/${params.id}`)
       .then(res => res.json())
       .then(data => {
         setBlog(data);

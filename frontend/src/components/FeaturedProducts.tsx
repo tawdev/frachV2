@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
 import { Eye, ArrowRight } from 'lucide-react';
@@ -15,7 +15,7 @@ interface Product {
 
 export default function FeaturedProducts({ initialProducts }: { initialProducts: Product[] }) {
   const displayProducts = initialProducts?.slice(0, 8) || [];
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
 
 
   return (
@@ -74,7 +74,7 @@ export default function FeaturedProducts({ initialProducts }: { initialProducts:
                     <Link 
                       href={`/products/${product.id}`} 
                       className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-text-muted hover:text-secondary hover:border-secondary transition-all shrink-0 ml-2" 
-                      title="Détails"
+                      title="DÃ©tails"
                     >
                       <Eye className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                     </Link>
@@ -94,3 +94,4 @@ export default function FeaturedProducts({ initialProducts }: { initialProducts:
     </div>
   );
 }
+

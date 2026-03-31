@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -6,7 +6,7 @@ export default function StockBadge() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:3001/products/stream/low-stock');
+    const eventSource = new EventSource((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products/stream/low-stock');
 
     eventSource.onmessage = (event) => {
       try {
@@ -35,3 +35,4 @@ export default function StockBadge() {
     </span>
   );
 }
+

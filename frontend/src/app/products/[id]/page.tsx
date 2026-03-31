@@ -10,7 +10,7 @@ export default async function ProductDetailPage({
 }) {
   let product = null;
   try {
-    const res = await fetch(`http://localhost:3001/products/${params.id}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/products/${params.id}`, { cache: 'no-store' });
     if (res.ok) {
       product = await res.json();
     }
@@ -27,7 +27,7 @@ export default async function ProductDetailPage({
     );
   }
 
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}';
   const mainImage = product.image 
     ? (product.image.startsWith('http') ? product.image : `${backendUrl}/${product.image}`)
     : '/images/placeholder.jpg';

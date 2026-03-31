@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, FolderTree, X, Loader2 } from 'lucide-react';
@@ -30,8 +30,8 @@ export default function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:3001/categories');
-      if (!response.ok) throw new Error('Erreur réseau');
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories');
+      if (!response.ok) throw new Error('Erreur rÃ©seau');
       const data = await response.json();
       setCategories(data);
     } catch (err: any) {
@@ -53,7 +53,7 @@ export default function AdminCategories() {
         description: category.description || '',
         image: category.image || ''
       });
-      setPreviewUrl(category.image ? (category.image.startsWith('http') ? category.image : `http://localhost:3001/${category.image}`) : '');
+      setPreviewUrl(category.image ? (category.image.startsWith('http') ? category.image : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/${category.image}`) : '');
     } else {
       setEditingCategory(null);
       setFormData({ name: '', description: '', image: '' });
@@ -67,8 +67,8 @@ export default function AdminCategories() {
     setSubmitting(true);
     try {
       const url = editingCategory 
-        ? `http://localhost:3001/categories/${editingCategory.id}`
-        : 'http://localhost:3001/categories';
+        ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/${editingCategory.id}`
+        : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories';
       
       const method = editingCategory ? 'PATCH' : 'POST';
       
@@ -78,7 +78,7 @@ export default function AdminCategories() {
         body: JSON.stringify(formData)
       });
 
-      if (!response.ok) throw new Error('Erreur lors de l’enregistrement');
+      if (!response.ok) throw new Error('Erreur lors de lâ€™enregistrement');
       
       await fetchCategories();
       setShowModal(false);
@@ -92,7 +92,7 @@ export default function AdminCategories() {
   const handleDelete = async () => {
     if (!categoryToDelete) return;
     try {
-      const response = await fetch(`http://localhost:3001/categories/${categoryToDelete.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/${categoryToDelete.id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Erreur lors de la suppression');
@@ -103,20 +103,20 @@ export default function AdminCategories() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-text-muted">Chargement des catégories...</div>;
+  if (loading) return <div className="p-8 text-center text-text-muted">Chargement des catÃ©gories...</div>;
 
   return (
     <div className="animate-fade-in relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-serif text-primary">Gestion des Catégories</h1>
+          <h1 className="text-3xl font-serif text-primary">Gestion des CatÃ©gories</h1>
           <p className="text-text-muted mt-1">Organisez vos produits par collections.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
           className="btn-primary flex items-center gap-2 w-fit px-6 py-3 rounded-xl bg-primary text-white hover:bg-primary-dark transition-all shadow-lg hover:shadow-primary/20"
         >
-          <Plus size={18} /> Ajouter une Catégorie
+          <Plus size={18} /> Ajouter une CatÃ©gorie
         </button>
       </div>
 
@@ -125,7 +125,7 @@ export default function AdminCategories() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100 text-sm text-text-muted">
-                <th className="px-6 py-4 font-medium">Catégorie</th>
+                <th className="px-6 py-4 font-medium">CatÃ©gorie</th>
                 <th className="px-6 py-4 font-medium">Description</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
@@ -138,7 +138,7 @@ export default function AdminCategories() {
                       <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center overflow-hidden shrink-0 text-secondary font-bold">
                         {cat.image ? (
                            <img 
-                           src={cat.image.startsWith('http') ? cat.image : `http://localhost:3001${cat.image.startsWith('/') ? '' : '/'}${cat.image}`} 
+                           src={cat.image.startsWith('http') ? cat.image : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${cat.image.startsWith('/') ? '' : '/'}${cat.image}`} 
                            alt={cat.name} 
                            className="w-full h-full object-cover" 
                          />
@@ -173,7 +173,7 @@ export default function AdminCategories() {
           <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
             <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-primary text-white">
               <h2 className="text-xl font-serif font-bold">
-                {editingCategory ? 'Modifier la Catégorie' : 'Ajouter une Catégorie'}
+                {editingCategory ? 'Modifier la CatÃ©gorie' : 'Ajouter une CatÃ©gorie'}
               </h2>
               <button onClick={() => setShowModal(false)} className="hover:bg-white/20 p-2 rounded-full transition-all">
                 <X size={20} />
@@ -200,15 +200,15 @@ export default function AdminCategories() {
                 />
               </div>
                <div>
-                <label className="block text-xs font-bold text-text-muted uppercase mb-1">Image de la Catégorie</label>
+                <label className="block text-xs font-bold text-text-muted uppercase mb-1">Image de la CatÃ©gorie</label>
                 <div className="space-y-2">
                   <label className="flex items-center justify-center w-full h-32 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-all overflow-hidden relative">
                     {uploadingImage ? (
-                      <span className="text-sm text-text-muted">Téléchargement...</span>
+                      <span className="text-sm text-text-muted">TÃ©lÃ©chargement...</span>
                     ) : previewUrl ? (
                       <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-sm text-text-muted">Cliquer pour sélectionner une image</span>
+                      <span className="text-sm text-text-muted">Cliquer pour sÃ©lectionner une image</span>
                     )}
                     <input
                       type="file"
@@ -222,13 +222,13 @@ export default function AdminCategories() {
                           const data = new FormData();
                           data.append('file', file);
                           try {
-                            const res = await fetch('http://localhost:3001/upload/categories', { method: 'POST', body: data });
+                            const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/upload/categories', { method: 'POST', body: data });
                             if (!res.ok) throw new Error('Upload failed');
                             const uploaded = await res.json();
                             setFormData(prev => ({...prev, image: uploaded.path}));
                           } catch (err) {
                             console.error(err);
-                            alert("Erreur lors du téléchargement");
+                            alert("Erreur lors du tÃ©lÃ©chargement");
                           } finally {
                             setUploadingImage(false);
                           }
@@ -256,9 +256,9 @@ export default function AdminCategories() {
       {categoryToDelete && (
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
            <div className="bg-white max-w-sm w-full rounded-3xl p-8 shadow-2xl">
-            <h3 className="text-xl font-serif font-bold text-center text-primary mb-2">Supprimer la catégorie ?</h3>
+            <h3 className="text-xl font-serif font-bold text-center text-primary mb-2">Supprimer la catÃ©gorie ?</h3>
             <p className="text-text-muted text-center mb-8">
-              Êtes-vous sûr ?
+              ÃŠtes-vous sÃ»r ?
             </p>
             <div className="flex gap-3">
               <button 
@@ -280,3 +280,4 @@ export default function AdminCategories() {
     </div>
   );
 }
+

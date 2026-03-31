@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Trophy, Package, Calendar } from 'lucide-react';
@@ -6,7 +6,7 @@ import { Trophy, Package, Calendar } from 'lucide-react';
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `http://localhost:3001${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 export default function ExcellencePage() {
@@ -17,7 +17,7 @@ export default function ExcellencePage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3001/orders/best-products?month=${bestMonth}&year=${bestYear}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/best-products?month=${bestMonth}&year=${bestYear}`)
       .then(r => r.ok ? r.json() : [])
       .then(data => setBestProducts(Array.isArray(data) ? data : []))
       .catch(() => setBestProducts([]))
@@ -72,7 +72,7 @@ export default function ExcellencePage() {
             
             {/* Month Selector (Wrap) */}
             <div className="flex flex-wrap items-center gap-2 w-full pt-2 xl:pt-0">
-              {['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'].map((m, i) => (
+              {['Jan', 'FÃ©v', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'AoÃ»', 'Sep', 'Oct', 'Nov', 'DÃ©c'].map((m, i) => (
                 <button
                   key={m}
                   onClick={() => setBestMonth(i + 1)}
@@ -89,7 +89,7 @@ export default function ExcellencePage() {
           {loading ? (
             <div className="py-20 flex justify-center"><div className="w-8 h-8 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div></div>
           ) : bestProducts.length === 0 ? (
-            <div className="border border-dashed border-gray-200 rounded-[2rem] p-12 text-center text-text-muted italic">Aucune vente livrée pour ce mois.</div>
+            <div className="border border-dashed border-gray-200 rounded-[2rem] p-12 text-center text-text-muted italic">Aucune vente livrÃ©e pour ce mois.</div>
           ) : bestProducts.map((bp: any, index: number) => {
             let badgeIcon: any = <span className="font-bold text-gray-500">#{index + 1}</span>;
             let badgeColor = 'bg-gray-50 border-gray-100';
@@ -124,7 +124,7 @@ export default function ExcellencePage() {
                 <div className="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
                   <div className="text-left sm:text-right border-l border-gray-200 pl-6">
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-widest block mb-1">Volume</span>
-                    <span className="font-bold text-lg text-primary">{bp.total_quantity_sold} <span className="text-xs font-normal text-text-muted opacity-60">unités</span></span>
+                    <span className="font-bold text-lg text-primary">{bp.total_quantity_sold} <span className="text-xs font-normal text-text-muted opacity-60">unitÃ©s</span></span>
                   </div>
                   <div className="text-right border-l border-gray-200 pl-6 w-32">
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-widest block mb-1">Revenu</span>
@@ -139,3 +139,4 @@ export default function ExcellencePage() {
     </div>
   );
 }
+

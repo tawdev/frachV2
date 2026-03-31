@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import CategorySlider from '@/components/CategorySlider';
 import BestSellers from '@/components/BestSellers';
@@ -17,7 +17,7 @@ import Location from '@/components/Location';
 
 async function getCategories() {
   try {
-    const res = await fetch('http://localhost:3001/categories', { next: { revalidate: 3600 } });
+    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories', { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -28,7 +28,7 @@ async function getCategories() {
 
 async function getProducts() {
   try {
-    const res = await fetch('http://localhost:3001/products', { next: { revalidate: 3600 } });
+    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products', { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -68,13 +68,13 @@ export default async function Home() {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              Redéfinissez votre espace avec notre sélection exclusive de pièces artisanales, où le luxe rencontre le confort absolu.
+              RedÃ©finissez votre espace avec notre sÃ©lection exclusive de piÃ¨ces artisanales, oÃ¹ le luxe rencontre le confort absolu.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <Link href="/products" className="btn-secondary px-8 py-4 text-lg rounded-full group transition-all hover:scale-105 active:scale-95">
-                Découvrir la collection
-                <span className="ml-2 transition-transform group-hover:translate-x-1 inline-block">→</span>
+                DÃ©couvrir la collection
+                <span className="ml-2 transition-transform group-hover:translate-x-1 inline-block">â†’</span>
               </Link>
               <Link href="/categories" className="px-8 py-4 text-white font-semibold hover:text-secondary-light transition-colors relative group">
                 Parcourir par styles
@@ -92,13 +92,13 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. Catégories */}
+      {/* 2. CatÃ©gories */}
       <section className="py-20 bg-background">
         <div className="container">
           <div className="flex justify-between items-end mb-12">
             <div>
               <h2 className="text-sm font-bold tracking-widest text-secondary uppercase mb-2">Nos Espaces</h2>
-              <h3 className="text-3xl md:text-4xl font-serif text-primary">Explorez nos catégories</h3>
+              <h3 className="text-3xl md:text-4xl font-serif text-primary">Explorez nos catÃ©gories</h3>
             </div>
             <Link href="/categories" className="hidden md:inline-flex link-hover text-primary font-medium pb-1">
               Voir tout
@@ -143,3 +143,4 @@ export default async function Home() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, Package, ExternalLink, X, Loader2 } from 'lucide-react';
@@ -67,8 +67,8 @@ export default function AdminProducts() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:3001/products');
-      if (!response.ok) throw new Error('Erreur réseau');
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products');
+      if (!response.ok) throw new Error('Erreur rÃ©seau');
       const data = await response.json();
       setProducts(Array.isArray(data) ? data : []);
     } catch (err: any) {
@@ -81,9 +81,9 @@ export default function AdminProducts() {
   const fetchMetadata = async () => {
     try {
       const [catRes, typeRes, subRes] = await Promise.all([
-        fetch('http://localhost:3001/categories'),
-        fetch('http://localhost:3001/categories/types-base'),
-        fetch('http://localhost:3001/categories/types')
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories'),
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base'),
+        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types')
       ]);
       const catData = await catRes.json();
       const typeData = await typeRes.json();
@@ -156,8 +156,8 @@ export default function AdminProducts() {
     setSubmitting(true);
     try {
       const url = editingProduct 
-        ? `http://localhost:3001/products/${editingProduct.id}`
-        : 'http://localhost:3001/products';
+        ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${editingProduct.id}`
+        : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products';
       
       const method = editingProduct ? 'PATCH' : 'POST';
       
@@ -177,7 +177,7 @@ export default function AdminProducts() {
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) throw new Error('Erreur lors de l’enregistrement');
+      if (!response.ok) throw new Error('Erreur lors de lâ€™enregistrement');
       
       await fetchProducts();
       setShowModal(false);
@@ -191,7 +191,7 @@ export default function AdminProducts() {
   const handleDelete = async () => {
     if (!productToDelete) return;
     try {
-      const response = await fetch(`http://localhost:3001/products/${productToDelete.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${productToDelete.id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Erreur lors de la suppression');
@@ -209,7 +209,7 @@ export default function AdminProducts() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-serif text-primary">Gestion des Produits</h1>
-          <p className="text-text-muted mt-1">Gérez votre inventaire et vos collections.</p>
+          <p className="text-text-muted mt-1">GÃ©rez votre inventaire et vos collections.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
@@ -225,7 +225,7 @@ export default function AdminProducts() {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100 text-sm text-text-muted">
                 <th className="px-6 py-4 font-medium">Produit</th>
-                <th className="px-6 py-4 font-medium">Catégorie</th>
+                <th className="px-6 py-4 font-medium">CatÃ©gorie</th>
                 <th className="px-6 py-4 font-medium">Prix</th>
                 <th className="px-6 py-4 font-medium">Stock</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -242,7 +242,7 @@ export default function AdminProducts() {
                             src={
                               (product.image || (product.images?.[0]?.url))?.startsWith('http') 
                                 ? (product.image || product.images?.[0]?.url) 
-                                : `http://localhost:3001${(product.image || product.images?.[0]?.url)?.startsWith('/') ? '' : '/'}${product.image || product.images?.[0]?.url}`
+                                : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${(product.image || product.images?.[0]?.url)?.startsWith('/') ? '' : '/'}${product.image || product.images?.[0]?.url}`
                             } 
                             alt={product.name} 
                             className="w-full h-full object-cover" 
@@ -338,7 +338,7 @@ export default function AdminProducts() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-text-muted uppercase mb-1">Catégorie *</label>
+                  <label className="block text-xs font-bold text-text-muted uppercase mb-1">CatÃ©gorie *</label>
                    <select 
                     required
                     value={formData.category_id}
@@ -348,7 +348,7 @@ export default function AdminProducts() {
                     }}
                     className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary outline-none transition-all"
                    >
-                    <option value="">Sélectionner une catégorie</option>
+                    <option value="">SÃ©lectionner une catÃ©gorie</option>
                     {categories.map(c => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
@@ -369,15 +369,15 @@ export default function AdminProducts() {
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-bold text-text-muted uppercase mb-1">
-                    Sous-catégorie
-                    {(!formData.category_id || !formData.types_id) && <span className="text-[10px] lowercase font-normal ml-2 opacity-60">(Sélectionnez un type pour filtrer)</span>}
+                    Sous-catÃ©gorie
+                    {(!formData.category_id || !formData.types_id) && <span className="text-[10px] lowercase font-normal ml-2 opacity-60">(SÃ©lectionnez un type pour filtrer)</span>}
                   </label>
                    <select 
                     value={formData.type_category_id}
                     onChange={(e) => setFormData({...formData, type_category_id: e.target.value})}
                     className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary outline-none transition-all"
                    >
-                    <option value="">Sélectionner une sous-catégorie</option>
+                    <option value="">SÃ©lectionner une sous-catÃ©gorie</option>
                     {typeCategories.map(tc => (
                       <option key={tc.id} value={tc.id}>{tc.name}</option>
                     ))}
@@ -391,7 +391,7 @@ export default function AdminProducts() {
                     {formData.images.map((img, idx) => (
                       <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-100 group">
                         <img 
-                          src={img.startsWith('http') ? img : `http://localhost:3001${img.startsWith('/') ? '' : '/'}${img}`} 
+                          src={img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${img.startsWith('/') ? '' : '/'}${img}`} 
                           className="w-full h-full object-cover" 
                         />
                         <button 
@@ -420,7 +420,7 @@ export default function AdminProducts() {
                               const data = new FormData();
                               data.append('file', files[i]);
                               try {
-                                const res = await fetch('http://localhost:3001/upload', {
+                                const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/upload', {
                                   method: 'POST',
                                   body: data,
                                 });
@@ -463,7 +463,7 @@ export default function AdminProducts() {
                       />
                     </div>
                   </div>
-                  <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wider font-bold opacity-60">Glissez-déposez ou collez des URLs. La première est l'image principale.</p>
+                  <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wider font-bold opacity-60">Glissez-dÃ©posez ou collez des URLs. La premiÃ¨re est l'image principale.</p>
                 </div>
               </div>
               
@@ -507,3 +507,4 @@ export default function AdminProducts() {
     </div>
   );
 }
+

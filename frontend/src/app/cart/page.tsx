@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ export default function CartPage() {
   const deliveryFee = subtotal > 0 ? 500 : 0;
   const total = subtotal + deliveryFee;
 
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
 
   return (
     <div className="bg-background min-h-screen py-10 pt-28">
@@ -28,7 +28,7 @@ export default function CartPage() {
                 <div className="hidden sm:grid grid-cols-12 gap-4 pb-4 border-b border-gray-100 text-sm font-medium text-text-muted">
                   <div className="col-span-6">Produit</div>
                   <div className="col-span-2 text-center">Prix</div>
-                  <div className="col-span-2 text-center">Quantité</div>
+                  <div className="col-span-2 text-center">QuantitÃ©</div>
                   <div className="col-span-2 text-right">Total</div>
                 </div>
 
@@ -94,7 +94,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between items-center px-2">
                 <Link href="/products" className="text-text-muted hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium">
-                  ← Continuer vos achats
+                  â† Continuer vos achats
                 </Link>
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function CartPage() {
             {/* Order Summary */}
             <div className="lg:w-1/3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 sticky top-28">
-                <h2 className="text-2xl font-serif text-primary mb-6">Résumé de la commande</h2>
+                <h2 className="text-2xl font-serif text-primary mb-6">RÃ©sumÃ© de la commande</h2>
                 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-text-muted">
@@ -110,7 +110,7 @@ export default function CartPage() {
                     <span className="font-medium text-text">{subtotal.toLocaleString()} DHS</span>
                   </div>
                   <div className="flex justify-between text-text-muted">
-                    <span>Frais de livraison estimés</span>
+                    <span>Frais de livraison estimÃ©s</span>
                     <span className="font-medium text-text">{deliveryFee.toLocaleString()} DHS</span>
                   </div>
                 </div>
@@ -127,12 +127,12 @@ export default function CartPage() {
                 </div>
                 
                 <Link href="/checkout" className="btn-primary w-full py-4 text-center justify-center gap-2 group">
-                  Passer à la caisse
+                  Passer Ã  la caisse
                   <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                 </Link>
                 
                 <div className="mt-6 flex items-center justify-center gap-4 border-t border-gray-100 pt-6 px-4">
-                   <p className="text-xs text-center text-text-muted italic">Paiement 100% sécurisé et livraison garantie partout au Maroc.</p>
+                   <p className="text-xs text-center text-text-muted italic">Paiement 100% sÃ©curisÃ© et livraison garantie partout au Maroc.</p>
                 </div>
               </div>
             </div>
@@ -144,9 +144,9 @@ export default function CartPage() {
               <ShoppingBag size={40} />
             </div>
             <h2 className="text-2xl font-serif text-primary mb-4">Votre panier est vide</h2>
-            <p className="text-text-muted mb-8">Découvrez nos collections pour ajouter des articles à votre panier.</p>
+            <p className="text-text-muted mb-8">DÃ©couvrez nos collections pour ajouter des articles Ã  votre panier.</p>
             <Link href="/products" className="btn-primary">
-              Découvrir nos collections
+              DÃ©couvrir nos collections
             </Link>
           </div>
         )}
@@ -154,3 +154,4 @@ export default function CartPage() {
     </div>
   );
 }
+
