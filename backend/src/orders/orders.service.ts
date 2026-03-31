@@ -10,7 +10,7 @@ export class OrdersService {
     try {
       const { items, ...orderData } = createOrderDto;
       
-      const order = await this.prisma.order.create({
+      const order = await this.prisma.client.order.create({
         data: {
           ...orderData,
           status: 'En attente',
@@ -34,7 +34,7 @@ export class OrdersService {
   }
 
   findAll() {
-    return this.prisma.order.findMany({
+    return this.prisma.client.order.findMany({
       include: {
         order_items: {
           include: {
@@ -47,7 +47,7 @@ export class OrdersService {
   }
 
   findOne(id: number) {
-    return this.prisma.order.findUnique({
+    return this.prisma.client.order.findUnique({
       where: { id },
       include: {
         order_items: {
@@ -61,7 +61,7 @@ export class OrdersService {
 
   async update(id: number, updateData: any) {
     try {
-      return await this.prisma.order.update({
+      return await this.prisma.client.order.update({
         where: { id },
         data: updateData,
       });
@@ -72,9 +72,7 @@ export class OrdersService {
 
   async remove(id: number) {
     try {
-      // Order items are deleted automatically due to cascade (if configured in Prisma)
-      // Otherwise we might need to delete them first.
-      return await this.prisma.order.delete({
+      return await this.prisma.client.order.delete({
         where: { id },
       });
     } catch (error) {
@@ -83,8 +81,7 @@ export class OrdersService {
   }
 
   async bestProductsByMonth() {
-    // Fetch all order items with their parent order (for the date) and product details
-    const items = await this.prisma.orderItem.findMany({
+    const items = await this.prisma.client.orderItem.findMany({
       include: {
         order: { select: { created_at: true } },
         product: { select: { image: true, name: true } }
@@ -92,7 +89,6 @@ export class OrdersService {
       orderBy: { order: { created_at: 'desc' } },
     });
 
-    // Group by year-month, then by product_id, summing quantities
     const monthMap: Record<string, Record<string, { id: number; name: string; image: string; qty: number; revenue: number }>> = {};
     for (const item of items) {
       if (!item.product) continue;
@@ -114,10 +110,9 @@ export class OrdersService {
       monthMap[key][prodId].revenue += Number(item.price) * item.quantity;
     }
 
-    // For each month, pick the top product
     return Object.entries(monthMap)
-      .sort(([a], [b]) => b.localeCompare(a)) // newest first
-      .slice(0, 6) // last 6 months
+      .sort(([a], [b]) => b.localeCompare(a))
+      .slice(0, 6)
       .map(([month, products]) => {
         const top = Object.values(products).sort((a, b) => b.qty - a.qty)[0];
         const [year, m] = month.split('-');
@@ -135,7 +130,7 @@ export class OrdersService {
   }
 
   async bestProductsForSpecificMonth(month: number, year: number) {
-    const items = await this.prisma.orderItem.findMany({
+    const items = await this.prisma.client.orderItem.findMany({
       where: { order: { status: 'Livrée' } },
       include: {
         order: { select: { created_at: true } },

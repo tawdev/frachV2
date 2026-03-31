@@ -11,7 +11,7 @@ export class ProductsService {
   }
 
   async emitCurrentLowStock() {
-    const count = await this.prisma.product.count({ where: { stock: { lt: 10 } } });
+    const count = await this.prisma.client.product.count({ where: { stock: { lt: 10 } } });
     this.lowStockSubject.next(count);
     return count;
   }
@@ -36,7 +36,7 @@ export class ProductsService {
       ];
     }
 
-    const products: any[] = await this.prisma.product.findMany({
+    const products: any[] = await this.prisma.client.product.findMany({
       where,
       include: {
         categories: true,
@@ -47,7 +47,7 @@ export class ProductsService {
 
     // Fetch images for each product
     for (const product of products) {
-      product.images = await this.prisma.$queryRawUnsafe(
+      product.images = await this.prisma.client.$queryRawUnsafe(
         'SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC',
         product.id
       );
@@ -57,7 +57,7 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
-    const product: any = await this.prisma.product.findUnique({
+    const product: any = await this.prisma.client.product.findUnique({
       where: { id },
       include: {
         categories: true,
@@ -68,7 +68,7 @@ export class ProductsService {
     if (!product) throw new NotFoundException('Product not found');
 
     // Fetch images
-    product.images = await this.prisma.$queryRawUnsafe(
+    product.images = await this.prisma.client.$queryRawUnsafe(
       'SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC',
       id
     );
@@ -77,7 +77,7 @@ export class ProductsService {
   }
 
   async getFeatured() {
-    return this.prisma.product.findMany({
+    return this.prisma.client.product.findMany({
       take: 10,
       orderBy: { id: 'desc' },
       include: { categories: true }
@@ -99,12 +99,12 @@ export class ProductsService {
     }
 
     const [products, categories] = await Promise.all([
-      this.prisma.product.findMany({
+      this.prisma.client.product.findMany({
         where: productsWhere,
         take: 20,
         include: { categories: true }
       }),
-      this.prisma.category.findMany({
+      this.prisma.client.category.findMany({
         where: { name: { contains: query } },
         take: 5
       })
@@ -113,7 +113,7 @@ export class ProductsService {
     // Attach images for search results
     const productResults: any[] = [];
     for (const p of products) {
-      const images = await this.prisma.$queryRawUnsafe(
+      const images = await this.prisma.client.$queryRawUnsafe(
         'SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC LIMIT 1',
         p.id
       );
@@ -125,7 +125,7 @@ export class ProductsService {
 
   async create(data: any) {
     const { images, ...productData } = data;
-    const product = await this.prisma.product.create({
+    const product = await this.prisma.client.product.create({
       data: {
         name: productData.name,
         description: productData.description,
@@ -142,14 +142,14 @@ export class ProductsService {
     // Handle multiple images if provided
     if (data.images && Array.isArray(data.images)) {
       for (const imageUrl of data.images) {
-        await this.prisma.$executeRawUnsafe(
+        await this.prisma.client.$executeRawUnsafe(
           'INSERT INTO product_images (product_id, url) VALUES (?, ?)',
           product.id, imageUrl
         );
       }
     } else if (data.image) {
       // If only single image provided, add it as main
-      await this.prisma.$executeRawUnsafe(
+      await this.prisma.client.$executeRawUnsafe(
         'INSERT INTO product_images (product_id, url, is_main) VALUES (?, ?, ?)',
         product.id, data.image, 1
       );
@@ -162,7 +162,7 @@ export class ProductsService {
     if (stock < 0) {
       throw new Error('Stock cannot be negative');
     }
-    const result = await this.prisma.product.update({
+    const result = await this.prisma.client.product.update({
       where: { id },
       data: { stock: Number(stock) },
       select: { id: true, stock: true }
@@ -173,7 +173,7 @@ export class ProductsService {
 
   async update(id: number, data: any) {
     const { images, ...productData } = data;
-    const product = await this.prisma.product.update({
+    const product = await this.prisma.client.product.update({
       where: { id },
       data: {
         name: productData.name,
@@ -191,10 +191,10 @@ export class ProductsService {
     // Sync images if provided in data
     if (data.images && Array.isArray(data.images)) {
       // Delete old images
-      await this.prisma.$executeRawUnsafe('DELETE FROM product_images WHERE product_id = ?', id);
+      await this.prisma.client.$executeRawUnsafe('DELETE FROM product_images WHERE product_id = ?', id);
       // Insert new ones
       for (const imageUrl of data.images) {
-        await this.prisma.$executeRawUnsafe(
+        await this.prisma.client.$executeRawUnsafe(
           'INSERT INTO product_images (product_id, url) VALUES (?, ?)',
           id, imageUrl
         );
@@ -205,7 +205,7 @@ export class ProductsService {
   }
 
   async remove(id: number) {
-    return this.prisma.product.delete({
+    return this.prisma.client.product.delete({
       where: { id }
     });
   }

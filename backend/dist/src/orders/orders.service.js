@@ -20,7 +20,7 @@ let OrdersService = class OrdersService {
     async create(createOrderDto) {
         try {
             const { items, ...orderData } = createOrderDto;
-            const order = await this.prisma.order.create({
+            const order = await this.prisma.client.order.create({
                 data: {
                     ...orderData,
                     status: 'En attente',
@@ -44,7 +44,7 @@ let OrdersService = class OrdersService {
         }
     }
     findAll() {
-        return this.prisma.order.findMany({
+        return this.prisma.client.order.findMany({
             include: {
                 order_items: {
                     include: {
@@ -56,7 +56,7 @@ let OrdersService = class OrdersService {
         });
     }
     findOne(id) {
-        return this.prisma.order.findUnique({
+        return this.prisma.client.order.findUnique({
             where: { id },
             include: {
                 order_items: {
@@ -69,7 +69,7 @@ let OrdersService = class OrdersService {
     }
     async update(id, updateData) {
         try {
-            return await this.prisma.order.update({
+            return await this.prisma.client.order.update({
                 where: { id },
                 data: updateData,
             });
@@ -80,7 +80,7 @@ let OrdersService = class OrdersService {
     }
     async remove(id) {
         try {
-            return await this.prisma.order.delete({
+            return await this.prisma.client.order.delete({
                 where: { id },
             });
         }
@@ -89,7 +89,7 @@ let OrdersService = class OrdersService {
         }
     }
     async bestProductsByMonth() {
-        const items = await this.prisma.orderItem.findMany({
+        const items = await this.prisma.client.orderItem.findMany({
             include: {
                 order: { select: { created_at: true } },
                 product: { select: { image: true, name: true } }
@@ -136,7 +136,7 @@ let OrdersService = class OrdersService {
         });
     }
     async bestProductsForSpecificMonth(month, year) {
-        const items = await this.prisma.orderItem.findMany({
+        const items = await this.prisma.client.orderItem.findMany({
             where: { order: { status: 'Livrée' } },
             include: {
                 order: { select: { created_at: true } },

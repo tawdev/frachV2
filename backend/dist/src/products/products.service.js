@@ -20,7 +20,7 @@ let ProductsService = class ProductsService {
         return this.lowStockSubject.asObservable();
     }
     async emitCurrentLowStock() {
-        const count = await this.prisma.product.count({ where: { stock: { lt: 10 } } });
+        const count = await this.prisma.client.product.count({ where: { stock: { lt: 10 } } });
         this.lowStockSubject.next(count);
         return count;
     }
@@ -44,7 +44,7 @@ let ProductsService = class ProductsService {
                 { description: { contains: query } }
             ];
         }
-        const products = await this.prisma.product.findMany({
+        const products = await this.prisma.client.product.findMany({
             where,
             include: {
                 categories: true,
@@ -53,12 +53,12 @@ let ProductsService = class ProductsService {
             orderBy: { id: 'desc' }
         });
         for (const product of products) {
-            product.images = await this.prisma.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC', product.id);
+            product.images = await this.prisma.client.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC', product.id);
         }
         return products;
     }
     async findOne(id) {
-        const product = await this.prisma.product.findUnique({
+        const product = await this.prisma.client.product.findUnique({
             where: { id },
             include: {
                 categories: true,
@@ -67,11 +67,11 @@ let ProductsService = class ProductsService {
         });
         if (!product)
             throw new common_1.NotFoundException('Product not found');
-        product.images = await this.prisma.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC', id);
+        product.images = await this.prisma.client.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC', id);
         return product;
     }
     async getFeatured() {
-        return this.prisma.product.findMany({
+        return this.prisma.client.product.findMany({
             take: 10,
             orderBy: { id: 'desc' },
             include: { categories: true }
@@ -90,26 +90,26 @@ let ProductsService = class ProductsService {
             productsWhere.category_id = category_id;
         }
         const [products, categories] = await Promise.all([
-            this.prisma.product.findMany({
+            this.prisma.client.product.findMany({
                 where: productsWhere,
                 take: 20,
                 include: { categories: true }
             }),
-            this.prisma.category.findMany({
+            this.prisma.client.category.findMany({
                 where: { name: { contains: query } },
                 take: 5
             })
         ]);
         const productResults = [];
         for (const p of products) {
-            const images = await this.prisma.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC LIMIT 1', p.id);
+            const images = await this.prisma.client.$queryRawUnsafe('SELECT * FROM product_images WHERE product_id = ? ORDER BY is_main DESC, id ASC LIMIT 1', p.id);
             productResults.push({ ...p, images });
         }
         return { products: productResults, categories };
     }
     async create(data) {
         const { images, ...productData } = data;
-        const product = await this.prisma.product.create({
+        const product = await this.prisma.client.product.create({
             data: {
                 name: productData.name,
                 description: productData.description,
@@ -124,11 +124,11 @@ let ProductsService = class ProductsService {
         });
         if (data.images && Array.isArray(data.images)) {
             for (const imageUrl of data.images) {
-                await this.prisma.$executeRawUnsafe('INSERT INTO product_images (product_id, url) VALUES (?, ?)', product.id, imageUrl);
+                await this.prisma.client.$executeRawUnsafe('INSERT INTO product_images (product_id, url) VALUES (?, ?)', product.id, imageUrl);
             }
         }
         else if (data.image) {
-            await this.prisma.$executeRawUnsafe('INSERT INTO product_images (product_id, url, is_main) VALUES (?, ?, ?)', product.id, data.image, 1);
+            await this.prisma.client.$executeRawUnsafe('INSERT INTO product_images (product_id, url, is_main) VALUES (?, ?, ?)', product.id, data.image, 1);
         }
         return product;
     }
@@ -136,7 +136,7 @@ let ProductsService = class ProductsService {
         if (stock < 0) {
             throw new Error('Stock cannot be negative');
         }
-        const result = await this.prisma.product.update({
+        const result = await this.prisma.client.product.update({
             where: { id },
             data: { stock: Number(stock) },
             select: { id: true, stock: true }
@@ -146,7 +146,7 @@ let ProductsService = class ProductsService {
     }
     async update(id, data) {
         const { images, ...productData } = data;
-        const product = await this.prisma.product.update({
+        const product = await this.prisma.client.product.update({
             where: { id },
             data: {
                 name: productData.name,
@@ -161,15 +161,15 @@ let ProductsService = class ProductsService {
             }
         });
         if (data.images && Array.isArray(data.images)) {
-            await this.prisma.$executeRawUnsafe('DELETE FROM product_images WHERE product_id = ?', id);
+            await this.prisma.client.$executeRawUnsafe('DELETE FROM product_images WHERE product_id = ?', id);
             for (const imageUrl of data.images) {
-                await this.prisma.$executeRawUnsafe('INSERT INTO product_images (product_id, url) VALUES (?, ?)', id, imageUrl);
+                await this.prisma.client.$executeRawUnsafe('INSERT INTO product_images (product_id, url) VALUES (?, ?)', id, imageUrl);
             }
         }
         return product;
     }
     async remove(id) {
-        return this.prisma.product.delete({
+        return this.prisma.client.product.delete({
             where: { id }
         });
     }

@@ -6,7 +6,7 @@ export class CategoriesService {
   constructor(private prisma: PrismaService) { }
 
   findAll() {
-    return this.prisma.category.findMany({
+    return this.prisma.client.category.findMany({
       include: {
         types_categories: true,
         _count: {
@@ -18,23 +18,23 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return this.prisma.category.findUnique({ where: { id } });
+    return this.prisma.client.category.findUnique({ where: { id } });
   }
 
   create(data: any) {
-    return this.prisma.category.create({ data });
+    return this.prisma.client.category.create({ data });
   }
 
   update(id: number, data: any) {
-    return this.prisma.category.update({ where: { id }, data });
+    return this.prisma.client.category.update({ where: { id }, data });
   }
 
   remove(id: number) {
-    return this.prisma.category.delete({ where: { id } });
+    return this.prisma.client.category.delete({ where: { id } });
   }
 
   findTypes() {
-    return this.prisma.typesCategory.findMany({
+    return this.prisma.client.typesCategory.findMany({
       include: {
         categories: true,
         types: true,
@@ -44,32 +44,32 @@ export class CategoriesService {
   }
 
   findTypesBase() {
-    return this.prisma.type.findMany({
+    return this.prisma.client.type.findMany({
       orderBy: { name: 'asc' }
     });
   }
 
   createTypeBase(data: any) {
-    return this.prisma.type.create({ data });
+    return this.prisma.client.type.create({ data });
   }
 
   updateTypeBase(id: number, data: any) {
-    return this.prisma.type.update({ where: { id }, data });
+    return this.prisma.client.type.update({ where: { id }, data });
   }
 
   deleteTypeBase(id: number) {
-    return this.prisma.type.delete({ where: { id } });
+    return this.prisma.client.type.delete({ where: { id } });
   }
 
   createType(data: any) {
-    return this.prisma.typesCategory.create({ data });
+    return this.prisma.client.typesCategory.create({ data });
   }
 
   updateType(id: number, data: any) {
-    return this.prisma.typesCategory.update({ where: { id }, data });
+    return this.prisma.client.typesCategory.update({ where: { id }, data });
   }
 
   deleteType(id: number) {
-    return this.prisma.typesCategory.delete({ where: { id } });
+    return this.prisma.client.typesCategory.delete({ where: { id } });
   }
 }

@@ -2,7 +2,7 @@ import { CategoriesService } from './categories.service';
 export declare class CategoriesController {
     private readonly categoriesService;
     constructor(categoriesService: CategoriesService);
-    findAll(): import("@prisma/client").Prisma.PrismaPromise<({
+    findAll(): import("generated/prisma").Prisma.PrismaPromise<({
         types_categories: {
             id: number;
             name: string;
@@ -23,7 +23,7 @@ export declare class CategoriesController {
         created_at: Date;
         updated_at: Date;
     })[]>;
-    findTypes(): import("@prisma/client").Prisma.PrismaPromise<({
+    findTypes(): import("generated/prisma").Prisma.PrismaPromise<({
         categories: {
             id: number;
             name: string;
@@ -47,45 +47,45 @@ export declare class CategoriesController {
         category_id: number;
         types_id: number | null;
     })[]>;
-    findTypesBase(): import("@prisma/client").Prisma.PrismaPromise<{
+    findTypesBase(): import("generated/prisma").Prisma.PrismaPromise<{
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
     }[]>;
-    findOne(id: number): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    findOne(id: number): import("generated/prisma").Prisma.Prisma__CategoryClient<{
         id: number;
         name: string;
         description: string | null;
         image: string | null;
         created_at: Date;
         updated_at: Date;
-    } | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    create(data: any): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    } | null, null, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    create(data: any): import("generated/prisma").Prisma.Prisma__CategoryClient<{
         id: number;
         name: string;
         description: string | null;
         image: string | null;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    update(id: number, data: any): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    update(id: number, data: any): import("generated/prisma").Prisma.Prisma__CategoryClient<{
         id: number;
         name: string;
         description: string | null;
         image: string | null;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    remove(id: number): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    remove(id: number): import("generated/prisma").Prisma.Prisma__CategoryClient<{
         id: number;
         name: string;
         description: string | null;
         image: string | null;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    createType(data: any): import("@prisma/client").Prisma.Prisma__TypesCategoryClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    createType(data: any): import("generated/prisma").Prisma.Prisma__TypesCategoryClient<{
         id: number;
         name: string;
         image: string | null;
@@ -93,8 +93,8 @@ export declare class CategoriesController {
         updated_at: Date;
         category_id: number;
         types_id: number | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    updateType(id: number, data: any): import("@prisma/client").Prisma.Prisma__TypesCategoryClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    updateType(id: number, data: any): import("generated/prisma").Prisma.Prisma__TypesCategoryClient<{
         id: number;
         name: string;
         image: string | null;
@@ -102,8 +102,8 @@ export declare class CategoriesController {
         updated_at: Date;
         category_id: number;
         types_id: number | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    deleteType(id: number): import("@prisma/client").Prisma.Prisma__TypesCategoryClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    deleteType(id: number): import("generated/prisma").Prisma.Prisma__TypesCategoryClient<{
         id: number;
         name: string;
         image: string | null;
@@ -111,23 +111,23 @@ export declare class CategoriesController {
         updated_at: Date;
         category_id: number;
         types_id: number | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    createTypeBase(data: any): import("@prisma/client").Prisma.Prisma__TypeClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    createTypeBase(data: any): import("generated/prisma").Prisma.Prisma__TypeClient<{
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    updateTypeBase(id: number, data: any): import("@prisma/client").Prisma.Prisma__TypeClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    updateTypeBase(id: number, data: any): import("generated/prisma").Prisma.Prisma__TypeClient<{
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    deleteTypeBase(id: number): import("@prisma/client").Prisma.Prisma__TypeClient<{
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
+    deleteTypeBase(id: number): import("generated/prisma").Prisma.Prisma__TypeClient<{
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
+    }, never, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
 }

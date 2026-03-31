@@ -16,14 +16,14 @@ export declare class OrdersController {
         id: number;
         created_at: Date;
         updated_at: Date;
+        status: string | null;
         customer_name: string;
         customer_email: string;
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-        status: string | null;
     }>;
-    findAll(): import("@prisma/client").Prisma.PrismaPromise<({
+    findAll(): import("generated/prisma").Prisma.PrismaPromise<({
         order_items: ({
             product: {
                 id: number;
@@ -58,12 +58,12 @@ export declare class OrdersController {
         id: number;
         created_at: Date;
         updated_at: Date;
+        status: string | null;
         customer_name: string;
         customer_email: string;
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-        status: string | null;
     })[]>;
     bestProductsByMonth(month?: string, year?: string): Promise<{
         rank: number;
@@ -79,7 +79,7 @@ export declare class OrdersController {
         qty: number;
         revenue: number;
     }[]>;
-    findOne(id: string): import("@prisma/client").Prisma.Prisma__OrderClient<({
+    findOne(id: string): import("generated/prisma").Prisma.Prisma__OrderClient<({
         order_items: ({
             product: {
                 id: number;
@@ -114,33 +114,33 @@ export declare class OrdersController {
         id: number;
         created_at: Date;
         updated_at: Date;
+        status: string | null;
         customer_name: string;
         customer_email: string;
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-        status: string | null;
-    }) | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
+    }) | null, null, import("generated/prisma/runtime/client").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
     updateStatus(id: string, status: string): Promise<{
         id: number;
         created_at: Date;
         updated_at: Date;
+        status: string | null;
         customer_name: string;
         customer_email: string;
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-        status: string | null;
     }>;
     remove(id: string): Promise<{
         id: number;
         created_at: Date;
         updated_at: Date;
+        status: string | null;
         customer_name: string;
         customer_email: string;
         customer_phone: string | null;
         customer_address: string;
         total_amount: import("@prisma/client-runtime-utils").Decimal;
-        status: string | null;
     }>;
 }

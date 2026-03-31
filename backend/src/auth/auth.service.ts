@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async login(username: string, pass: string) {
-    const admin = await this.prisma.admin.findUnique({
+    const admin = await this.prisma.client.admin.findUnique({
       where: { username },
     });
 

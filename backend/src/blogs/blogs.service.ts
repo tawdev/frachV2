@@ -8,7 +8,7 @@ export class BlogsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createBlogDto: CreateBlogDto) {
-    return this.prisma.blog.create({
+    return this.prisma.client.blog.create({
       data: {
         ...createBlogDto,
         published_at: createBlogDto.status === 'published' ? new Date() : null,
@@ -35,14 +35,14 @@ export class BlogsService {
     const skip = (page - 1) * limit;
     
     const [data, total] = await Promise.all([
-      this.prisma.blog.findMany({
+      this.prisma.client.blog.findMany({
         where,
         include: { author: { select: { id: true, username: true } } },
         orderBy: { created_at: 'desc' },
         skip,
         take: limit,
       }),
-      this.prisma.blog.count({ where }),
+      this.prisma.client.blog.count({ where }),
     ]);
     
     return {
@@ -57,7 +57,7 @@ export class BlogsService {
   }
 
   async findOne(id: number) {
-    const blog = await this.prisma.blog.findUnique({
+    const blog = await this.prisma.client.blog.findUnique({
       where: { id },
       include: { author: { select: { id: true, username: true } } },
     });
@@ -67,7 +67,7 @@ export class BlogsService {
   }
 
   async findOneBySlug(slug: string) {
-    const blog = await this.prisma.blog.findUnique({
+    const blog = await this.prisma.client.blog.findUnique({
       where: { slug },
       include: { author: { select: { id: true, username: true } } },
     });
@@ -75,7 +75,7 @@ export class BlogsService {
     if (!blog) throw new NotFoundException('Blog not found');
 
     // Increment views
-    await this.prisma.blog.update({
+    await this.prisma.client.blog.update({
       where: { id: blog.id },
       data: { views: { increment: 1 } },
     });
@@ -87,26 +87,26 @@ export class BlogsService {
     const data: any = { ...updateBlogDto };
     
     if (updateBlogDto.status === 'published') {
-      const existing = await this.prisma.blog.findUnique({ where: { id } });
+      const existing = await this.prisma.client.blog.findUnique({ where: { id } });
       if (existing && !existing.published_at) {
         data.published_at = new Date();
       }
     }
     
-    return this.prisma.blog.update({
+    return this.prisma.client.blog.update({
       where: { id },
       data,
     });
   }
 
   async remove(id: number) {
-    return this.prisma.blog.delete({
+    return this.prisma.client.blog.delete({
       where: { id },
     });
   }
 
   async bulkDelete(ids: number[]) {
-    return this.prisma.blog.deleteMany({
+    return this.prisma.client.blog.deleteMany({
       where: {
         id: { in: ids },
       },

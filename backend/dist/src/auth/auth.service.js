@@ -55,7 +55,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async login(username, pass) {
-        const admin = await this.prisma.admin.findUnique({
+        const admin = await this.prisma.client.admin.findUnique({
             where: { username },
         });
         if (!admin) {

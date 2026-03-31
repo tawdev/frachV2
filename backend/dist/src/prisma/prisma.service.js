@@ -10,26 +10,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = void 0;
+require("dotenv/config");
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
+const prisma_1 = require("../../generated/prisma");
 const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
-let PrismaService = class PrismaService extends client_1.PrismaClient {
+function parseDatabaseUrl(url) {
+    const match = url.match(/mysql:\/\/([^:]+):([^@]*)@([^:]+):(\d+)\/(.+)/);
+    if (!match) {
+        throw new Error(`Invalid DATABASE_URL format: ${url}`);
+    }
+    return {
+        host: match[3],
+        port: parseInt(match[4], 10),
+        user: match[1],
+        password: decodeURIComponent(match[2]),
+        database: match[5],
+    };
+}
+let PrismaService = class PrismaService {
+    client;
     constructor() {
-        const url = new URL(process.env.DATABASE_URL);
+        const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL);
         const adapter = new adapter_mariadb_1.PrismaMariaDb({
-            host: url.hostname,
-            port: Number(url.port) || 3306,
-            user: url.username,
-            password: url.password,
-            database: url.pathname.substring(1),
+            host: dbConfig.host,
+            port: dbConfig.port,
+            user: dbConfig.user,
+            password: dbConfig.password,
+            database: dbConfig.database,
         });
-        super({ adapter });
+        this.client = new prisma_1.PrismaClient({ adapter });
     }
     async onModuleInit() {
-        await this.$connect();
+        await this.client.$connect();
     }
     async onModuleDestroy() {
-        await this.$disconnect();
+        await this.client.$disconnect();
     }
 };
 exports.PrismaService = PrismaService;

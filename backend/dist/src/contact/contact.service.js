@@ -19,7 +19,7 @@ let ContactService = class ContactService {
     }
     async create(createContactDto) {
         try {
-            return await this.prisma.contactMessage.create({
+            return await this.prisma.client.contactMessage.create({
                 data: {
                     ...createContactDto,
                 },
@@ -30,7 +30,7 @@ let ContactService = class ContactService {
         }
     }
     findAll() {
-        return this.prisma.contactMessage.findMany({
+        return this.prisma.client.contactMessage.findMany({
             orderBy: { created_at: 'desc' }
         });
     }

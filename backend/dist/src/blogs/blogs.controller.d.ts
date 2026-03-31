@@ -5,19 +5,19 @@ export declare class BlogsController {
     private readonly blogsService;
     constructor(blogsService: BlogsService);
     create(createBlogDto: CreateBlogDto): Promise<{
+        id: number;
+        image: string | null;
+        category: string | null;
+        created_at: Date;
+        updated_at: Date;
         title: string;
         slug: string;
         content: string;
-        category: string | null;
-        image: string | null;
+        author_id: number | null;
         status: string;
         tags: string | null;
         views: number;
-        created_at: Date;
-        updated_at: Date;
         published_at: Date | null;
-        id: number;
-        author_id: number | null;
     }>;
     findAll(q?: string, category?: string, status?: string, author?: string, page?: string, limit?: string): Promise<{
         data: ({
@@ -26,19 +26,19 @@ export declare class BlogsController {
                 username: string;
             } | null;
         } & {
+            id: number;
+            image: string | null;
+            category: string | null;
+            created_at: Date;
+            updated_at: Date;
             title: string;
             slug: string;
             content: string;
-            category: string | null;
-            image: string | null;
+            author_id: number | null;
             status: string;
             tags: string | null;
             views: number;
-            created_at: Date;
-            updated_at: Date;
             published_at: Date | null;
-            id: number;
-            author_id: number | null;
         })[];
         meta: {
             total: number;
@@ -53,19 +53,19 @@ export declare class BlogsController {
             username: string;
         } | null;
     } & {
+        id: number;
+        image: string | null;
+        category: string | null;
+        created_at: Date;
+        updated_at: Date;
         title: string;
         slug: string;
         content: string;
-        category: string | null;
-        image: string | null;
+        author_id: number | null;
         status: string;
         tags: string | null;
         views: number;
-        created_at: Date;
-        updated_at: Date;
         published_at: Date | null;
-        id: number;
-        author_id: number | null;
     }>;
     findOne(id: string): Promise<{
         author: {
@@ -73,51 +73,51 @@ export declare class BlogsController {
             username: string;
         } | null;
     } & {
+        id: number;
+        image: string | null;
+        category: string | null;
+        created_at: Date;
+        updated_at: Date;
         title: string;
         slug: string;
         content: string;
-        category: string | null;
-        image: string | null;
+        author_id: number | null;
         status: string;
         tags: string | null;
         views: number;
-        created_at: Date;
-        updated_at: Date;
         published_at: Date | null;
-        id: number;
-        author_id: number | null;
     }>;
     update(id: string, updateBlogDto: UpdateBlogDto): Promise<{
+        id: number;
+        image: string | null;
+        category: string | null;
+        created_at: Date;
+        updated_at: Date;
         title: string;
         slug: string;
         content: string;
-        category: string | null;
-        image: string | null;
+        author_id: number | null;
         status: string;
         tags: string | null;
         views: number;
-        created_at: Date;
-        updated_at: Date;
         published_at: Date | null;
-        id: number;
-        author_id: number | null;
     }>;
     remove(id: string): Promise<{
+        id: number;
+        image: string | null;
+        category: string | null;
+        created_at: Date;
+        updated_at: Date;
         title: string;
         slug: string;
         content: string;
-        category: string | null;
-        image: string | null;
+        author_id: number | null;
         status: string;
         tags: string | null;
         views: number;
-        created_at: Date;
-        updated_at: Date;
         published_at: Date | null;
-        id: number;
-        author_id: number | null;
     }>;
-    bulkDelete(ids: number[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
+    bulkDelete(ids: number[]): Promise<import("generated/prisma").Prisma.BatchPayload>;
     uploadFile(file: Express.Multer.File): {
         url: string;
     };

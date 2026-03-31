@@ -18,7 +18,7 @@ let BlogsService = class BlogsService {
         this.prisma = prisma;
     }
     async create(createBlogDto) {
-        return this.prisma.blog.create({
+        return this.prisma.client.blog.create({
             data: {
                 ...createBlogDto,
                 published_at: createBlogDto.status === 'published' ? new Date() : null,
@@ -42,14 +42,14 @@ let BlogsService = class BlogsService {
             where.author_id = +author;
         const skip = (page - 1) * limit;
         const [data, total] = await Promise.all([
-            this.prisma.blog.findMany({
+            this.prisma.client.blog.findMany({
                 where,
                 include: { author: { select: { id: true, username: true } } },
                 orderBy: { created_at: 'desc' },
                 skip,
                 take: limit,
             }),
-            this.prisma.blog.count({ where }),
+            this.prisma.client.blog.count({ where }),
         ]);
         return {
             data,
@@ -62,7 +62,7 @@ let BlogsService = class BlogsService {
         };
     }
     async findOne(id) {
-        const blog = await this.prisma.blog.findUnique({
+        const blog = await this.prisma.client.blog.findUnique({
             where: { id },
             include: { author: { select: { id: true, username: true } } },
         });
@@ -71,13 +71,13 @@ let BlogsService = class BlogsService {
         return blog;
     }
     async findOneBySlug(slug) {
-        const blog = await this.prisma.blog.findUnique({
+        const blog = await this.prisma.client.blog.findUnique({
             where: { slug },
             include: { author: { select: { id: true, username: true } } },
         });
         if (!blog)
             throw new common_1.NotFoundException('Blog not found');
-        await this.prisma.blog.update({
+        await this.prisma.client.blog.update({
             where: { id: blog.id },
             data: { views: { increment: 1 } },
         });
@@ -86,23 +86,23 @@ let BlogsService = class BlogsService {
     async update(id, updateBlogDto) {
         const data = { ...updateBlogDto };
         if (updateBlogDto.status === 'published') {
-            const existing = await this.prisma.blog.findUnique({ where: { id } });
+            const existing = await this.prisma.client.blog.findUnique({ where: { id } });
             if (existing && !existing.published_at) {
                 data.published_at = new Date();
             }
         }
-        return this.prisma.blog.update({
+        return this.prisma.client.blog.update({
             where: { id },
             data,
         });
     }
     async remove(id) {
-        return this.prisma.blog.delete({
+        return this.prisma.client.blog.delete({
             where: { id },
         });
     }
     async bulkDelete(ids) {
-        return this.prisma.blog.deleteMany({
+        return this.prisma.client.blog.deleteMany({
             where: {
                 id: { in: ids },
             },
