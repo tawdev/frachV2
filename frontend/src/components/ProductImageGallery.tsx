@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
@@ -18,7 +19,7 @@ export default function ProductImageGallery({ images, alt }: ProductImageGallery
     ? images.map(img => typeof img === 'string' ? img : img.url)
     : [];
   
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
   
   const formatUrl = (url: string) => {
     if (!url) return '/images/placeholder.jpg';

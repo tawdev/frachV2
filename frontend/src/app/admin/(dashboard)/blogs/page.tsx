@@ -1,6 +1,8 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/api-config';
+
 import Link from 'next/link';
 import { 
   Plus, 
@@ -50,7 +52,7 @@ export default function BlogsPage() {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      let url = `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs?page=${page}&limit=10`;
+      let url = `${API_BASE_URL}/blogs?page=${page}&limit=10`;
       if (statusFilter !== 'all') url += `&status=${statusFilter}`;
       if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
       
@@ -75,7 +77,7 @@ export default function BlogsPage() {
     if (!confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cet article ?')) return;
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/blogs/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -91,7 +93,7 @@ export default function BlogsPage() {
     if (!confirm(`ÃŠtes-vous sÃ»r de vouloir supprimer ${selectedIds.length} articles ?`)) return;
 
     try {
-      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs/bulk/delete', {
+      const res = await fetch(`${API_BASE_URL}/blogs/bulk/delete`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: selectedIds }),

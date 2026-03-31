@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ChevronLeft, Check, Truck, ShieldCheck } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductImageGallery from '@/components/ProductImageGallery';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export default async function ProductDetailPage({
   params,
@@ -10,7 +11,7 @@ export default async function ProductDetailPage({
 }) {
   let product = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/products/${params.id}`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/products/${params.id}`, { cache: 'no-store' });
     if (res.ok) {
       product = await res.json();
     }
@@ -27,7 +28,7 @@ export default async function ProductDetailPage({
     );
   }
 
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}';
+  const backendUrl = API_BASE_URL;
   const mainImage = product.image 
     ? (product.image.startsWith('http') ? product.image : `${backendUrl}/${product.image}`)
     : '/images/placeholder.jpg';

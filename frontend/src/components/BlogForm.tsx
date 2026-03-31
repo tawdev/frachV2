@@ -1,7 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api-config';
+
 import { 
   Save, 
   X, 
@@ -60,7 +62,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
     formDataUpload.append('image', file);
 
     try {
-      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs/upload', {
+      const res = await fetch(`${API_BASE_URL}/blogs/upload`, {
         method: 'POST',
         body: formDataUpload,
       });
@@ -81,8 +83,8 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
     setError(null);
 
     const url = isEdit 
-      ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/blogs/${initialData.id}` 
-      : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs';
+      ? `${API_BASE_URL}/blogs/${initialData.id}` 
+      : `${API_BASE_URL}/blogs`;
     
     const method = isEdit ? 'PATCH' : 'POST';
 
@@ -234,7 +236,7 @@ export default function BlogForm({ initialData, isEdit = false }: BlogFormProps)
               {formData.image ? (
                 <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100 border border-gray-100 shadow-inner">
                   <img 
-                    src={formData.image.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${formData.image}` : formData.image} 
+                    src={formData.image.startsWith('/') ? `${API_BASE_URL}${formData.image}` : formData.image} 
                     alt="Preview" 
                     className="w-full h-full object-cover"
                   />

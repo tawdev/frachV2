@@ -1,12 +1,13 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import { Trophy, Package, Calendar } from 'lucide-react';
 
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 export default function ExcellencePage() {
@@ -17,7 +18,7 @@ export default function ExcellencePage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/best-products?month=${bestMonth}&year=${bestYear}`)
+    fetch(`${API_BASE_URL}/orders/best-products?month=${bestMonth}&year=${bestYear}`)
       .then(r => r.ok ? r.json() : [])
       .then(data => setBestProducts(Array.isArray(data) ? data : []))
       .catch(() => setBestProducts([]))

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Image from 'next/image';
 import Link from 'next/link';
 import CategorySlider from '@/components/CategorySlider';
@@ -17,7 +18,7 @@ import Location from '@/components/Location';
 
 async function getCategories() {
   try {
-    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories', { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE_URL}/categories`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -28,7 +29,7 @@ async function getCategories() {
 
 async function getProducts() {
   try {
-    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products', { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE_URL}/products`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {

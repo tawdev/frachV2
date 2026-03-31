@@ -1,0 +1,15 @@
+{
+  "name": "frach-v2-root",
+  "version": "1.0.0",
+  "description": "Root package manager for FrachDarkV2",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "build:all": "npm run build --prefix backend && npm run build --prefix frontend",
+    "prisma:generate": "npm run generate --prefix backend",
+    "start:backend": "pm2 start backend/dist/main.js --name \"frach-backend\"",
+    "start:frontend": "pm2 start \"npm run start\" --prefix frontend --name \"frach-frontend\"",
+    "start:all": "pm2 start ecosystem.config.js",
+    "stop:all": "pm2 stop ecosystem.config.js",
+    "restart:all": "pm2 restart ecosystem.config.js"
+  }
+}

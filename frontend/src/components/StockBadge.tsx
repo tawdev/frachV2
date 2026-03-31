@@ -1,12 +1,13 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 
 export default function StockBadge() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const eventSource = new EventSource((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products/stream/low-stock');
+    const eventSource = new EventSource(`${API_BASE_URL}/products/stream/low-stock`);
 
     eventSource.onmessage = (event) => {
       try {

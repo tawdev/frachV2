@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Link from 'next/link';
 import Image from 'next/image';
 
@@ -11,7 +12,7 @@ interface Category {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories', { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE_URL}/categories`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -22,7 +23,7 @@ async function getCategories(): Promise<Category[]> {
 
 export default async function CategoriesPage() {
   const categories = await getCategories();
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
   return (
     <div className="bg-background min-h-screen py-10">

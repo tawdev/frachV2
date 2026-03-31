@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
@@ -15,7 +16,7 @@ interface Product {
 
 export default function FeaturedProducts({ initialProducts }: { initialProducts: Product[] }) {
   const displayProducts = initialProducts?.slice(0, 8) || [];
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
 
   return (

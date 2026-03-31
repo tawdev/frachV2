@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, Folder, Loader2, ChevronDown } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,7 +25,7 @@ export default function SidebarSearch() {
 
   // Fetch categories
   useEffect(() => {
-    fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories')
+    fetch(`${API_BASE_URL}/categories`)
       .then(res => res.json())
       .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error('Failed to fetch categories:', err));
@@ -48,7 +49,7 @@ export default function SidebarSearch() {
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -92,7 +93,7 @@ export default function SidebarSearch() {
     setShowDropdown(false);
   };
 
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
   const formatUrl = (url: string) => {
     if (!url) return '/images/placeholder.jpg';

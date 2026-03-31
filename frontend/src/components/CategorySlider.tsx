@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,7 +13,7 @@ export default function CategorySlider({ initialCategories }: { initialCategorie
   if (!initialCategories || initialCategories.length === 0) return null;
 
   const displayCategories = [...initialCategories, ...initialCategories];
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
   return (
     <div className="relative overflow-hidden group">

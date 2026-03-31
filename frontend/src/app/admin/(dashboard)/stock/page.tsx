@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import { Package, AlertCircle, CheckCircle2, AlertTriangle, Loader2, Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -7,7 +8,7 @@ import Link from 'next/link';
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 interface Product {
@@ -32,7 +33,7 @@ export default function StockManagementPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products');
+      const res = await fetch(`${API_BASE_URL}/products`);
       const data = await res.json();
       const sortedData = data.sort((a: Product, b: Product) => {
         if (a.stock !== b.stock) return a.stock - b.stock;
@@ -61,7 +62,7 @@ export default function StockManagementPage() {
 
     setUpdatingId(product.id);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${product.id}/stock`, {
+      const res = await fetch(`${API_BASE_URL}/products/${product.id}/stock`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

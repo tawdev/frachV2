@@ -1,7 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, ChevronDown, Package, Folder, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-config';
+
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,7 +25,7 @@ export default function GlobalSearch() {
 
   // Fetch categories for dropdown
   useEffect(() => {
-    fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories')
+    fetch(`${API_BASE_URL}/categories`)
       .then(res => res.json())
       .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error('Failed to fetch categories:', err));
@@ -41,7 +43,7 @@ export default function GlobalSearch() {
       setLoading(true);
       try {
         const catParam = selectedCategory ? `&category=${encodeURIComponent(selectedCategory)}` : '';
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/search?q=${encodeURIComponent(query)}${catParam}`);
+        const res = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}${catParam}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -80,7 +82,7 @@ export default function GlobalSearch() {
     setQuery('');
   };
 
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
   const formatUrl = (url: string) => {
     if (!url) return '/images/placeholder.jpg';

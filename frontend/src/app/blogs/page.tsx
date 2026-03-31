@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Newspaper, Search, Filter } from 'lucide-react';
@@ -24,7 +25,7 @@ export default function BlogsPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
 
   useEffect(() => {
-    fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/blogs?status=published')
+    fetch(`${API_BASE_URL}/blogs`)
       .then(res => res.json())
       .then(data => {
         setBlogs(data.data);
@@ -106,7 +107,7 @@ export default function BlogsPage() {
               >
                 <Link href={`/blogs/${blog.slug}`} className="block relative aspect-[16/10] overflow-hidden">
                   <img 
-                    src={blog.image ? (blog.image.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${blog.image}` : blog.image) : '/images/placeholder-blog.jpg'} 
+                    src={blog.image ? (blog.image.startsWith('/') ? `${API_BASE_URL}${blog.image}` : blog.image) : '/images/placeholder-blog.jpg'} 
                     alt={blog.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />

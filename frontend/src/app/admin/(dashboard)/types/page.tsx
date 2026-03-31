@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Settings, Tag, X, Loader2 } from 'lucide-react';
 
@@ -41,9 +42,9 @@ export default function AdminTypes() {
   const fetchData = async () => {
     try {
       const [tRes, tcRes, catRes] = await Promise.all([
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base'),
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types'),
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories')
+        fetch(`${API_BASE_URL}/categories/types-base`),
+        fetch(`${API_BASE_URL}/categories/types`),
+        fetch(`${API_BASE_URL}/categories`)
       ]);
       
       const tData = await tRes.json();
@@ -66,7 +67,7 @@ export default function AdminTypes() {
 
   const handleTypeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingType ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types-base/${editingType.id}` : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base';
+    const url = editingType ? `${API_BASE_URL}/categories/types-base/${editingType.id}` : `${API_BASE_URL}/categories/types-base`;
     const method = editingType ? 'PATCH' : 'POST';
     await fetch(url, {
       method,
@@ -79,7 +80,7 @@ export default function AdminTypes() {
 
   const handleTCSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingTC ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types/${editingTC.id}` : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types';
+    const url = editingTC ? `${API_BASE_URL}/categories/types/${editingTC.id}` : `${API_BASE_URL}/categories/types`;
     const method = editingTC ? 'PATCH' : 'POST';
     await fetch(url, {
       method,
@@ -131,7 +132,7 @@ export default function AdminTypes() {
                   <td className="px-6 py-4 font-medium text-sm text-primary">{t.name}</td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => { setEditingType(t); setTypeForm({ name: t.name }); setShowTypeModal(true); }} className="p-2 text-gray-400 hover:text-primary"><Edit size={16} /></button>
-                    <button onClick={() => handleDelete(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types-base/${t.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                    <button onClick={() => handleDelete(`${API_BASE_URL}/categories/types-base/${t.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </td>
                 </tr>
               ))}
@@ -170,7 +171,7 @@ export default function AdminTypes() {
                   <td className="px-6 py-4 text-sm text-text-muted">{tc.types?.name || '-'}</td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => { setEditingTC(tc); setTCForm({ name: tc.name, category_id: tc.category_id.toString(), types_id: tc.types_id ? tc.types_id.toString() : '' }); setShowTCModal(true); }} className="p-2 text-gray-400 hover:text-secondary"><Edit size={16} /></button>
-                    <button onClick={() => handleDelete(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/types/${tc.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                    <button onClick={() => handleDelete(`${API_BASE_URL}/categories/types/${tc.id}`)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </td>
                 </tr>
               ))}

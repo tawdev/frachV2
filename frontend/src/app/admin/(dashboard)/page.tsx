@@ -1,4 +1,5 @@
-﻿'use client';
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
 
 import { useState, useEffect } from 'react';
 import {
@@ -39,7 +40,7 @@ interface BestProduct {
 const formatUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -83,10 +84,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     Promise.all([
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products').then(r => r.json()).catch(() => []),
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/orders').then(r => r.json()).catch(() => []),
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories').then(r => r.json()).catch(() => []),
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/contact').then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API_BASE_URL}/products`).then(r => r.json()).catch(() => []),
+      fetch(`${API_BASE_URL}/orders`).then(r => r.json()).catch(() => []),
+      fetch(`${API_BASE_URL}/categories`).then(r => r.json()).catch(() => []),
+      fetch(`${API_BASE_URL}/contact`).then(r => r.ok ? r.json() : []).catch(() => []),
     ]).then(([products, ordersData, cats, msgs]) => {
       const o = Array.isArray(ordersData) ? ordersData : [];
       const p = Array.isArray(products) ? products : [];
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/best-products?month=${currentMonth}&year=${currentYear}`)
+    fetch(`${API_BASE_URL}/orders/best-products?month=${currentMonth}&year=${currentYear}`)
       .then(r => r.ok ? r.json() : [])
       .then(data => setBestProducts(Array.isArray(data) ? data.slice(0, 3) : []))
       .catch(() => setBestProducts([]));

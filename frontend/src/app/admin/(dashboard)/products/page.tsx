@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, Package, ExternalLink, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -67,7 +68,7 @@ export default function AdminProducts() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products');
+      const response = await fetch(`${API_BASE_URL}/products`);
       if (!response.ok) throw new Error('Erreur rÃ©seau');
       const data = await response.json();
       setProducts(Array.isArray(data) ? data : []);
@@ -81,9 +82,9 @@ export default function AdminProducts() {
   const fetchMetadata = async () => {
     try {
       const [catRes, typeRes, subRes] = await Promise.all([
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories'),
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base'),
-        fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types')
+        fetch(`${API_BASE_URL}/categories`),
+        fetch(`${API_BASE_URL}/types`),
+        fetch(`${API_BASE_URL}/types-categories`)
       ]);
       const catData = await catRes.json();
       const typeData = await typeRes.json();
@@ -156,8 +157,8 @@ export default function AdminProducts() {
     setSubmitting(true);
     try {
       const url = editingProduct 
-        ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${editingProduct.id}`
-        : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/products';
+        ? `${API_BASE_URL}/products/${editingProduct.id}`
+        : `${API_BASE_URL}/products`;
       
       const method = editingProduct ? 'PATCH' : 'POST';
       
@@ -191,7 +192,7 @@ export default function AdminProducts() {
   const handleDelete = async () => {
     if (!productToDelete) return;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products/${productToDelete.id}`, {
+      const response = await fetch(`${API_BASE_URL}/products/${productToDelete.id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Erreur lors de la suppression');
@@ -242,7 +243,7 @@ export default function AdminProducts() {
                             src={
                               (product.image || (product.images?.[0]?.url))?.startsWith('http') 
                                 ? (product.image || product.images?.[0]?.url) 
-                                : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${(product.image || product.images?.[0]?.url)?.startsWith('/') ? '' : '/'}${product.image || product.images?.[0]?.url}`
+                                : `${API_BASE_URL}${(product.image || product.images?.[0]?.url)?.startsWith('/') ? '' : '/'}${product.image || product.images?.[0]?.url}`
                             } 
                             alt={product.name} 
                             className="w-full h-full object-cover" 
@@ -391,7 +392,7 @@ export default function AdminProducts() {
                     {formData.images.map((img, idx) => (
                       <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-100 group">
                         <img 
-                          src={img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${img.startsWith('/') ? '' : '/'}${img}`} 
+                          src={img.startsWith('http') ? img : `${API_BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`} 
                           className="w-full h-full object-cover" 
                         />
                         <button 
@@ -420,7 +421,7 @@ export default function AdminProducts() {
                               const data = new FormData();
                               data.append('file', files[i]);
                               try {
-                                const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/upload', {
+                                const res = await fetch(`${API_BASE_URL}/upload`, {
                                   method: 'POST',
                                   body: data,
                                 });

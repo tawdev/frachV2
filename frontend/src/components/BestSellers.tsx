@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
@@ -16,7 +17,7 @@ interface Product {
 export default function BestSellers({ products }: { products: Product[] }) {
   // Take 4 products to simulate best sellers, preferably different from featured if we had a view count
   const displayProducts = products?.slice(0, 4) || [];
-  const backendUrl = (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')';
+  const backendUrl = API_BASE_URL;
 
   if (displayProducts.length === 0) return null;
 

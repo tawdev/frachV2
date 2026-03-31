@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 ﻿import Link from 'next/link';
 import Image from 'next/image';
 import { Filter, ChevronDown, Eye, Search, X, Tag, Package, Sparkles } from 'lucide-react';
@@ -26,9 +27,9 @@ export default async function ProductsPage({
 
   try {
     const [prodRes, catRes, typeRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/products?category=${encodeURIComponent(categoryQuery)}&types_id=${activeTypeId}&type_category=${activeSubCatId}&q=${encodeURIComponent(searchQuery)}`, { cache: 'no-store' }),
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories', { cache: 'no-store' }),
-      fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories/types-base', { cache: 'no-store' })
+      fetch(`${API_BASE_URL}/products?category=${encodeURIComponent(categoryQuery)}&types_id=${activeTypeId}&type_category=${activeSubCatId}&q=${encodeURIComponent(searchQuery)}`, { cache: 'no-store' }),
+      fetch(`${API_BASE_URL}/categories`, { cache: 'no-store' }),
+      fetch(`${API_BASE_URL}/categories/types-base`, { cache: 'no-store' })
     ]);
 
     if (prodRes.ok) products = await prodRes.json();

@@ -1,6 +1,8 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/api-config';
+
 import { Plus, Edit, Trash2, FolderTree, X, Loader2 } from 'lucide-react';
 
 interface Category {
@@ -30,7 +32,7 @@ export default function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories');
+      const response = await fetch(`${API_BASE_URL}/categories`);
       if (!response.ok) throw new Error('Erreur rÃ©seau');
       const data = await response.json();
       setCategories(data);
@@ -53,7 +55,7 @@ export default function AdminCategories() {
         description: category.description || '',
         image: category.image || ''
       });
-      setPreviewUrl(category.image ? (category.image.startsWith('http') ? category.image : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/${category.image}`) : '');
+      setPreviewUrl(category.image ? (category.image.startsWith('http') ? category.image : `${API_BASE_URL}/${category.image}`) : '');
     } else {
       setEditingCategory(null);
       setFormData({ name: '', description: '', image: '' });
@@ -67,8 +69,8 @@ export default function AdminCategories() {
     setSubmitting(true);
     try {
       const url = editingCategory 
-        ? `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/${editingCategory.id}`
-        : (process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/categories';
+        ? `${API_BASE_URL}/categories/${editingCategory.id}`
+        : `${API_BASE_URL}/categories`;
       
       const method = editingCategory ? 'PATCH' : 'POST';
       
@@ -92,7 +94,7 @@ export default function AdminCategories() {
   const handleDelete = async () => {
     if (!categoryToDelete) return;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/categories/${categoryToDelete.id}`, {
+      const response = await fetch(`${API_BASE_URL}/categories/${categoryToDelete.id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Erreur lors de la suppression');
@@ -138,7 +140,7 @@ export default function AdminCategories() {
                       <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center overflow-hidden shrink-0 text-secondary font-bold">
                         {cat.image ? (
                            <img 
-                           src={cat.image.startsWith('http') ? cat.image : `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}${cat.image.startsWith('/') ? '' : '/'}${cat.image}`} 
+                           src={cat.image.startsWith('http') ? cat.image : `${API_BASE_URL}${cat.image.startsWith('/') ? '' : '/'}${cat.image}`} 
                            alt={cat.name} 
                            className="w-full h-full object-cover" 
                          />
@@ -222,7 +224,7 @@ export default function AdminCategories() {
                           const data = new FormData();
                           data.append('file', file);
                           try {
-                            const res = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/upload/categories', { method: 'POST', body: data });
+                            const res = await fetch(`${API_BASE_URL}/upload/categories`, { method: 'POST', body: data });
                             if (!res.ok) throw new Error('Upload failed');
                             const uploaded = await res.json();
                             setFormData(prev => ({...prev, image: uploaded.path}));

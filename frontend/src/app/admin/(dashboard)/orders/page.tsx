@@ -1,5 +1,6 @@
-﻿'use client';
-
+'use client';
+import { API_BASE_URL } from '@/lib/api-config';
+﻿
 import { useState, useEffect } from 'react';
 import { ShoppingBag, Search, Eye, Download, MoreVertical, Calendar, User, MapPin, Phone, CheckCircle, Package, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -41,7 +42,7 @@ export default function AdminOrders() {
   useEffect(() => {
     async function fetchOrders() {
       try {
-        const response = await fetch((process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}')/orders');
+        const response = await fetch(`${API_BASE_URL}/orders`);
         if (!response.ok) throw new Error('Erreur lors de la rÃ©cupÃ©ration des commandes');
         const data = await response.json();
         setOrders(data);
@@ -56,7 +57,7 @@ export default function AdminOrders() {
 
   const handleStatusUpdate = async (id: number, newStatus: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/${id}/status`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -72,7 +73,7 @@ export default function AdminOrders() {
   const handleDelete = async (id: number) => {
     if (!confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette commande ?')) return;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}'}/orders/${id}/delete`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${id}/delete`, {
         method: 'POST',
       });
       if (response.ok) {
