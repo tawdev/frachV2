@@ -34,7 +34,6 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
-const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
 const path = __importStar(require("path"));
 require("dotenv/config");
 function slugify(filename) {
@@ -52,15 +51,7 @@ function slugify(filename) {
     return `${slug}${ext.toLowerCase()}`;
 }
 async function main() {
-    const url = new URL(process.env.DATABASE_URL);
-    const adapter = new adapter_mariadb_1.PrismaMariaDb({
-        host: url.hostname,
-        port: Number(url.port) || 3306,
-        user: url.username,
-        password: url.password,
-        database: url.pathname.substring(1),
-    });
-    const prisma = new client_1.PrismaClient({ adapter });
+    const prisma = new client_1.PrismaClient();
     try {
         console.log('Starting Database Image Path Update...');
         const products = await prisma.product.findMany({ select: { id: true, image: true } });

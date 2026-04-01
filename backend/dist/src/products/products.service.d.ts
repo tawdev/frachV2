@@ -20,7 +20,7 @@ export declare class ProductsService {
         id: number;
         name: string;
         description: string | null;
-        price: import("@prisma/client-runtime-utils").Decimal;
+        price: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
         category: string;
         stock: number | null;
@@ -30,12 +30,12 @@ export declare class ProductsService {
         type_category_id: number | null;
         types_categories_items_id: number | null;
         types_id: number | null;
-        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_length: import("@prisma/client-runtime-utils").Decimal | null;
-        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+        max_longueur: import("@prisma/client/runtime/library").Decimal | null;
+        max_largeur: import("@prisma/client/runtime/library").Decimal | null;
+        longueur: import("@prisma/client/runtime/library").Decimal | null;
+        largeur: import("@prisma/client/runtime/library").Decimal | null;
+        max_length: import("@prisma/client/runtime/library").Decimal | null;
+        max_width: import("@prisma/client/runtime/library").Decimal | null;
     })[]>;
     search(query: string, category_id?: number): Promise<{
         products: any[];
@@ -52,7 +52,7 @@ export declare class ProductsService {
         id: number;
         name: string;
         description: string | null;
-        price: import("@prisma/client-runtime-utils").Decimal;
+        price: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
         category: string;
         stock: number | null;
@@ -62,12 +62,12 @@ export declare class ProductsService {
         type_category_id: number | null;
         types_categories_items_id: number | null;
         types_id: number | null;
-        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_length: import("@prisma/client-runtime-utils").Decimal | null;
-        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+        max_longueur: import("@prisma/client/runtime/library").Decimal | null;
+        max_largeur: import("@prisma/client/runtime/library").Decimal | null;
+        longueur: import("@prisma/client/runtime/library").Decimal | null;
+        largeur: import("@prisma/client/runtime/library").Decimal | null;
+        max_length: import("@prisma/client/runtime/library").Decimal | null;
+        max_width: import("@prisma/client/runtime/library").Decimal | null;
     }>;
     updateStock(id: number, stock: number): Promise<{
         id: number;
@@ -77,7 +77,7 @@ export declare class ProductsService {
         id: number;
         name: string;
         description: string | null;
-        price: import("@prisma/client-runtime-utils").Decimal;
+        price: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
         category: string;
         stock: number | null;
@@ -87,18 +87,18 @@ export declare class ProductsService {
         type_category_id: number | null;
         types_categories_items_id: number | null;
         types_id: number | null;
-        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_length: import("@prisma/client-runtime-utils").Decimal | null;
-        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+        max_longueur: import("@prisma/client/runtime/library").Decimal | null;
+        max_largeur: import("@prisma/client/runtime/library").Decimal | null;
+        longueur: import("@prisma/client/runtime/library").Decimal | null;
+        largeur: import("@prisma/client/runtime/library").Decimal | null;
+        max_length: import("@prisma/client/runtime/library").Decimal | null;
+        max_width: import("@prisma/client/runtime/library").Decimal | null;
     }>;
     remove(id: number): Promise<{
         id: number;
         name: string;
         description: string | null;
-        price: import("@prisma/client-runtime-utils").Decimal;
+        price: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
         category: string;
         stock: number | null;
@@ -108,11 +108,11 @@ export declare class ProductsService {
         type_category_id: number | null;
         types_categories_items_id: number | null;
         types_id: number | null;
-        max_longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        longueur: import("@prisma/client-runtime-utils").Decimal | null;
-        largeur: import("@prisma/client-runtime-utils").Decimal | null;
-        max_length: import("@prisma/client-runtime-utils").Decimal | null;
-        max_width: import("@prisma/client-runtime-utils").Decimal | null;
+        max_longueur: import("@prisma/client/runtime/library").Decimal | null;
+        max_largeur: import("@prisma/client/runtime/library").Decimal | null;
+        longueur: import("@prisma/client/runtime/library").Decimal | null;
+        largeur: import("@prisma/client/runtime/library").Decimal | null;
+        max_length: import("@prisma/client/runtime/library").Decimal | null;
+        max_width: import("@prisma/client/runtime/library").Decimal | null;
     }>;
 }

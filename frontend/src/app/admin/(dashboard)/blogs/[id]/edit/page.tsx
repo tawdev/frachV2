@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import BlogForm from '@/components/BlogForm';
 import { Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -11,7 +12,7 @@ export default function EditBlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/blogs/${params.id}`)
+    fetch(`${API_BASE_URL}/blogs/${params.id}`)
       .then(res => res.json())
       .then(data => {
         setBlog(data);

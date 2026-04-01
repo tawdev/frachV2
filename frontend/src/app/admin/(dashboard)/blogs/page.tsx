@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '@/lib/api-config';
 
 import Link from 'next/link';
@@ -45,11 +45,7 @@ export default function BlogsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  useEffect(() => {
-    fetchBlogs();
-  }, [page, statusFilter]);
-
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
       let url = `${API_BASE_URL}/blogs?page=${page}&limit=10`;
@@ -65,7 +61,11 @@ export default function BlogsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, statusFilter, searchQuery]);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

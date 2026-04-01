@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Copy, Clock, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { API_BASE_URL } from '@/lib/api-config';
 
 interface Blog {
   id: number;
@@ -21,6 +22,7 @@ interface Blog {
 }
 
 export default function BlogDetailPage() {
+
   const { slug } = useParams();
   const router = useRouter();
   const [blog, setBlog] = useState<Blog | null>(null);
@@ -28,7 +30,8 @@ export default function BlogDetailPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/blogs/slug/${slug}`)
+    fetch(`${API_BASE_URL}/blogs/slug/${slug}`)
+
       .then(res => {
         if (!res.ok) throw new Error('Not found');
         return res.json();
@@ -132,7 +135,7 @@ export default function BlogDetailPage() {
          {blog.image && (
            <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-[2.5rem] overflow-hidden mb-20 shadow-2xl shadow-primary/5 border border-gray-100 group">
               <img 
-                src={blog.image.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${blog.image}` : blog.image} 
+                src={blog.image.startsWith('/') ? `${API_BASE_URL}${blog.image}` : blog.image} 
                 alt={blog.title}
                 className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
               />

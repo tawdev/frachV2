@@ -13,39 +13,17 @@ exports.PrismaService = void 0;
 require("dotenv/config");
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
-const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
-function parseDatabaseUrl(url) {
-    const match = url.match(/mysql:\/\/([^:]+):([^@]*)@([^:]+):(\d+)\/(.+)/);
-    if (!match) {
-        throw new Error(`Invalid DATABASE_URL format: ${url}`);
-    }
-    return {
-        host: match[3],
-        port: parseInt(match[4], 10),
-        user: match[1],
-        password: decodeURIComponent(match[2]),
-        database: match[5],
-    };
-}
-let PrismaService = class PrismaService {
+let PrismaService = class PrismaService extends client_1.PrismaClient {
     client;
     constructor() {
-        const dbUrl = process.env.DATABASE_URL;
-        const dbConfig = parseDatabaseUrl(dbUrl);
-        const adapter = new adapter_mariadb_1.PrismaMariaDb({
-            host: dbConfig.host,
-            port: dbConfig.port,
-            user: dbConfig.user,
-            password: dbConfig.password,
-            database: dbConfig.database,
-        });
-        this.client = new client_1.PrismaClient({ adapter });
+        super();
+        this.client = this;
     }
     async onModuleInit() {
-        await this.client.$connect();
+        await this.$connect();
     }
     async onModuleDestroy() {
-        await this.client.$disconnect();
+        await this.$disconnect();
     }
 };
 exports.PrismaService = PrismaService;

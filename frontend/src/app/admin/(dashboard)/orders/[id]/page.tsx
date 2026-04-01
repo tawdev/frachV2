@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   ShoppingBag, ArrowLeft, User, Phone, Mail, MapPin, 
   Calendar, CheckCircle, Package, Trash2, Printer, 
   Clock, CreditCard, ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-config';
 
 interface OrderItem {
   id: number;
@@ -35,9 +36,9 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders/${params.id}`);
+      const response = await fetch(`${API_BASE_URL}/orders/${params.id}`);
       if (!response.ok) throw new Error('Commande non trouvée');
       const data = await response.json();
       setOrder(data);
@@ -46,16 +47,16 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchOrder();
-  }, [params.id]);
+  }, [fetchOrder]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!order) return;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders/${order.id}/status`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${order.id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -154,7 +155,7 @@ export default function OrderDetailsPage({ params }: { params: { id: string } })
                         <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-primary font-bold shadow-inner border border-gray-100 transition-transform group-hover:scale-105 overflow-hidden">
                             {item.product?.image ? (
                               <img 
-                                src={item.product.image.startsWith('http') ? item.product.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${item.product.image.startsWith('/') ? '' : '/'}${item.product.image}`} 
+                                src={item.product.image.startsWith('http') ? item.product.image : `${API_BASE_URL}${item.product.image.startsWith('/') ? '' : '/'}${item.product.image}`} 
                                 alt={item.product_name}
                                 className="w-full h-full object-cover"
                               />

@@ -1,7 +1,7 @@
 'use client';
 import { API_BASE_URL } from '@/lib/api-config';
 ﻿
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, Package, ExternalLink, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -66,10 +66,10 @@ export default function AdminProducts() {
   // Delete confirm
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/products`);
-      if (!response.ok) throw new Error('Erreur rÃ©seau');
+      if (!response.ok) throw new Error('Erreur réseau');
       const data = await response.json();
       setProducts(Array.isArray(data) ? data : []);
     } catch (err: any) {
@@ -77,9 +77,9 @@ export default function AdminProducts() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchMetadata = async () => {
+  const fetchMetadata = useCallback(async () => {
     try {
       const [catRes, typeRes, subRes] = await Promise.all([
         fetch(`${API_BASE_URL}/categories`),
@@ -94,12 +94,12 @@ export default function AdminProducts() {
       setTypes(Array.isArray(typeData) ? typeData : []);
       setAllTypeCategories(Array.isArray(subData) ? subData : []);
     } catch (err) {}
-  };
+  }, []);
 
   useEffect(() => {
     fetchProducts();
     fetchMetadata();
-  }, []);
+  }, [fetchProducts, fetchMetadata]);
 
   // Filter type categories when category or type changes
   useEffect(() => {
@@ -394,6 +394,7 @@ export default function AdminProducts() {
                         <img 
                           src={img.startsWith('http') ? img : `${API_BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`} 
                           className="w-full h-full object-cover" 
+                          alt={`Aperçu ${idx + 1}`}
                         />
                         <button 
                           type="button"

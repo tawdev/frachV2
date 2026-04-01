@@ -6,17 +6,17 @@ export declare class BlogsController {
     constructor(blogsService: BlogsService);
     create(createBlogDto: CreateBlogDto): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     findAll(q?: string, category?: string, status?: string, author?: string, page?: string, limit?: string): Promise<{
@@ -27,17 +27,17 @@ export declare class BlogsController {
             } | null;
         } & {
             id: number;
-            image: string | null;
-            category: string | null;
-            created_at: Date;
-            updated_at: Date;
             title: string;
             slug: string;
             content: string;
+            category: string | null;
             author_id: number | null;
+            image: string | null;
             status: string;
             tags: string | null;
             views: number;
+            created_at: Date;
+            updated_at: Date;
             published_at: Date | null;
         })[];
         meta: {
@@ -54,17 +54,17 @@ export declare class BlogsController {
         } | null;
     } & {
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     findOne(id: string): Promise<{
@@ -74,50 +74,50 @@ export declare class BlogsController {
         } | null;
     } & {
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     update(id: string, updateBlogDto: UpdateBlogDto): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     remove(id: string): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
-    bulkDelete(ids: number[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
+    bulkDelete(ids: number[]): Promise<import(".prisma/client").Prisma.BatchPayload>;
     uploadFile(file: Express.Multer.File): {
         url: string;
     };

@@ -6,17 +6,17 @@ export declare class BlogsService {
     constructor(prisma: PrismaService);
     create(createBlogDto: CreateBlogDto): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     findAll(params: {
@@ -34,17 +34,17 @@ export declare class BlogsService {
             } | null;
         } & {
             id: number;
-            image: string | null;
-            category: string | null;
-            created_at: Date;
-            updated_at: Date;
             title: string;
             slug: string;
             content: string;
+            category: string | null;
             author_id: number | null;
+            image: string | null;
             status: string;
             tags: string | null;
             views: number;
+            created_at: Date;
+            updated_at: Date;
             published_at: Date | null;
         })[];
         meta: {
@@ -61,17 +61,17 @@ export declare class BlogsService {
         } | null;
     } & {
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     findOneBySlug(slug: string): Promise<{
@@ -81,48 +81,48 @@ export declare class BlogsService {
         } | null;
     } & {
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     update(id: number, updateBlogDto: UpdateBlogDto): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
     remove(id: number): Promise<{
         id: number;
-        image: string | null;
-        category: string | null;
-        created_at: Date;
-        updated_at: Date;
         title: string;
         slug: string;
         content: string;
+        category: string | null;
         author_id: number | null;
+        image: string | null;
         status: string;
         tags: string | null;
         views: number;
+        created_at: Date;
+        updated_at: Date;
         published_at: Date | null;
     }>;
-    bulkDelete(ids: number[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
+    bulkDelete(ids: number[]): Promise<import(".prisma/client").Prisma.BatchPayload>;
 }
