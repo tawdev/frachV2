@@ -32,7 +32,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
             </div>
             <h3 className="text-3xl md:text-5xl font-serif text-primary">Produits les plus vendus</h3>
             <p className="text-text-muted mt-4 max-w-xl">
-              Nos piÃ¨ces les plus prisÃ©es, plÃ©biscitÃ©es par nos clients pour leur design et leur confort exceptionnel.
+              Nos pièces les plus prisées, plébiscitées par nos clients pour leur design et leur confort exceptionnel.
             </p>
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
               >
                 {/* Bestseller Badge */}
                 <div className="absolute top-4 left-4 bg-yellow-500 text-white text-[10px] font-bold uppercase tracking-wider py-1.5 px-3 rounded-full z-30 shadow-md flex items-center gap-1">
-                  <span>â˜…</span> Best Seller
+                  <span>★</span> Best Seller
                 </div>
 
                 <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 shrink-0">
@@ -92,7 +92,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
                       <Link 
                         href={`/products/${product.id}`} 
                         className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-text-muted hover:text-secondary hover:border-secondary transition-all shrink-0 ml-2" 
-                        title="DÃ©tails"
+                        title="Détails"
                       >
                         <Eye className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                       </Link>

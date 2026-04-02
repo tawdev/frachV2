@@ -31,7 +31,7 @@ export default async function CategoriesPage() {
         <div className="text-center mb-16 animate-fade-in text-primary">
           <h1 className="text-4xl md:text-6xl font-serif mb-6 leading-tight">Nos Espaces <span className="italic text-secondary">de Vie</span></h1>
           <p className="text-text-muted text-lg max-w-2xl mx-auto">
-            Chaque catÃ©gorie a Ã©tÃ© pensÃ©e pour rÃ©pondre Ã  vos exigences de style et de confort. Explorez nos univers pour trouver l'inspiration.
+            Chaque catégorie a été pensée pour répondre à vos exigences de style et de confort. Explorez nos univers pour trouver l'inspiration.
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default async function CategoriesPage() {
                   href={`/products?category=${encodeURIComponent(category.name)}`} 
                   className="inline-flex items-center gap-2 font-medium text-primary hover:text-secondary transition-colors link-hover"
                 >
-                  DÃ©couvrir la collection
+                  Découvrir la collection
                 </Link>
               </div>
             </div>

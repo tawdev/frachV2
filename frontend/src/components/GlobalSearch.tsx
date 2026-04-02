@@ -191,7 +191,7 @@ export default function GlobalSearch() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-4 bg-secondary rounded-full" />
-                  <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Suggestions de CatÃ©gories</h3>
+                  <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Suggestions de Catégories</h3>
                 </div>
                 <div className="space-y-1">
                   {suggestions.categories.map(cat => (
@@ -250,7 +250,7 @@ export default function GlobalSearch() {
                 onClick={handleSearch}
                 className="text-xs font-bold text-secondary uppercase tracking-widest hover:tracking-[0.15em] transition-all py-2 inline-block"
               >
-                Voir tous les rÃ©sultats
+                Voir tous les résultats
               </button>
             </div>
           </div>

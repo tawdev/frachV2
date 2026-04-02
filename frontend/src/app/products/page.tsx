@@ -68,7 +68,7 @@ export default async function ProductsPage({
           </div>
           <h1 className="text-5xl md:text-6xl font-serif text-primary mb-6 tracking-tight">Nos Collections</h1>
           <p className="text-text-muted max-w-2xl mx-auto text-lg leading-relaxed">
-            DÃ©couvrez l'Ã©lÃ©gance du design marocain contemporain, entre piÃ¨ces en stock prÃªtes Ã  livrer et crÃ©ations uniques sur mesure.
+            Découvrez l'élégance du design marocain contemporain, entre pièces en stock prêtes à livrer et créations uniques sur mesure.
           </p>
         </div>
 
@@ -111,7 +111,7 @@ export default async function ProductsPage({
                 {/* Categories Filter */}
                 <div>
                   <h3 className="font-bold text-text mb-5 flex items-center gap-2 text-sm uppercase tracking-widest">
-                    <Package size={14} className="text-secondary" /> CatÃ©gories
+                    <Package size={14} className="text-secondary" /> Catégories
                   </h3>
                   <ul className="space-y-3">
                     {categoryList.map((cat) => (
@@ -134,7 +134,7 @@ export default async function ProductsPage({
                     href="/products" 
                     className="flex justify-center items-center gap-2 py-3 bg-red-50 text-red-500 rounded-xl text-xs font-bold hover:bg-red-100 transition-colors mt-4"
                   >
-                    <X size={14} /> RÃ©initialiser
+                    <X size={14} /> Réinitialiser
                   </Link>
                 )}
               </div>
@@ -151,7 +151,7 @@ export default async function ProductsPage({
             {products.length === 0 && (
               <div className="py-32 flex flex-col items-center text-text-muted bg-white rounded-[3rem] border border-dashed border-gray-200 mt-10">
                 <Search size={64} className="mb-6 opacity-10" />
-                <h3 className="text-xl font-serif text-primary mb-2">Aucun rÃ©sultat trouvÃ©</h3>
+                <h3 className="text-xl font-serif text-primary mb-2">Aucun résultat trouvé</h3>
                 <p>Essayez de modifier vos filtres ou effectuez une nouvelle recherche.</p>
                 <Link href="/products" className="mt-8 text-secondary font-bold border-b-2 border-secondary pb-1 hover:opacity-70 transition-opacity">
                     Voir toute la boutique

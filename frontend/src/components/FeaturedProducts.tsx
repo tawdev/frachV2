@@ -75,7 +75,7 @@ export default function FeaturedProducts({ initialProducts }: { initialProducts:
                     <Link 
                       href={`/products/${product.id}`} 
                       className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-text-muted hover:text-secondary hover:border-secondary transition-all shrink-0 ml-2" 
-                      title="DÃ©tails"
+                      title="Détails"
                     >
                       <Eye className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                     </Link>
