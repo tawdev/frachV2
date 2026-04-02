@@ -40,6 +40,7 @@ const path_1 = require("path");
 const express = __importStar(require("express"));
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.setGlobalPrefix('api');
     app.enableCors({
         origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -51,7 +52,7 @@ async function bootstrap() {
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
     }, express.static((0, path_1.join)(process.cwd(), 'uploads')));
-    await app.listen(process.env.PORT ?? 3001);
+    await app.listen(process.env.PORT ?? 3011);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
