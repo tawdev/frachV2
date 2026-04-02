@@ -1,0 +1,41 @@
+name: Deploy FrachV2 to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 72.61.198.43
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            # Aller dans le dossier du projet
+            cd /var/www/frach-dark-v2/frachV2/
+            
+            # Récupérer les changements
+            git pull origin main
+            
+            # Mettre à jour et builder le Backend
+            echo "--- Début Build Backend ---"
+            npm install --prefix backend
+            npm run build --prefix backend
+            
+            # Mettre à jour et builder le Frontend
+            echo "--- Début Build Frontend ---"
+            npm install --prefix frontend
+            npm run build --prefix frontend
+            
+            # Appliquer les migrations de base de données si nécessaire
+            cd backend && npx prisma db push && cd ..
+            
+            # Redémarrer tout proprement avec PM2
+            pm2 restart all
+            
+            echo "--- Déploiement terminé avec succès ! ---"
